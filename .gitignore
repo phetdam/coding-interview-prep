@@ -1,0 +1,4 @@
+# ignore __pycache__ and common binary files
+**/__pycache__
+**/*.o
+**/*.so
