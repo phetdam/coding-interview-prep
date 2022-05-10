@@ -13,8 +13,8 @@ Since some questions are language dependent (ex. C++ references are very
 different from Python references), the first level of subdirectories splits the
 source by language, with the subsequent level specifying topics.
 
-.. [#] To be fair, the implementations here are slightly cleaner than what one
-   would typically end up writing under pressure in an interview.
+.. [#] To be fair, the implementations here are an order of magnitude cleaner
+   than what one would typically end up writing under pressure in an interview.
 
 Contents
 --------
