@@ -15,6 +15,7 @@ source by language, with the subsequent level specifying topics.
 
 .. [#] To be fair, the implementations here are an order of magnitude cleaner
    than what one would typically end up writing under pressure in an interview.
+   Unless asked, you wouldn't worry about inheritance and perfect-looking code.
 
 Contents
 --------
