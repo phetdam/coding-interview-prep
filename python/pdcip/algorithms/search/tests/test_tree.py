@@ -6,8 +6,8 @@
 import unittest
 
 # pylint: disable=missing-function-docstring
-from pdcip.data_structures.tests.test_tree import BinaryTreeTestCaseBase
-from pdcip.algorithms.tree_search import AlgoLoopType, bfs, dfs
+from pdcip.structures.tests.test_tree import BinaryTreeTestCaseBase
+from pdcip.algorithms.search.tree import AlgoLoopType, bfs, dfs
 
 
 class BinaryTreeSearchTestCase(BinaryTreeTestCaseBase):

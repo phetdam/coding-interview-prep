@@ -4,18 +4,11 @@
 """
 
 from copy import deepcopy
-from enum import Enum
 from typing import List
 
 # pylint: disable=bad-continuation
-from pdcip.data_structures.tree import BinaryTree
-
-
-class AlgoLoopType(Enum):
-    """Enum type indicating if algorithm runs recursively or iteratively."""
-
-    RECURSIVE = 0
-    ITERATIVE = 1
+from pdcip.algorithms.core import AlgoLoopType
+from pdcip.structures.tree import BinaryTree
 
 
 # allow this to use a generic tree later on

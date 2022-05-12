@@ -6,7 +6,7 @@
 import unittest
 
 # pylint: disable=missing-function-docstring
-from pdcip.data_structures.tree import BinaryTree, SearchStrategy
+from pdcip.structures.tree import BinaryTree, SearchStrategy
 
 
 class BinaryTreeTestCaseBase(unittest.TestCase):

@@ -5,20 +5,10 @@
 
 # pylint: disable=bad-continuation
 
-from enum import Enum
 from dataclasses import dataclass
 from typing import List, Union
 
-
-class SearchStrategy(Enum):
-    """Enum dictating how search matches should be conducted."""
-
-    # match exactly for success
-    EXACT = 0
-    # match nearest upper bound for success
-    FROM_ABOVE = 1
-    # match nearest lower bound for success
-    FROM_BELOW = 2
+from pdcip.algorithms.search.core import SearchStrategy
 
 
 @dataclass
