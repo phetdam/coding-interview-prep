@@ -1,12 +1,12 @@
-"""Unit tests for the BinaryTree.
+"""Unit tests for tree implementations.
 
 .. codeauthor:: Derek Huang <djh458@stern.nyu.edu>
 """
 
 import unittest
 
-# pylint: disable=missing-function-docstring,relative-beyond-top-level
-from ..binary_tree import BinaryTree, SearchStrategy
+# pylint: disable=missing-function-docstring
+from pdcip.data_structures.tree import BinaryTree, SearchStrategy
 
 
 class BinaryTreeTestCaseBase(unittest.TestCase):

@@ -7,8 +7,8 @@ from copy import deepcopy
 from enum import Enum
 from typing import List
 
-# pylint: disable=relative-beyond-top-level
-from ..data_structures.binary_tree import BinaryTree
+# pylint: disable=bad-continuation
+from pdcip.data_structures.tree import BinaryTree
 
 
 class AlgoLoopType(Enum):

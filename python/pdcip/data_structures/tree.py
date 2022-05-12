@@ -1,7 +1,9 @@
-"""Binary tree implementation.
+"""General tree implementations.
 
 .. codeauthor:: Derek Huang <djh458@stern.nyu.edu>
 """
+
+# pylint: disable=bad-continuation
 
 from enum import Enum
 from dataclasses import dataclass
@@ -20,12 +22,42 @@ class SearchStrategy(Enum):
 
 
 @dataclass
-class BinaryTree:
-    """Simple binary tree implementation."""
+class Tree:
+    """General tree implementation using adjacency lists."""
 
     value: Union[float, None] = None
-    left: Union["BinaryTree", None] = None
-    right: Union["BinaryTree", None] = None
+    children: Union[List["Tree"], None] = None
+
+
+@dataclass(init=False)
+class BinaryTree(Tree):
+    """Simple binary tree implementation."""
+
+    def __init__(
+        self,
+        value: Union[float, None] = None,
+        left: Union["BinaryTree", None] = None,
+        right: Union["BinaryTree", None] = None
+    ):
+        super().__init__(value, [left, right])
+
+    @property
+    def left(self) -> "BinaryTree":
+        """Return left child of the BinaryTree."""
+        return self.children[0]
+
+    @left.setter
+    def left(self, new_left: "BinaryTree"):
+        self.children[0] = new_left
+
+    @property
+    def right(self) -> "BinaryTree":
+        """Return right child of the BinaryTree."""
+        return self.children[1]
+
+    @right.setter
+    def right(self, new_right: "BinaryTree"):
+        self.children[1] = new_right
 
     def insert(self, value: float) -> float:
         """Insert a value into the binary tree.

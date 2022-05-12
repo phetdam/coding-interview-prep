@@ -5,9 +5,9 @@
 
 import unittest
 
-# pylint: disable=missing-function-docstring,relative-beyond-top-level
-from ...data_structures.tests.test_binary_tree import BinaryTreeTestCaseBase
-from ..tree_search import AlgoLoopType, bfs, dfs
+# pylint: disable=missing-function-docstring
+from pdcip.data_structures.tests.test_tree import BinaryTreeTestCaseBase
+from pdcip.algorithms.tree_search import AlgoLoopType, bfs, dfs
 
 
 class BinaryTreeSearchTestCase(BinaryTreeTestCaseBase):
