@@ -2,3 +2,5 @@
 **/__pycache__
 **/*.o
 **/*.so
+# ignore VS Code local settings folder
+.vscode
