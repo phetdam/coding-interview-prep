@@ -18,6 +18,11 @@ class Tree:
     value: Union[float, None] = None
     children: Union[List["Tree"], None] = None
 
+    @property
+    def n_children(self) -> int:
+        """Return number of direct children in tree node."""
+        return len(self.children)
+
 
 @dataclass(init=False)
 class BinaryTree(Tree):
