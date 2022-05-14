@@ -3,10 +3,35 @@
 .. codeauthor:: Derek Huang <djh458@stern.nyu.edu>
 """
 
+from copy import deepcopy
+
 import unittest
 
 # pylint: disable=missing-function-docstring
-from pdcip.structures.tree import BinaryTree, SearchStrategy
+from pdcip.structures.tree import BinaryTree, SearchStrategy, Tree
+
+
+class TreeDunderTestCase(unittest.TestCase):
+    """Test that dunder methods behave as expected."""
+
+    def test_repr(self):
+        # children should not show up
+        head = Tree(value=56.2)
+        self.assertEqual(
+            f"{Tree.__name__}(value={head.value})",
+            repr(head)
+        )
+
+    def test_compare(self):
+        # note if children are different, these won't be equal
+        head_a = Tree(value=2.4)
+        head_aa = deepcopy(head_a)
+        head_b = Tree(value=5.6)
+        self.assertEqual(head_a, head_aa)
+        self.assertLessEqual(head_a, head_aa, msg=f"{head_a} > {head_aa}")
+        self.assertGreaterEqual(head_a, head_aa, msg=f"{head_a} < {head_aa}")
+        self.assertLess(head_a, head_b, msg=f"{head_a} >= {head_b}")
+        self.assertGreater(head_b, head_a, msg=f"{head_b} <= {head_a}")
 
 
 class BinaryTreeTestCaseBase(unittest.TestCase):

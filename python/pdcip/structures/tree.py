@@ -11,7 +11,7 @@ from typing import List, Union
 from pdcip.algorithms.search.core import SearchStrategy
 
 
-@dataclass
+@dataclass(order=True)
 class Tree:
     """General tree implementation using adjacency lists."""
 
@@ -25,7 +25,7 @@ class Tree:
         return len(self.children)
 
 
-@dataclass(init=False, order=True)
+@dataclass(init=False)
 class BinaryTree(Tree):
     """Simple binary tree implementation."""
 
