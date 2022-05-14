@@ -5,7 +5,7 @@
 
 # pylint: disable=bad-continuation
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Union
 
 from pdcip.algorithms.search.core import SearchStrategy
@@ -16,7 +16,8 @@ class Tree:
     """General tree implementation using adjacency lists."""
 
     value: Union[float, None] = None
-    children: Union[List["Tree"], None] = None
+    # don't include in repr string; repr can be very long
+    children: Union[List["Tree"], None] = field(default=None, repr=False)
 
     @property
     def n_children(self) -> int:
@@ -24,7 +25,7 @@ class Tree:
         return len(self.children)
 
 
-@dataclass(init=False)
+@dataclass(init=False, order=True)
 class BinaryTree(Tree):
     """Simple binary tree implementation."""
 
@@ -84,10 +85,53 @@ class BinaryTree(Tree):
             return value
         return self.right.insert(value)
 
+    @staticmethod
+    def _closest(
+        target: float,
+        closest: Union["BinaryTree", None],
+        candidate: "BinaryTree",
+        strategy: SearchStrategy = SearchStrategy.EXACT
+    ) -> Union["BinaryTree", None]:
+        """Return tree node has closest value to the target.
+
+        None may be returned if neither closest nor candidate are suitable.
+
+        Parameters
+        ----------
+        target : float
+            Target value to search for
+        closest : BinaryTree or None
+            Current tree node with closest value (can be None)
+        candidate : BinaryTree
+            Candidate tree node we want to compare in "closeness" to closest
+        strategy : SearchStrategy, default=SearchStrategy.EXACT
+            Search strategy, which affects the the criteria of "closeness"
+        """
+        if target == candidate.value or closest and target == closest.value:
+            return closest
+        if strategy == SearchStrategy.FROM_BELOW:
+            # if candidate is invalid, use valid closest
+            if target - candidate.value < 0:
+                return closest
+            # if candidate is valid and closest is None, automatically wins
+            if not closest:
+                return candidate
+            # else choose better amongst closest and target
+            return candidate if candidate >= closest else closest
+        elif strategy == SearchStrategy.FROM_ABOVE:
+            if target - candidate.value > 0:
+                return closest
+            if not closest:
+                return candidate
+            return candidate if candidate <= closest else closest
+        # if candidate is invalid or cannot beat closest, keep using closest
+        return closest
+
     def search(
         self,
         value: float,
-        strategy: SearchStrategy = SearchStrategy.EXACT
+        strategy: SearchStrategy = SearchStrategy.EXACT,
+        _closest: float = None
     ) -> Union["BinaryTree", None]:
         """Search for a value in the tree.
 
@@ -109,6 +153,15 @@ class BinaryTree(Tree):
         BinaryTree or None
             Node containing the matched value, else None if no match
         """
+        # update closest value to target value, by search strategy, using the
+        # new value we are testing (self.value). can be None if self.value
+        # is not closest in the sense defined by the search strategy.
+        _closest = self._closest(
+            value,
+            _closest,
+            self,
+            strategy=strategy
+        )
         # for nearest search, need to track the "closest" guess
         if self.value is None:
             return None
@@ -118,13 +171,15 @@ class BinaryTree(Tree):
             if not self.left:
                 if strategy == SearchStrategy.FROM_ABOVE:
                     return self
-                return None
-            return self.left.search(value, strategy=strategy)
+                # note that _closest may also be None in this case
+                return _closest
+            return self.left.search(value, strategy=strategy, _closest=_closest)
         if not self.right:
             if strategy == SearchStrategy.FROM_BELOW:
                 return self
-            return None
-        return self.right.search(value, strategy=strategy)
+            # _closest may also be None in this case
+            return _closest
+        return self.right.search(value, strategy=strategy, _closest=_closest)
 
     def sorted_values(self) -> List[float]:
         """Return tree values sorted in a list."""

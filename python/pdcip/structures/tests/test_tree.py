@@ -49,21 +49,21 @@ class BinaryTreeTestCase(BinaryTreeTestCaseBase):
             self.tree.search(10, strategy=SearchStrategy.FROM_ABOVE)
         )
 
-    # def test_search_below(self):
-    #     # search for middle value
-    #     self.assertEqual(
-    #         4.,
-    #         self.tree.search(5, strategy=SearchStrategy.FROM_BELOW).value
-    #     )
-    #     # search below lowest value
-    #     self.assertIsNone(
-    #         self.tree.search(-4, strategy=SearchStrategy.FROM_BELOW)
-    #     )
-    #     # search above highest value
-    #     self.assertEqual(
-    #         9.,
-    #         self.tree.search(10, strategy=SearchStrategy.FROM_BELOW).value
-    #     )
+    def test_search_below(self):
+        # search for middle value
+        self.assertEqual(
+            4.,
+            self.tree.search(5, strategy=SearchStrategy.FROM_BELOW).value
+        )
+        # search below lowest value
+        self.assertIsNone(
+            self.tree.search(-4, strategy=SearchStrategy.FROM_BELOW)
+        )
+        # search above highest value
+        self.assertEqual(
+            9.,
+            self.tree.search(10, strategy=SearchStrategy.FROM_BELOW).value
+        )
 
 
 if __name__ == "__main__":
