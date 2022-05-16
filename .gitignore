@@ -4,3 +4,5 @@
 **/*.so
 # ignore VS Code local settings folder
 .vscode
+# ignore build directories
+**/build
