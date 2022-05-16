@@ -21,8 +21,7 @@ namespace structures {
  * @param children `const tree_children_ptr&` with children
  */
 tree::tree(double value, const tree_children_ptr& children)
-  : value_(value), children_(children)
-{}
+  : value_(value), children_(children) {}
 
 /**
  * Getter for the `tree` value.
@@ -85,8 +84,7 @@ binary_tree::binary_tree(
       std::make_shared<tree_children>(
         tree_children(
           { std::static_pointer_cast<tree>(left),
-            std::static_pointer_cast<tree>(right) })))
-{}
+            std::static_pointer_cast<tree>(right) }))) {}
 
 /**
  * Return `std::shared_ptr` to left `binary_tree` child.
