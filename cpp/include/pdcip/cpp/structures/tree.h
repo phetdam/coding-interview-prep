@@ -27,18 +27,8 @@ using tree_ptr = std::shared_ptr<tree>;
 using tree_children = std::vector<tree_ptr>;
 using tree_children_ptr = std::shared_ptr<tree_children>;
 
-
-// class tree {
-// public:
-//   tree(double = nan);
-//   virtual ~tree() = 0;
-//   double value() const;
-//   virtual const std::vector<std::shared_ptr<tree>>& children() const = 0;
-//   virtual std::uintmax_t n_children() const = 0;
-
-// protected:
-//   double value_;
-// };
+class binary_tree;
+using binary_tree_ptr = std::shared_ptr<binary_tree>;
 
 /**
  * A general multi-child tree for numeric data.
@@ -66,20 +56,16 @@ class binary_tree : public tree {
 public:
   binary_tree(
     double = nan,
-    const std::shared_ptr<binary_tree>& = nullptr,
-    const std::shared_ptr<binary_tree>& = nullptr
+    const binary_tree_ptr& = nullptr,
+    const binary_tree_ptr& = nullptr
   );
-  binary_tree(
-    double,
-    std::shared_ptr<binary_tree>&&,
-    std::shared_ptr<binary_tree>&&
-  );
-  std::shared_ptr<binary_tree> left() const;
-  std::shared_ptr<binary_tree> right() const;
-  void set_left(const std::shared_ptr<binary_tree>&);
-  void set_left(const binary_tree&);
-  void set_right(const std::shared_ptr<binary_tree>&);
-  void set_right(const binary_tree&);
+  binary_tree(double, binary_tree_ptr&&, binary_tree_ptr&&);
+  binary_tree_ptr left() const;
+  binary_tree_ptr right() const;
+  void set_left(const binary_tree_ptr&);
+  void set_left(binary_tree_ptr&&);
+  void set_right(const binary_tree_ptr&);
+  void set_right(binary_tree_ptr&&);
   void insert(double);
 };
 

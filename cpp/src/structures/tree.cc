@@ -21,7 +21,8 @@ namespace structures {
  * @param children `const tree_children_ptr&` with children
  */
 tree::tree(double value, const tree_children_ptr& children)
-  : value_(value), children_(children) {}
+  : value_(value), children_(children)
+{}
 
 /**
  * Getter for the `tree` value.
@@ -84,21 +85,106 @@ binary_tree::binary_tree(
       std::make_shared<tree_children>(
         tree_children(
           { std::static_pointer_cast<tree>(left),
-            std::static_pointer_cast<tree>(right) }))) {}
+            std::static_pointer_cast<tree>(right)})))
+{}
 
 /**
  * Return `std::shared_ptr` to left `binary_tree` child.
  */
-std::shared_ptr<binary_tree> binary_tree::left() const {
+std::shared_ptr<binary_tree> binary_tree::left() const
+{
   return std::dynamic_pointer_cast<binary_tree>(children()->at(0));
 }
 
 /**
  * Return `std::shared_ptr` to right `binary_tree` child.
  */
-std::shared_ptr<binary_tree> binary_tree::right() const {
+std::shared_ptr<binary_tree> binary_tree::right() const
+{
   return std::dynamic_pointer_cast<binary_tree>(children()->at(1));
 }
+
+/**
+ * Set the left node of the `binary_tree` with `std::shared_ptr` copy.
+ * 
+ * @param new_left `const std::shared_ptr<binary_tree>&` new left node
+ */
+void binary_tree::set_left(const std::shared_ptr<binary_tree>& new_left)
+{
+  set_children(
+    std::make_shared<tree_children>(
+      tree_children(
+        {
+          std::static_pointer_cast<tree>(new_left),
+          std::static_pointer_cast<tree>(children()->at(1))
+        }
+      )
+    )
+  );
+}
+
+/**
+ * Set the left node of the `binary_tree` with `std::shared_ptr` move.
+ * 
+ * @param new_left `std::shared_ptr<binary_tree>&&` new left node
+ */
+void binary_tree::set_left(std::shared_ptr<binary_tree>&& new_left)
+{
+  set_children(
+    std::make_shared<tree_children>(
+      tree_children(
+        {
+          std::static_pointer_cast<tree>(new_left),
+          std::static_pointer_cast<tree>(children()->at(1))
+        }
+      )
+    )
+  );
+}
+
+/**
+ * Set the right node of the `binary_tree` with `std::shared_ptr` copy.
+ * 
+ * @param new_right `const std::shared_ptr<binary_tree>&` new right node
+ */
+void binary_tree::set_right(const std::shared_ptr<binary_tree>& new_right)
+{
+  set_children(
+    std::make_shared<tree_children>(
+      tree_children(
+        {
+          std::static_pointer_cast<tree>(children()->at(0)),
+          std::static_pointer_cast<tree>(new_right)
+        }
+      )
+    )
+  );
+}
+
+/**
+ * Set the right node of the `binary_tree` with `std::shared_ptr` move.
+ * 
+ * @param new_right `std::shared_ptr<binary_tree>&&` new right node
+ */
+void binary_tree::set_right(std::shared_ptr<binary_tree>&& new_right)
+{
+  set_children(
+    std::make_shared<tree_children>(
+      tree_children(
+        {
+          std::static_pointer_cast<tree>(children()->at(0)),
+          std::static_pointer_cast<tree>(new_right)
+        }
+      )
+    )
+  );
+}
+
+/**
+ * Insert a value into the `binary_tree`.
+ * 
+ * If the value already exists in the tree, the tree is left unmodified.
+ */
 
 }  // namespace pdcip::structures
 }  // namespace pdcip
