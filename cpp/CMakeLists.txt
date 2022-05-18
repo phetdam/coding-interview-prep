@@ -8,11 +8,44 @@ project(
     LANGUAGES CXX
 )
 
+# build debug by default; we set -DCMAKE_BUILD_TYPE=Release for release
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# debug and release flags, handle MSVC case specifically
+if(MSVC)
+    add_compile_options(
+        /Wall
+        /wd4265
+        /wd4514
+        /wd4619
+        /wd4668
+        /wd4820
+        /wd5045
+        /wd5204
+    )
+    if(CMAKE_BUILD_TYPE STREQUAL Release)
+        add_compile_options(/O2)
+    else()
+        add_compile_options(/Od /DEBUG)
+    endif()
+else()
+    add_compile_options(-Wall -Wextra)
+    if(CMAKE_BUILD_TYPE STREQUAL Release)
+        add_compile_options(-O3)
+    else()
+        add_compile_options(-O0 -ggdb)
+    endif()
+endif()
+
 # soft dependency on Google Test
-find_package(GTest 1.10.0)
+set(GTEST_MIN_VERSION 1.10.0)
+
+find_package(GTest ${GTEST_MIN_VERSION})
 
 include_directories(include)
 
