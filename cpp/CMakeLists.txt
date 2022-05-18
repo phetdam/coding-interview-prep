@@ -11,7 +11,25 @@ project(
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# soft dependency on Google Test
+find_package(GTest 1.10.0)
+
 include_directories(include)
 
 add_subdirectory(src)
-# add_subdirectory(test)
+
+# only build tests and enable testing if compatible GoogleTest is found.
+# note: on Windows, GTest_VERSION doesn't seem to be locatable, so there is
+# a bit of hack here to ignore the version on Windows
+if(
+    GTest_FOUND AND
+    (WIN32 OR GTest_VERSION VERSION_GREATER_EQUAL ${GTEST_MIN_VERSION})
+)
+    enable_testing()
+    # add_subdirectory(test)
+else()
+    message(
+        STATUS
+        "GoogleTest >=${GTEST_MIN_VERSION} not satisfied. No tests to build"
+    )
+endif()
