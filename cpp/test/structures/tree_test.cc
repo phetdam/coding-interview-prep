@@ -15,6 +15,8 @@ namespace pdcip {
 namespace tests {
 namespace structures {
 
+namespace {
+
 TEST(TreeTests, DummyTest)
 {
   pdcip::structures::tree_children_ptr
@@ -23,6 +25,8 @@ TEST(TreeTests, DummyTest)
   );
   ASSERT_EQ(children->at(0), children->at(0));
 }
+
+}  // namespace
 
 }  // namespace pdcip::tests::structures
 }  // namespace pdcip::tests
