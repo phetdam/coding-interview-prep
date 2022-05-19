@@ -25,6 +25,16 @@ tree::tree(double value, const tree_children_ptr& children)
 {}
 
 /**
+ * `tree` move constructor.
+ * 
+ * @param value `double` value of `tree` node
+ * @param children `tree_children_ptr&&` with children
+ */
+tree::tree(double value, tree_children_ptr&& children)
+  : value_(value), children_(children)
+{}
+
+/**
  * Getter for the `tree` value.
  */
 double tree::value() const { return value_; }
