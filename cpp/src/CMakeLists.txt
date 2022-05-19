@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-# defines globs for different directories
-file(GLOB_RECURSE STRUCTURES_CC structures/*.cc)
+# build object targets to link into shared library
+add_subdirectory(structures)
 
-add_library(pdcip_cpp SHARED ${STRUCTURES_CC})
+add_library(pdcip_cpp SHARED $<TARGET_OBJECTS:pdcip_cpp_structures>)

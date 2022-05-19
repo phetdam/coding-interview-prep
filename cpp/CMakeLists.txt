@@ -15,6 +15,8 @@ endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# in lieu of specifying -fPIC manually to g++
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # debug and release flags, handle MSVC case specifically
 if(MSVC)
