@@ -38,8 +38,8 @@ C++ ABI compatibility
 The C++ code in this repository contains classes that have STL members and
 [may] also have functions/methods that return STL members. On Windows
 especially, exporting STL objects to/from DLLs gives a lot of headaches due to
-issues of ABI incompatibility, which are often specific to MSVC. There is a
-`detailed discussion on StackOverflow`__ about this.
+issues of ABI incompatibility, which are often specific to MSVC. See the
+`detailed discussion on StackOverflow`__.
 
 .. __: https://stackoverflow.com/a/22797419/14227825
 
@@ -47,7 +47,9 @@ Fortunately, since this repo is only distributed as source code, it is highly
 unlikely that ABI issues will arise. If the user compiles this repo's C++ code
 and links against it with their own code, for whatever reason, it is likely
 the same compiler toolchain is being used, although care may have to be taken
-when using MSVC to ensure that the proper Debug/Release DLL is linked against.
+when using MSVC to ensure that the proper debug/release DLL is linked against
+depending on whether the user's code is for debug/release.
+
 
 Python
 ~~~~~~
