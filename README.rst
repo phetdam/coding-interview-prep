@@ -25,4 +25,16 @@ TBD
 Building from source
 --------------------
 
-TBD
+C/C++
+~~~~~
+
+.. _CMake: https://cmake.org/cmake/help/latest/
+
+TBD. In short, build with CMake_ 3.16 or later.
+
+Python
+~~~~~~
+
+.. _setuptools: https://setuptools.pypa.io/en/latest/index.html
+
+TBD. Pure Python source only requires Python 3.6 or later and setuptools_.
