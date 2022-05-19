@@ -61,7 +61,7 @@ if(
     (WIN32 OR GTest_VERSION VERSION_GREATER_EQUAL ${GTEST_MIN_VERSION})
 )
     enable_testing()
-    # add_subdirectory(test)
+    add_subdirectory(test)
 else()
     message(
         STATUS
