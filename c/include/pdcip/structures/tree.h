@@ -8,6 +8,7 @@
 #ifndef PDCIP_STRUCTURES_TREE_H_
 #define PDCIP_STRUCTURES_TREE_H_
 
+#include <stdbool.h>
 #include <stddef.h>
 
 /**
@@ -19,13 +20,31 @@ typedef struct gen_tree_ {
   struct gen_tree_ **children;
 } gen_tree;
 
-gen_tree *gen_tree_malloc(double, size_t, gen_tree **);
+gen_tree *
+gen_tree_malloc(double, size_t, gen_tree **);
 
-void gen_tree_free(gen_tree *);
+void
+gen_tree_free_(gen_tree *, bool);
+
+/**
+ * Free a `gen_tree` instance on the heap, but not its children.
+ *
+ * @param t `gen_tree *` pointer to `gen_tree` to free
+ */
+#define gen_tree_free(t) gen_tree_free_(t, false)
+
+/**
+ * Free a `gen_tree` instance on the heap and free its direct children.
+ *
+ * Use with caution if the children are dereferenced somewhere else!
+ *
+ * @param t `gen_tree *` pointer to `gen_tree` to free
+ */
+#define gen_tree_free_deep(t) gen_tree_free_(t, true)
 
 /**
  * Allocate a `gen_tree` instance on the heap with zero children.
- * 
+ *
  * @param v `double` value to set the `gen_tree` node with
  */
 #define gen_tree_malloc_default(v) gen_tree_malloc(v, 0, NULL)
@@ -39,10 +58,15 @@ typedef struct binary_tree_ {
   struct binary_tree_ *right;
 } binary_tree;
 
-void gen_tree_set_children(gen_tree *, size_t, gen_tree **);
+/*
+void
+gen_tree_set_children(gen_tree *, size_t, gen_tree **);
 
-gen_tree **gen_tree_make_children(size_t, double *);
+gen_tree **
+gen_tree_make_children(size_t, double *);
 
-binary_tree *binary_tree_insert(binary_tree *, double);
+binary_tree *
+binary_tree_insert(binary_tree *, double);
+*/
 
 #endif  /* PDCIP_STRUCTURES_TREE_H_ */
