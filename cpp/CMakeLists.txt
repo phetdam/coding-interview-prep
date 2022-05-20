@@ -49,7 +49,10 @@ endif()
 # soft dependency on Google Test
 set(GTEST_MIN_VERSION 1.10.0)
 
-find_package(GTest ${GTEST_MIN_VERSION})
+find_package(
+    GTest ${GTEST_MIN_VERSION}
+    PATHS ${CMAKE_CURRENT_SOURCE_DIR}/external/googletest
+)
 
 include_directories(include)
 
