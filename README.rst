@@ -30,7 +30,21 @@ C/C++
 
 .. _CMake: https://cmake.org/cmake/help/latest/
 
+.. _Google Test: https://google.github.io/googletest/
+
+.. _Ninja: https://ninja-build.org/
+
 TBD. In short, build with CMake_ 3.16 or later.
+
+Currently, the C++ CMake_ build on Windows does not work propertlly with a
+standalone build of `Google Test`_, as the `Google Test`_ libraries built
+with Ninja_ as the CMake_ generator end up using the static debug C runtime,
+whereas this project links against the shared debug C runtime. Unlike what
+`the README.md`__ states for `Google Test`_, neither passing
+``-Dgtest_force_shared_crt=1`` to ``cmake`` nor using
+``set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)`` has any effect.
+
+.. __: https://github.com/google/googletest/blob/main/googletest/README.md
 
 C++ ABI compatibility
 ^^^^^^^^^^^^^^^^^^^^^
