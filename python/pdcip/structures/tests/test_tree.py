@@ -8,7 +8,8 @@ from copy import deepcopy
 import unittest
 
 # pylint: disable=missing-function-docstring
-from pdcip.structures.tree import BinaryTree, SearchStrategy, Tree
+from pdcip.algorithms.search.core import SearchStrategy
+from pdcip.structures.tree import BinaryTree, Tree
 
 
 class TreeDunderTestCase(unittest.TestCase):
