@@ -49,6 +49,7 @@ endif()
 # soft dependency on Google Test
 set(GTEST_MIN_VERSION 1.10.0)
 
+# use GTEST_ROOT env variable if you need to manually specify install path
 find_package(GTest ${GTEST_MIN_VERSION})
 
 include_directories(include)

@@ -37,7 +37,24 @@ else()
     endif()
 endif()
 
+# soft dependency on the Check C unit testing framework
+set(CHECK_MIN_VERSION 0.15)
+
+# Check defines its own CMake targets and package, so we can use find_package.
+# use CHECK_ROOT env variable if you need to manually specify install path
+find_package(Check ${CHECK_MIN_VERSION} PATHS $ENV{CHECK_ROOT})
+
 include_directories(include)
 
 add_subdirectory(src)
-# add_subdirectory(test)
+
+# only build tests and enable testing if compatible Check library is found
+if(Check_FOUND AND Check_VERSION VERSION_GREATER_EQUAL ${CHECK_MIN_VERSION})
+    enable_testing()
+    add_subdirectory(test)
+else()
+    message(
+        STATUS
+        "Check >=${CHECK_MIN_VERSION} not satisfied. No tests to build"
+    )
+endif()
