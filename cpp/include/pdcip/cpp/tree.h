@@ -5,8 +5,8 @@
  * @copyright MIT License
  */
 
-#ifndef PDCIP_CPP_STRUCTURES_TREE_H_
-#define PDCIP_CPP_STRUCTURES_TREE_H_
+#ifndef PDCIP_CPP_TREE_H_
+#define PDCIP_CPP_TREE_H_
 
 #include <cstdint>
 #include <limits>
@@ -96,4 +96,4 @@ tree_children_ptr_t<tree_t> make_tree_children(std::vector<double> values)
 
 }  // namespace pdcip
 
-#endif  // PDCIP_CPP_STRUCTURES_TREE_H_
+#endif  // PDCIP_CPP_TREE_H_
