@@ -7,6 +7,7 @@
 
 #include "pdcip/cpp/tree.h"
 
+#include <cmath>
 #include <memory>
 #include <vector>
 #include <utility>
@@ -190,7 +191,31 @@ void binary_tree::set_right(std::shared_ptr<binary_tree>&& new_right)
 /**
  * Insert a value into the `binary_tree`.
  *
- * If the value already exists in the tree, the tree is left unmodified.
+ * If the value already exists in the tree, the tree is left unmodified. If the
+ * instance itself has `NAN` as a value, then its value is updated to `value`.
+ *
+ * @param value `double` to insert into the tree
  */
+void binary_tree::insert(double value)
+{
+  if (std::isnan(this->value())) {
+    set_value(value);
+    return;
+  }
+  if (value == this->value()) {
+    return;
+  }
+  if (value < this->value()) {
+    if (!left()) {
+      set_left(std::make_shared<binary_tree>());
+    }
+    left()->set_value(value);
+    return;
+  }
+  if (!right()) {
+    set_right(std::make_shared<binary_tree>());
+  }
+  right()->set_value(value);
+}
 
 }  // namespace pdcip

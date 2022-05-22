@@ -8,18 +8,13 @@
 #ifndef PDCIP_CPP_TREE_H_
 #define PDCIP_CPP_TREE_H_
 
-#include <cstdint>
+#include <cmath>
+#include <cstddef>
 #include <limits>
 #include <memory>
 #include <vector>
 
 namespace pdcip {
-
-namespace {
-
-const double nan = std::numeric_limits<double>::quiet_NaN();
-
-}  // namespace
 
 template <class tree_t>
 using tree_ptr_t = std::shared_ptr<tree_t>;
@@ -41,7 +36,7 @@ using binary_tree_ptr = tree_ptr_t<binary_tree>;
  */
 class tree {
 public:
-  tree(double = nan, const tree_children_ptr& = nullptr);
+  tree(double = NAN, const tree_children_ptr& = nullptr);
   tree(double, tree_children_ptr&&);
   double value() const;
   const tree_children_ptr& children() const;
@@ -62,7 +57,7 @@ private:
 class binary_tree: public tree {
 public:
   binary_tree(
-    double = nan,
+    double = NAN,
     const binary_tree_ptr& = nullptr,
     const binary_tree_ptr& = nullptr
   );
