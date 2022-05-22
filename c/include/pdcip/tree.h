@@ -5,8 +5,8 @@
  * @copyright MIT License
  */
 
-#ifndef PDCIP_STRUCTURES_TREE_H_
-#define PDCIP_STRUCTURES_TREE_H_
+#ifndef PDCIP_TREE_H_
+#define PDCIP_TREE_H_
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -90,4 +90,4 @@ binary_tree *
 binary_tree_insert(binary_tree *, double);
 */
 
-#endif  /* PDCIP_STRUCTURES_TREE_H_ */
+#endif  /* PDCIP_TREE_H_ */

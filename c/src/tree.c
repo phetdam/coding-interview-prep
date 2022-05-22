@@ -5,7 +5,7 @@
  * @copyright MIT License
  */
 
-#include "pdcip/structures/tree.h"
+#include "pdcip/tree.h"
 
 #include <assert.h>
 #include <math.h>
