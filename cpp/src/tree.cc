@@ -209,13 +209,36 @@ void binary_tree::insert(double value)
     if (!left()) {
       set_left(std::make_shared<binary_tree>());
     }
-    left()->set_value(value);
+    left()->insert(value);
     return;
   }
   if (!right()) {
     set_right(std::make_shared<binary_tree>());
   }
-  right()->set_value(value);
+  right()->insert(value);
+}
+
+/**
+ * Return values in the `binary_tree` in ascending order.
+ */
+std::vector<double> binary_tree::sorted_values()
+{
+  if (!children()) {
+    return std::vector<double>();
+  }
+  std::vector<double> left_values(
+    left() ? left()->sorted_values() : std::vector<double>()
+  );
+  std::vector<double> right_values(
+    right() ? right()->sorted_values() : std::vector<double>()
+  );
+  if (!std::isnan(value())) {
+    left_values.push_back(value());
+  }
+  left_values.insert(
+    left_values.end(), right_values.begin(), right_values.end()
+  );
+  return left_values;
 }
 
 }  // namespace pdcip

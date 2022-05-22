@@ -69,6 +69,7 @@ public:
   void set_right(const binary_tree_ptr&);
   void set_right(binary_tree_ptr&&);
   void insert(double);
+  std::vector<double> sorted_values();
 };
 
 /**
