@@ -5,7 +5,6 @@ link_libraries(GTest::Main)
 
 include(GoogleTest)
 
-# build test runners for each subdirectory object linked in main library. each
-# of the test runners will be discovered using gtest_discover_tests
-# add_subdirectory(algorithms)
-add_subdirectory(structures)
+add_executable(pdcip_cpp_test tree_test.cc)
+target_link_libraries(pdcip_cpp_test pdcip_cpp)
+gtest_discover_tests(pdcip_cpp_test)

@@ -1,5 +1,0 @@
-cmake_minimum_required(VERSION 3.16)
-
-add_executable(pdcip_cpp_structures_test tree_test.cc)
-target_link_libraries(pdcip_cpp_structures_test pdcip_cpp)
-gtest_discover_tests(pdcip_cpp_structures_test)
