@@ -1,9 +1,16 @@
-"""Core code used by the search subpackage.
+"""Enumerated types used throughout the project.
 
 .. codeauthor:: Derek Huang <djh458@stern.nyu.edu>
 """
 
 from enum import Enum
+
+
+class AlgoLoopType(Enum):
+    """Enum type indicating if algorithm runs recursively or iteratively."""
+
+    RECURSIVE = 0
+    ITERATIVE = 1
 
 
 class SearchStrategy(Enum):

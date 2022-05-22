@@ -8,8 +8,8 @@ from copy import deepcopy
 import unittest
 
 # pylint: disable=missing-function-docstring
-from pdcip.algorithms.search.core import SearchStrategy
-from pdcip.structures.tree import BinaryTree, Tree
+from pdcip.enums import AlgoLoopType, SearchStrategy
+from pdcip.tree import BinaryTree, Tree
 
 
 class TreeDunderTestCase(unittest.TestCase):
@@ -90,6 +90,26 @@ class BinaryTreeTestCase(BinaryTreeTestCaseBase):
             9.,
             self.tree.search(10, strategy=SearchStrategy.FROM_BELOW).value
         )
+
+
+class BinaryTreeSearchTestCase(BinaryTreeTestCaseBase):
+    """Validate that tree search methods work correctly for binary trees."""
+
+    # the expected values we want to get
+    dfs_values = [1.2, 2.2, -3, 8.9, 6.7, 5.6, 9., 4.]
+    bfs_values = [4., -3., 9., 2.2, 5.6, 1.2, 6.7, 8.9]
+
+    def test_dfs_recursive(self):
+        self.assertEqual(self.dfs_values, Tree.dfs(self.tree))
+
+    def test_dfs_iterative(self):
+        self.assertEqual(
+            self.dfs_values,
+            Tree.dfs(self.tree, method=AlgoLoopType.ITERATIVE)
+        )
+
+    def test_bfs_iterative(self):
+        self.assertEqual(self.bfs_values, Tree.bfs(self.tree))
 
 
 if __name__ == "__main__":
