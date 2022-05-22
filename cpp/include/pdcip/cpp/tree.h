@@ -49,7 +49,7 @@ public:
   void set_value(double);
   virtual void set_children(const tree_children_ptr&);
   virtual void set_children(tree_children_ptr&&);
-  static tree_children_ptr make_children(std::vector<double>);
+  static tree_children_ptr make_children(const std::vector<double>&);
 
 private:
   double value_;
@@ -82,7 +82,8 @@ public:
  * @param values `std::vector<double>` of values to supply the children
  */
 template <class tree_t = tree>
-tree_children_ptr_t<tree_t> make_tree_children(std::vector<double> values)
+tree_children_ptr_t<tree_t> make_tree_children(
+  const std::vector<double>& values)
 {
   tree_children_ptr_t<tree_t>
   children = std::make_shared<tree_children_t<tree_t>>(

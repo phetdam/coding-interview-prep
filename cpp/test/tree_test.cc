@@ -16,11 +16,16 @@ namespace tests {
 
 namespace {
 
-TEST(TreeTests, DummyTest)
+/**
+ * Test that created children have the right values and have no children.
+ */
+TEST(TreeTests, MakeChildrenTest)
 {
-  pdcip::tree_children_ptr
-  children = pdcip::make_tree_children<>({1.0, 5.6, 9.8});
-  ASSERT_EQ(children->at(0), children->at(0));
+  std::vector<double> values({1.0, 5.6, 9.8});
+  pdcip::tree_children_ptr children = pdcip::tree::make_children(values);
+  for (std::size_t i = 0; i < children->size(); i++) {
+    EXPECT_DOUBLE_EQ(values[i], children->at(i)->value());
+  }
 }
 
 }  // namespace

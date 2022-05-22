@@ -79,6 +79,16 @@ void tree::set_children(tree_children_ptr&& children)
 }
 
 /**
+ * Convenience method to generate `tree` children.
+ *
+ * @param values `std::vector<double>` of values to supply the children
+ */
+tree_children_ptr tree::make_children(const std::vector<double>& values)
+{
+  return make_tree_children<tree>(values);
+}
+
+/**
  * `binary_tree` constructor.
  *
  * @param value `double` value of `binary_tree` node
