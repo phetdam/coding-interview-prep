@@ -38,11 +38,11 @@ TEST(BinaryTreeTest, SortedValuesTest)
   std::vector<double> values({4.5, 1.3, 6.5, 9});
   std::vector<double> values_sorted = values;
   std::sort(values_sorted.begin(), values_sorted.end());
-  pdcip::binary_tree btree;
+  pdcip::binary_tree tree;
   for (auto x : values) {
-    btree.insert(x);
+    tree.insert(x);
   }
-  EXPECT_EQ(values_sorted, btree.sorted_values());
+  EXPECT_EQ(values_sorted, tree.sorted_values());
 }
 
 }  // namespace
