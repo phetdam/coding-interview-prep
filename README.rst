@@ -42,7 +42,7 @@ with Ninja_ as the CMake_ generator end up using the static debug C runtime,
 whereas this project links against the shared debug C runtime. Unlike what
 `the README.md`__ states for `Google Test`_, neither passing
 ``-Dgtest_force_shared_crt=1`` to ``cmake`` nor using
-``set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)`` has any effect.
+``set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)`` works.
 
 .. __: https://github.com/google/googletest/blob/main/googletest/README.md
 
