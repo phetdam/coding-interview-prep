@@ -4,7 +4,7 @@
 :: Note: any -D<var>=<value> arguments must be double-quoted!
 
 @echo off
-setlocal
+setlocal EnableDelayedExpansion
 
 :: arguments passed to cmake command directly
 set CMAKE_ARGS=
