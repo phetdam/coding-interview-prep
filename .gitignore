@@ -7,3 +7,5 @@
 # ignore build directories
 **/build
 **/build_windows
+# ignore CMake testing directories
+**/Testing
