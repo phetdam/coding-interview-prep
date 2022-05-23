@@ -40,7 +40,7 @@ make_tree_test_suite(void)
 }
 
 int
-main()
+main(void)
 {
   int n_failed;
   Suite *tree_suite = make_tree_test_suite();
