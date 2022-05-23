@@ -54,15 +54,17 @@ collect_args() {
 # Main function for the build script.
 #
 main() {
+    # display help if requested
+    if [ $1 == -h ] || [ $1 == --help ]
+    then
+        # need double quote to preserve the spacing
+        echo "$USAGE"
+        return 0
+    fi
     # save first arg as directory we want to run cmake on and drop args. use
     # absolute path since we will be calling this script from other dirs.
     CMAKE_SOURCE_DIR=$(realpath $1)
     shift
-    if [ $CMAKE_SOURCE_DIR == -h ] || [ $CMAKE_SOURCE_DIR == --help ]
-    then
-        echo $USAGE
-        return 0
-    fi
     # separate incoming args into those for cmake, cmake --build
     collect_args "$@"
     cmake -S $CMAKE_SOURCE_DIR -B $CMAKE_SOURCE_DIR/build ${CMAKE_ARGS[@]}
