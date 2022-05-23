@@ -36,7 +36,7 @@ C/C++
 
 TBD. In short, build with CMake_ 3.16 or later.
 
-Currently, the C++ CMake_ build on Windows does not work propertlly with a
+Currently, the C++ CMake_ build on Windows does not work properly with a
 standalone build of `Google Test`_, as the `Google Test`_ libraries built
 with Ninja_ as the CMake_ generator end up using the static debug C runtime,
 whereas this project links against the shared debug C runtime. Unlike what
