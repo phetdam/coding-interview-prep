@@ -8,6 +8,7 @@
 #ifndef PDCIP_TREE_H_
 #define PDCIP_TREE_H_
 
+#include <math.h>
 #include <stdbool.h>
 #include <stddef.h>
 
@@ -30,6 +31,13 @@ gen_tree_malloc(double, size_t, gen_tree **);
  * @returns `gen_tree *`
  */
 #define gen_tree_malloc_default(v) gen_tree_malloc(v, 0, NULL)
+
+/**
+ * Allocate a `gen_tree` instance on the heap with no children and `NAN` value.
+ *
+ * @returns `gen_tree *`
+ */
+#define gen_tree_malloc_empty() gen_tree_malloc(NAN, 0, NULL);
 
 /**
  * Free a `gen_tree` instance on the heap, but not its children.
@@ -74,7 +82,7 @@ void
 gen_tree_free_deep(gen_tree *);
 
 gen_tree **
-gen_tree_make_children(size_t, double *);
+gen_tree_make_children(size_t, const double *);
 
 /**
  * A binary tree for numeric data.
