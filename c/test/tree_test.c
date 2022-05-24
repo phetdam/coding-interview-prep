@@ -11,32 +11,88 @@
 
 #include "pdcip/tree.h"
 
+// commonly reused gen_tree root, number of and values for direct children
+static gen_tree *gen_root;
+static const size_t n_direct_children = 5;
+static const double direct_values[] = {4.5, 1.7, 8.9, 2, 6.5};
+
+// macro to make direct children
+#define GEN_TREE_MAKE_DIRECT_CHILDREN() \
+  gen_tree_make_children(n_direct_children, direct_values);
+
 /**
- * Test that `gen_tree_malloc_default` works as expected.
+ * Setup function for `root` fixture.
+ *
+ * Also checks that the `gen_root` instance is initialized correctly.
  */
-START_TEST(test_gen_tree_malloc_default)
+static void
+gen_root_setup(void)
 {
-  gen_tree *tree = gen_tree_malloc_default(1.2);
-  ck_assert_double_eq(1.2, tree->value);
-  ck_assert_int_eq(0, tree->n_children);
-  ck_assert_ptr_null(tree->children);
-  gen_tree_free(tree);
+  gen_root = gen_tree_malloc_default(1.7);
+  ck_assert_double_eq(1.7, gen_root->value);
+  ck_assert_int_eq(0, gen_root->n_children);
+  ck_assert_ptr_null(gen_root->children);
+}
+
+/**
+ * Teardown function for `root` fixture.
+ */
+static void
+gen_root_teardown(void)
+{
+  gen_tree_free(gen_root);
+}
+
+/**
+ * Test that making and freeing direct tree children work as intended.
+ */
+START_TEST(test_gen_tree_make_free_children)
+{
+  gen_tree **children = GEN_TREE_MAKE_DIRECT_CHILDREN();
+  for (unsigned int i = 0; i < n_direct_children; i++) {
+    ck_assert_double_eq(direct_values[i], children[i]->value);
+    ck_assert_int_eq(0, children[i]->n_children);
+    ck_assert_ptr_null(children[i]->children);
+  }
+  gen_tree_set_children(gen_root, n_direct_children, children);
+  gen_tree_free_children(gen_root);
+  ck_assert_int_eq(0, gen_root->n_children);
+  ck_assert_ptr_null(gen_root->children);
+}
+END_TEST
+
+/**
+ * Test that making and freeing an entire subtree works as intended.
+ */
+START_TEST(test_gen_tree_make_free_children_deep)
+{
+  gen_tree **first_children = GEN_TREE_MAKE_DIRECT_CHILDREN();
+  gen_tree **second_children = GEN_TREE_MAKE_DIRECT_CHILDREN();
+  gen_tree_set_children(gen_root, n_direct_children, first_children);
+  gen_tree_set_children(first_children[1], n_direct_children, second_children);
+  gen_tree_free_children_deep(gen_root);
+  ck_assert_int_eq(0, gen_root->n_children);
+  ck_assert_ptr_null(gen_root->children);
 }
 END_TEST
 
 /**
  * Return a Check `Suite *` for the tree tests.
  *
- * @note Tests are `static`, but this function is not.
+ * @note Tests are `static`, but this function is not. Tests are run in order.
  */
 Suite *
 make_tree_test_suite(void)
 {
-  Suite *tts = suite_create("tree");
+  Suite *ts_tree = suite_create("tree");
   TCase *tc_memory = tcase_create("memory");
-  tcase_add_test(tc_memory, test_gen_tree_malloc_default);
-  suite_add_tcase(tts, tc_memory);
-  return tts;
+  // add checked fixtures
+  tcase_add_checked_fixture(tc_memory, gen_root_setup, gen_root_teardown);
+  // add test cases
+  tcase_add_test(tc_memory, test_gen_tree_make_free_children);
+  tcase_add_test(tc_memory, test_gen_tree_make_free_children_deep);
+  suite_add_tcase(ts_tree, tc_memory);
+  return ts_tree;
 }
 
 int

@@ -85,7 +85,7 @@ void
 gen_tree_free_deep(gen_tree *tree)
 {
   gen_tree_free_children(tree);
-  free(tree);
+  gen_tree_free(tree);
 }
 
 /**
@@ -94,11 +94,11 @@ gen_tree_free_deep(gen_tree *tree)
  * If `n` is 0, then `values` is ignored and `NULL` is returned.
  *
  * @param n number of `gen_tree *` children in array
- * @param values `double *` of values to populate children with
+ * @param values `const double *` of values to populate children with
  * @returns `gen_tree **` to `n` `gen_tree *`
  */
 gen_tree **
-gen_tree_make_children(size_t n, double *values)
+gen_tree_make_children(size_t n, const double *values)
 {
   // hack to add a message to the assert
   assert(values && "values must not be NULL");
