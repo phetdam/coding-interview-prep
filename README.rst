@@ -36,15 +36,13 @@ C/C++
 
 TBD. In short, build with CMake_ 3.16 or later.
 
-Currently, the C++ CMake_ build on Windows does not work properly with a
-standalone build of `Google Test`_, as the `Google Test`_ libraries built
-with Ninja_ as the CMake_ generator end up using the static debug C runtime,
-whereas this project links against the shared debug C runtime. Unlike what
-`the README.md`__ states for `Google Test`_, neither passing
-``-Dgtest_force_shared_crt=1`` to ``cmake`` nor using
-``set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)`` works.
-
-.. __: https://github.com/google/googletest/blob/main/googletest/README.md
+On Windows, in order to correctly build the `Google Test`_ test runners, ensure
+that when building `Google Test`_ with CMake_, that
+``-Dgtest_force_shared_crt=1`` is passed to the ``cmake`` build configuration
+command. Doing so forces `Google Test`_ to link against the shared C runtime
+instead of linking against the static C runtime as it does by default.
+Furthermore, ensure that the correct debug or release build is being linked
+against.
 
 C++ ABI compatibility
 ^^^^^^^^^^^^^^^^^^^^^
