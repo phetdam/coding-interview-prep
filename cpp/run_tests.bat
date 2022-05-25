@@ -80,6 +80,9 @@ exit /b 1
 ::::
 :: Main function executing the test runner.
 ::
+:: Arguments:
+::  Array of command-line arguments
+::
 :Main
 :: if we can't find Google Test static lib with main, just exit
 call :FindGTest

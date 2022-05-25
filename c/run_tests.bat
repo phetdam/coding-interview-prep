@@ -40,6 +40,9 @@ exit /b 0
 ::::
 :: Main function executing the test runner.
 ::
+:: Arguments:
+::  Array of command-line arguments
+::
 :Main
 :: if we can't find checkDynamic.dll, just exit
 call :FindCheck
