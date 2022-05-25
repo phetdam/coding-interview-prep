@@ -15,20 +15,39 @@ call :Main %*
 exit /b %ERRORLEVEL%
 
 ::::
+:: Find checkShared.dll installation by checking CHECK_ROOT and PATH.
+::
+:: If CHECK_ROOT is defined, %CHECK_ROOT%\bin is added to PATH.
+::
+:FindCheck
+:: if CHECK_ROOT not defined, don't update PATH
+if not defined CHECK_ROOT (
+    echo Note: CHECK_ROOT not set
+) else (
+    set PATH=%CHECK_ROOT%\bin;!PATH!
+)
+:: try to find checkDynamic.dll using path, error if we can't find it
+where checkDynamic.dll >nul 2>&1
+if %ERRORLEVEL% gtr 0 (
+    echo Error: Could not find checkDynamic.dll, please update CHECK_ROOT
+    exit /b 1
+)
+:: set location of checkDynamic.dll and echo success
+for /f %%i in ('where checkDynamic.dll') do set CHECK_SHARED_LOCATION=%%i
+echo Found Check DLL %CHECK_SHARED_LOCATION%
+exit /b 0
+
+::::
 :: Main function executing the test runner.
 ::
 :Main
-:: if CHECK_ROOT not defined and we can't find checkDynamic DLL, warn
-if not defined CHECK_ROOT (
-    echo note: CHECK_ROOT not set
-    where checkDynamic.dll >nul 2>&1
-    if !ERRORLEVEL! gtr 0 (
-        echo error: could not find checkDynamic.dll, please set CHECK_ROOT
-    )
+:: if we can't find checkDynamic.dll, just exit
+call :FindCheck
+if %ERRORLEVEL% gtr 0 (
     exit /b 1
 )
-:: need to put pdcip_c, checkDynamic DLL on path, else Windows can't find it
-set PATH=%BUILD_WINDOWS_DIR%\src;%CHECK_ROOT%\bin;%PATH%
+:: need to put pdcip_c DLL on path too for test runner
+set PATH=%BUILD_WINDOWS_DIR%\src;%PATH%
 ctest --test-dir %BUILD_WINDOWS_DIR% %*
 exit /b 0
 

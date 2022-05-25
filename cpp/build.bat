@@ -10,6 +10,8 @@ setlocal EnableDelayedExpansion
 set CMAKE_ARGS=
 :: arguments passed to cmake --build command directly
 set CMAKE_BUILD_ARGS=
+:: Windows build directory
+set BUILD_WINDOWS_DIR=%~dp0\build_windows
 
 call :Main %*
 exit /b %ERRORLEVEL%
@@ -24,8 +26,10 @@ exit /b %ERRORLEVEL%
 :: separate incoming args into those for cmake, cmake --build. note that the
 :: only way to preserve literal "=" is to just accept all the args.
 call :CollectArgs %*
-cmake -G Ninja -S . -B build_windows %CMAKE_ARGS%
-cmake --build build_windows %CMAKE_BUILD_ARGS%
+cmake -G Ninja -S . -B %BUILD_WINDOWS_DIR% %CMAKE_ARGS%
+:: update PATH else test runners will fail to link against pdcip_cpp.dll
+set PATH=%BUILD_WINDOWS_DIR%\src;%PATH%
+cmake --build %BUILD_WINDOWS_DIR% %CMAKE_BUILD_ARGS%
 exit /b 0
 
 ::::
