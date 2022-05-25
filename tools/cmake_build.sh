@@ -54,6 +54,12 @@ collect_args() {
 # Main function for the build script.
 #
 main() {
+    # must provide a source directory
+    if [ $# -lt 1 ]
+    then
+        echo "error: must provide src_dir. try $0 --help for usage"
+        return 1
+    fi
     # display help if requested
     if [ $1 == -h ] || [ $1 == --help ]
     then
