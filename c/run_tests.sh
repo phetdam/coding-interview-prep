@@ -5,6 +5,9 @@
 ##
 # Main function.
 #
+# Arguments:
+#   List of command-line arguments
+#
 main() {
     ctest --test-dir build "$@"
 }
