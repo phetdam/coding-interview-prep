@@ -60,6 +60,7 @@ gen_tree_set_children(gen_tree *tree, size_t n_children, gen_tree **children)
 void
 gen_tree_free_children_(gen_tree *tree, bool deep)
 {
+  assert(tree);
   if (tree->children) {
     for (size_t i = 0; i < tree->n_children; i++) {
       if (deep) {
@@ -110,4 +111,58 @@ gen_tree_make_children(size_t n, const double *values)
     children[i] = gen_tree_malloc_default(values[i]);
   }
   return children;
+}
+
+/**
+ * Allocate a `binary_tree` instance on the heap.
+ *
+ * @param value `double` value to give the `binary_tree`, can be `NAN` if root
+ * @param left `const binary_tree *` to set the left child as, can be `NULL`
+ * @param right `const binary_tree *` to set the right child as, can be `NULL`
+ */
+binary_tree *
+binary_tree_malloc(
+  double value,
+  const binary_tree *left,
+  const binary_tree *right)
+{
+  binary_tree *tree = (binary_tree *) malloc(sizeof(binary_tree));
+  tree->value = value;
+  // forcible cast to suppress -Wdiscard-qualifiers. left, right are untouched
+  tree->left = (binary_tree*) left;
+  tree->right = (binary_tree *) right;
+  return tree;
+}
+
+/**
+ * Insert a value into the `binary_tree`.
+ *
+ * If the root has `NAN` as a value, the root's value is set to `value`, while
+ * if `value` is equal to the root's value, then nothing is done.
+ *
+ * @param tree `binary_tree *` root of the binary tree
+ * @param value `double` value to insert into the binary tree, cannot be `NAN`
+ * @returns `binary_tree *` pointer to node `value` was inserted in
+ */
+binary_tree *
+binary_tree_insert(binary_tree *tree, double value)
+{
+  assert(tree && !isnan(value));
+  if (isnan(tree->value)) {
+    tree->value = value;
+    return tree;
+  }
+  if (value == tree->value) {
+    return tree;
+  }
+  if (value < tree->value) {
+    if (!tree->left) {
+      tree->left = binary_tree_malloc_empty();
+    }
+    return binary_tree_insert(tree->left, value);
+  }
+  if (!tree->right) {
+    tree->right = binary_tree_malloc_empty();
+  }
+  return binary_tree_insert(tree->right, value);
 }
