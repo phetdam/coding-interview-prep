@@ -21,7 +21,7 @@ static const double direct_values[] = {4.5, 1.7, 8.9, 2, 6.5};
   gen_tree_make_children(n_direct_children, direct_values);
 
 /**
- * Setup function for `root` fixture.
+ * Setup function for `gen_root` fixture.
  *
  * Also checks that the `gen_root` instance is initialized correctly.
  */
@@ -35,7 +35,7 @@ gen_root_setup(void)
 }
 
 /**
- * Teardown function for `root` fixture.
+ * Teardown function for `gen_root` fixture.
  */
 static void
 gen_root_teardown(void)
