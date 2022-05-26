@@ -134,7 +134,7 @@ void binary_tree::set_left(const std::shared_ptr<binary_tree>& new_left)
   set_children(
     std::make_shared<tree_children>(
       tree_children(
-        {std::static_pointer_cast<tree>(new_left), children()->at(1)}
+        {std::static_pointer_cast<tree>(new_left), std::move(children()->at(1))}
       )
     )
   );
@@ -150,7 +150,7 @@ void binary_tree::set_left(std::shared_ptr<binary_tree>&& new_left)
   set_children(
     std::make_shared<tree_children>(
       tree_children(
-        {std::static_pointer_cast<tree>(new_left), children()->at(1)}
+        {std::static_pointer_cast<tree>(new_left), std::move(children()->at(1))}
       )
     )
   );
@@ -166,7 +166,10 @@ void binary_tree::set_right(const std::shared_ptr<binary_tree>& new_right)
   set_children(
     std::make_shared<tree_children>(
       tree_children(
-        {children()->at(0), std::static_pointer_cast<tree>(new_right)}
+        {
+          std::move(children()->at(0)),
+          std::static_pointer_cast<tree>(new_right)
+        }
       )
     )
   );
@@ -182,7 +185,10 @@ void binary_tree::set_right(std::shared_ptr<binary_tree>&& new_right)
   set_children(
     std::make_shared<tree_children>(
       tree_children(
-        {children()->at(0), std::static_pointer_cast<tree>(new_right)}
+        {
+          std::move(children()->at(0)),
+          std::static_pointer_cast<tree>(new_right)
+        }
       )
     )
   );
@@ -195,27 +201,27 @@ void binary_tree::set_right(std::shared_ptr<binary_tree>&& new_right)
  * instance itself has `NAN` as a value, then its value is updated to `value`.
  *
  * @param value `double` to insert into the tree
+ * @returns `binary_tree_ptr` to the node `value` was inserted in.
  */
-void binary_tree::insert(double value)
+const binary_tree* binary_tree::insert(double value)
 {
   if (std::isnan(this->value())) {
     set_value(value);
-    return;
+    return this;
   }
   if (value == this->value()) {
-    return;
+    return this;
   }
   if (value < this->value()) {
     if (!left()) {
       set_left(std::make_shared<binary_tree>());
     }
-    left()->insert(value);
-    return;
+    return left()->insert(value);
   }
   if (!right()) {
     set_right(std::make_shared<binary_tree>());
   }
-  right()->insert(value);
+  return right()->insert(value);
 }
 
 /**
