@@ -129,7 +129,7 @@ binary_tree_malloc(
   binary_tree *tree = (binary_tree *) malloc(sizeof(binary_tree));
   tree->value = value;
   // forcible cast to suppress -Wdiscard-qualifiers. left, right are untouched
-  tree->left = (binary_tree*) left;
+  tree->left = (binary_tree *) left;
   tree->right = (binary_tree *) right;
   return tree;
 }
