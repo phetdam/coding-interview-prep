@@ -71,9 +71,9 @@ gen_tree_free_children_(gen_tree *, bool);
 #define gen_tree_free_children(t) gen_tree_free_children_(t, false)
 
 /**
- * Free the entire child subtree of a `gen_tree *`.
+ * Free all the child subtrees of a `gen_tree *`.
  *
- * @param t `gen_tree *` whose child subtree we wish to free
+ * @param t `gen_tree *` whose child subtrees we wish to free
  * @returns `void`
  */
 #define gen_tree_free_children_deep(t) gen_tree_free_children_(t, true)
@@ -117,6 +117,28 @@ binary_tree_malloc(double, const binary_tree *, const binary_tree *);
  * @returns `void`
  */
 #define binary_tree_free(t) free(t)
+
+void
+binary_tree_free_children_(binary_tree *, bool);
+
+/**
+ * Free the direct children of a `binary_tree *`.
+ *
+ * @param t `binary_tree *` whose direct children we wish to free
+ * @returns `void`
+ */
+#define binary_tree_free_children(t) binary_tree_free_children_(t, false)
+
+/**
+ * Free all the child subtrees of a `binary_tree *`.
+ *
+ * @param t `gen_tree *` whose child subtrees we wish to free
+ * @returns `void`
+ */
+#define binary_tree_free_children_deep(t) binary_tree_free_children_(t, true)
+
+void
+binary_tree_free_deep(binary_tree *);
 
 binary_tree *
 binary_tree_insert(binary_tree *, double);

@@ -54,8 +54,8 @@ gen_tree_set_children(gen_tree *tree, size_t n_children, gen_tree **children)
  * Free the children of a `gen_tree`.
  *
  * @param tree `gen_tree *` whose children we will free
- * @param deep `bool` where if `true` we free the entire child subtree, while
- *    if `false` we only free the direct children of `tree`.
+ * @param deep `bool` where if `true` we free all child subtrees, while if
+ *    `false` we only free the direct children of `tree`.
  */
 void
 gen_tree_free_children_(gen_tree *tree, bool deep)
@@ -132,6 +132,48 @@ binary_tree_malloc(
   tree->left = (binary_tree *) left;
   tree->right = (binary_tree *) right;
   return tree;
+}
+
+/**
+ * Free the children of a `binary_tree`.
+ *
+ * @param tree `binary_tree *` whose children we will free
+ * @param deep `bool` where if `true` we free all child subtrees, while if
+ *    `false` we only free the direct children of `tree`.
+ */
+void
+binary_tree_free_children_(binary_tree *tree, bool deep)
+{
+  assert(tree);
+  if (tree->left) {
+    if (deep) {
+      binary_tree_free_children_deep(tree->left);
+    }
+    binary_tree_free(tree->left);
+  }
+  if (tree->right) {
+    if (deep) {
+      binary_tree_free_children_deep(tree->right);
+    }
+    binary_tree_free(tree->right);
+  }
+  tree->left = NULL;
+  tree->right = NULL;
+}
+
+/**
+ * Free a `binary_tree` instance on the heap and frees its child subtrees.
+ *
+ * Use with caution if the children are dereferenced somewhere else!
+ *
+ * @param t `binary_tree *` pointer to `binary_tree` to free
+ * @returns `void`
+ */
+void
+binary_tree_free_deep(binary_tree *tree)
+{
+  binary_tree_free_children(tree);
+  binary_tree_free(tree);
 }
 
 /**
