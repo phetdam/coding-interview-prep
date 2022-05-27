@@ -101,14 +101,14 @@ binary_tree_malloc(double, const binary_tree *, const binary_tree *);
  *
  * @returns `binary_tree *`
  */
-#define binary_tree_malloc_default(v) binary_tree_malloc(v, NULL, NULL);
+#define binary_tree_malloc_default(v) binary_tree_malloc(v, NULL, NULL)
 
 /**
  * Allocate a `binary_tree` instance on heap with no children and `NAN` value.
  *
  * @returns `binary_tree *`
  */
-#define binary_tree_malloc_empty() binary_tree_malloc(NAN, NULL, NULL);
+#define binary_tree_malloc_empty() binary_tree_malloc(NAN, NULL, NULL)
 
 /**
  * Free a `binary_tree` instance on the heap, but not its children.
