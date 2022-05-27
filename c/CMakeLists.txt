@@ -22,7 +22,8 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 # debug and release flags, handle MSVC case specifically
 if(MSVC)
-    add_compile_options(/Wall /wd5045)
+    # Check causes C4100 warning. see definition of START_TEST macro
+    add_compile_options(/Wall /wd4100 /wd5045)
     if(CMAKE_BUILD_TYPE STREQUAL Release)
         add_compile_options(/O2)
     else()

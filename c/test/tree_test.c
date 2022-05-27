@@ -15,6 +15,8 @@
 static gen_tree *gen_root;
 static const size_t n_direct_children = 5;
 static const double direct_values[] = {4.5, 1.7, 8.9, 2, 6.5};
+// commonly reused binary_tree root
+static binary_tree *bt_root;
 
 // macro to make direct children
 #define GEN_TREE_MAKE_DIRECT_CHILDREN() \
@@ -44,7 +46,30 @@ gen_root_teardown(void)
 }
 
 /**
- * Test that making and freeing direct tree children work as intended.
+ * Setup function for `bt_root` fixture.
+ *
+ * Also checks that the `bt_root` instance is initialized correctly.
+ */
+static void
+bt_root_setup(void)
+{
+  bt_root = binary_tree_malloc_default(5);
+  ck_assert_double_eq(5, bt_root->value);
+  ck_assert_ptr_null(bt_root->left);
+  ck_assert_ptr_null(bt_root->right);
+}
+
+/**
+ * Teardown function for `bt_root` fixture.
+ */
+static void
+bt_root_teardown(void)
+{
+  binary_tree_free(bt_root);
+}
+
+/**
+ * Test that making and freeing direct `gen_tree` children works as intended.
  */
 START_TEST(test_gen_tree_make_free_children)
 {
@@ -62,7 +87,7 @@ START_TEST(test_gen_tree_make_free_children)
 END_TEST
 
 /**
- * Test that making and freeing an entire subtree works as intended.
+ * Test that making and freeing `gen_tree` subtrees works as intended.
  */
 START_TEST(test_gen_tree_make_free_children_deep)
 {
@@ -73,6 +98,40 @@ START_TEST(test_gen_tree_make_free_children_deep)
   gen_tree_free_children_deep(gen_root);
   ck_assert_int_eq(0, gen_root->n_children);
   ck_assert_ptr_null(gen_root->children);
+}
+END_TEST
+
+/**
+ * Test that making and freeing direct `binary_tree` children works as intended.
+ */
+START_TEST(test_binary_tree_make_free_children)
+{
+  bt_root->left = binary_tree_malloc_default(2.3);
+  bt_root->right = binary_tree_malloc_default(4.6);
+  binary_tree_free_children(bt_root);
+  ck_assert_ptr_null(bt_root->left);
+  ck_assert_ptr_null(bt_root->right);
+}
+END_TEST
+
+/**
+ * Test that making and freeing `binary_tree` subtrees works as intended.
+ */
+START_TEST(test_binary_tree_make_free_children_deep)
+{
+  bt_root->left = binary_tree_malloc(
+    4.5, binary_tree_malloc_default(3), binary_tree_malloc_default(4.9)
+  );
+  bt_root->right = binary_tree_malloc(
+    5.6,
+    NULL,
+    binary_tree_malloc(
+      8, binary_tree_malloc_default(7.2), binary_tree_malloc_default(9)
+    )
+  );
+  binary_tree_free_children_deep(bt_root);
+  ck_assert_ptr_null(bt_root->left);
+  ck_assert_ptr_null(bt_root->right);
 }
 END_TEST
 
@@ -88,9 +147,12 @@ make_tree_test_suite(void)
   TCase *tc_memory = tcase_create("memory");
   // add checked fixtures
   tcase_add_checked_fixture(tc_memory, gen_root_setup, gen_root_teardown);
+  tcase_add_checked_fixture(tc_memory, bt_root_setup, bt_root_teardown);
   // add test cases
   tcase_add_test(tc_memory, test_gen_tree_make_free_children);
   tcase_add_test(tc_memory, test_gen_tree_make_free_children_deep);
+  tcase_add_test(tc_memory, test_binary_tree_make_free_children);
+  tcase_add_test(tc_memory, test_binary_tree_make_free_children_deep);
   suite_add_tcase(ts_tree, tc_memory);
   return ts_tree;
 }
