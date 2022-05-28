@@ -34,7 +34,14 @@ C/C++
 
 .. _Ninja: https://ninja-build.org/
 
+.. _Check: https://libcheck.github.io/check/
+
 TBD. In short, build with CMake_ 3.16 or later.
+
+For C, unit tests require the Check_ testing framework, while for C++, unit
+tests require the `Google Test`_ testing framework. I chose to use two
+different testing frameworks because usually, people don't compile their C
+code with a C++ compiler.
 
 On Windows, in order to correctly build the `Google Test`_ test runners, ensure
 that when building `Google Test`_ with CMake_, that
