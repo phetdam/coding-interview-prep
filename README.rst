@@ -42,7 +42,7 @@ For C, unit tests require the Check_ testing framework, while for C++, unit
 tests require `Google Test`_. Note that the C code is not intended to be called
 from C++, i.e. the C headers have no
 
-.. code:: c
+.. code:: C++
 
    #ifdef __cplusplus
    extern "C" {
