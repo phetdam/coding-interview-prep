@@ -10,7 +10,7 @@ from typing import List, Union
 
 import numpy as np
 
-from pdcip.algorithms.search.core import SearchStrategy
+# from pdcip.enums import SearchStrategy
 
 
 @dataclass
