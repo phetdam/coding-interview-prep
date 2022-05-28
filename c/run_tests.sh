@@ -9,7 +9,9 @@
 #   List of command-line arguments
 #
 main() {
-    ctest --test-dir build "$@"
+    # output suppressed by default, so set CK_VERBOSITY=verbose in order to
+    # eliminate need to specify again when we rerun with --verbose flag
+    CK_VERBOSITY=verbose ctest --test-dir build "$@"
 }
 
 set -e

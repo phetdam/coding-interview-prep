@@ -208,3 +208,46 @@ binary_tree_insert(binary_tree *tree, double value)
   }
   return binary_tree_insert(tree->right, value);
 }
+
+/**
+ * Return the values stored in the `binary_tree` in ascending order.
+ *
+ * In the special case that value of the tree is `NAN`, then `NULL` is returned
+ * and `n_values_p` will have zero written to it.
+ *
+ * @param tree `const binary_tree *` binary tree we want sorted values from
+ * @param n_values_p `size_t *` address to a `size_t` which will be assigned
+ *    the number of values that were retrieved from the `binary_tree`.
+ */
+double *
+binary_tree_sorted_values(const binary_tree *tree, size_t *n_values_p)
+{
+  assert(tree && n_values_p);
+  if (isnan(tree->value)) {
+    *n_values_p = 0;
+    return NULL;
+  }
+  size_t n_values_left = 0;
+  size_t n_values_right = 0;
+  double *values_left = NULL;
+  double *values_right = NULL;
+  if (tree->left){
+    values_left = binary_tree_sorted_values(tree->left, &n_values_left);
+  }
+  if (tree->right) {
+    values_right = binary_tree_sorted_values(tree->right, &n_values_right);
+  }
+  size_t n_values = n_values_left + n_values_right + 1;
+  double *values = (double *) malloc(n_values * sizeof(double));
+  for (size_t i = 0; i < n_values_left; i++) {
+    values[i] = values_left[i];
+  }
+  values[n_values_left] = tree->value;
+  for (size_t i = 0; i < n_values_right; i++) {
+    values[n_values_left + i + 1] = values_right[i];
+  }
+  free(values_left);
+  free(values_right);
+  *n_values_p = n_values;
+  return values;
+}

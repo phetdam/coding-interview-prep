@@ -143,9 +143,7 @@ binary_tree_free_deep(binary_tree *);
 binary_tree *
 binary_tree_insert(binary_tree *, double);
 
-/*
 double *
 binary_tree_sorted_values(const binary_tree *, size_t *);
-*/
 
 #endif  /* PDCIP_TREE_H_ */

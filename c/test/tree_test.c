@@ -6,6 +6,7 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 
 #include <check.h>
 
@@ -70,6 +71,8 @@ bt_root_teardown(void)
 
 /**
  * Test that making and freeing direct `gen_tree` children works as intended.
+ *
+ * @note Leaks memory on failure due to checking inside loop.
  */
 START_TEST(test_gen_tree_make_free_children)
 {
@@ -136,6 +139,41 @@ START_TEST(test_binary_tree_make_free_children_deep)
 END_TEST
 
 /**
+ * Test that `binary_tree_sorted_values` works as expected.
+ *
+ * @note Leaks memory on failure due to checking inside loop.
+ */
+START_TEST(test_binary_tree_sorted_values)
+{
+  bt_root->left = binary_tree_malloc(
+    4.5,
+    binary_tree_malloc(
+      3, binary_tree_malloc_default(2.7), binary_tree_malloc_default(3.3)
+    ),
+    binary_tree_malloc_default(4.9)
+  );
+  bt_root->right = binary_tree_malloc(
+    5.6,
+    NULL,
+    binary_tree_malloc(
+      8, binary_tree_malloc_default(7.2), binary_tree_malloc_default(9)
+    )
+  );
+  size_t n_values_act;
+  double *values_act = binary_tree_sorted_values(bt_root, &n_values_act);
+  // recall that bt_root->value is 5
+  double values_exp[] = {2.7, 3, 3.3, 4.5, 4.9, 5, 5.6, 7.2, 8, 9};
+  // clean up now to reduce memory leak (values have been copied)
+  binary_tree_free_children_deep(bt_root);
+  // if size doesn't even match, clearly a mistake has been made
+  ck_assert_uint_eq(10, n_values_act);
+  for (size_t i = 0; i < n_values_act; i++) {
+    ck_assert_double_eq(values_exp[i], values_act[i]);
+  }
+}
+END_TEST
+
+/**
  * Return a Check `Suite *` for the tree tests.
  *
  * @note Tests are `static`, but this function is not. Tests are run in order.
@@ -153,6 +191,7 @@ make_tree_test_suite(void)
   tcase_add_test(tc_memory, test_gen_tree_make_free_children_deep);
   tcase_add_test(tc_memory, test_binary_tree_make_free_children);
   tcase_add_test(tc_memory, test_binary_tree_make_free_children_deep);
+  tcase_add_test(tc_memory, test_binary_tree_sorted_values);
   suite_add_tcase(ts_tree, tc_memory);
   return ts_tree;
 }
