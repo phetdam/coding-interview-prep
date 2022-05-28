@@ -182,7 +182,7 @@ Suite *
 make_tree_test_suite(void)
 {
   Suite *ts_tree = suite_create("tree");
-  TCase *tc_memory = tcase_create("memory");
+  TCase *tc_memory = tcase_create("tree::memory");
   // add checked fixtures
   tcase_add_checked_fixture(tc_memory, gen_root_setup, gen_root_teardown);
   tcase_add_checked_fixture(tc_memory, bt_root_setup, bt_root_teardown);
