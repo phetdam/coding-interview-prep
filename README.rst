@@ -39,9 +39,20 @@ C/C++
 TBD. In short, build with CMake_ 3.16 or later.
 
 For C, unit tests require the Check_ testing framework, while for C++, unit
-tests require the `Google Test`_ testing framework. I chose to use two
-different testing frameworks because usually, people don't compile their C
-code with a C++ compiler.
+tests require `Google Test`_. Note that the C code is not intended to be called
+from C++, i.e. the C headers have no
+
+.. code:: c
+
+   #ifdef __cplusplus
+   extern "C" {
+   #endif /* __cplusplus */
+
+   /* ... */
+
+   #ifdef __cplusplus
+   }
+   #endif /* __cplusplus */
 
 On Windows, in order to correctly build the `Google Test`_ test runners, ensure
 that when building `Google Test`_ with CMake_, that
