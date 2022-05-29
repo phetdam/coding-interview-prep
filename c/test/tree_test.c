@@ -1,7 +1,7 @@
 /**
  * @file tree_test.c
  * @author Derek Huang
- * @brief Tests for the `gen_tree` and `binary_tree`
+ * @brief Legacy tests for the `gen_tree` and `binary_tree`
  * @copyright MIT License
  */
 
@@ -15,7 +15,7 @@
 // commonly reused gen_tree root, number of and values for direct children
 static gen_tree *gen_root;
 static const size_t n_direct_children = 5;
-static const double direct_values[] = {4.5, 1.7, 8.9, 2, 6.5};
+static const double direct_values[] = {4.5, 1.8, 8.9, 2, 6.5};
 // commonly reused binary_tree root
 static binary_tree *bt_root;
 
