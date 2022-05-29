@@ -1,7 +1,7 @@
 /**
  * @file tree_test.cc
  * @author Derek Huang
- * @brief Unit tests for the tree classes defined in structures/tree.cc
+ * @brief Unit tests for the tree classes defined in tree.cc
  * @copyright MIT License
  */
 
