@@ -49,7 +49,7 @@ gen_tree_malloc(double, size_t, gen_tree **);
  * @param t `gen_tree *` pointer to `gen_tree` to free
  * @returns `void`
  */
-#define gen_tree_free(t) free(t)
+#define gen_tree_free(t) free((void *) t)
 
 void
 gen_tree_set_children(gen_tree *, size_t, gen_tree **);
@@ -120,7 +120,7 @@ binary_tree_malloc(double, const binary_tree *, const binary_tree *);
  * @param t `binary_tree *` pointer to `binary_tree` to free
  * @returns `void`
  */
-#define binary_tree_free(t) free(t)
+#define binary_tree_free(t) free((void *) t)
 
 void
 binary_tree_free_children_(binary_tree *, bool);
