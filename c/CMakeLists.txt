@@ -8,17 +8,15 @@ project(
     LANGUAGES C
 )
 
-# build debug by default; we set -DCMAKE_BUILD_TYPE=Release for release
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Debug)
-endif()
+# update CMake module path. see ../tools/cmake for all relevant modules
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../tools/cmake")
+
+# set default build type if not specified and set C++ project defaults
+include(SetDefaultBuild)
+include(SetCppDefaults)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
-# in lieu of specifying -fPIC manually to g++
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-# export all symbols so we can dispense with __declspec pain (mostly)
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 # debug and release flags, handle MSVC case specifically
 if(MSVC)
