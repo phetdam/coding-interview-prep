@@ -24,12 +24,17 @@ namespace {
  */
 class TreeTest: public ::testing::Test {
 protected:
-  TreeTest()
-    : root_(std::make_shared<tree>(5.7)),
-      test_children_values_(
-        std::make_shared<pdcip::double_vector>(
-          pdcip::double_vector({4.5, 1.3, 6.5, 9, 8.7})))
-  {}
+  TreeTest() : root_(std::make_shared<tree>(root_value_)) {}
+
+  /**
+   * Set up the `TreeTest` instance.
+   *
+   * Performs some checking of the initialized members.
+   */
+  void SetUp() override
+  {
+    ASSERT_EQ(root_->value(), root_value_);
+  }
 
   /**
    * Return `tree` children using `tree::make_children`.
@@ -38,7 +43,7 @@ protected:
    */
   tree_ptr_vector_ptr make_test_children()
   {
-    return pdcip::tree::make_children(*test_children_values_);
+    return pdcip::tree::make_children(test_children_values_);
   }
 
   /**
@@ -62,12 +67,18 @@ protected:
    */
   size_t n_test_children() const
   {
-    return static_cast<size_t>(test_children_values_->size());
+    return static_cast<size_t>(test_children_values_.size());
   }
 
   tree_ptr root_;
-  double_vector_ptr test_children_values_;
+
+  // initialization values for root_ and make_test_children return
+  static double root_value_;
+  static double_vector test_children_values_;
 };
+
+double TreeTest::root_value_ = 5.7;
+double_vector TreeTest::test_children_values_({4.5, 1.3, 6.5, 9, 8.7});
 
 /**
  * Test that created children have the right values and have no children.
@@ -76,7 +87,7 @@ TEST_F(TreeTest, MakeChildrenTest)
 {
   pdcip::tree_ptr_vector_ptr children = make_test_children();
   for (std::size_t i = 0; i < children->size(); i++) {
-    ASSERT_DOUBLE_EQ(test_children_values_->at(i), children->at(i)->value());
+    ASSERT_DOUBLE_EQ(test_children_values_[i], children->at(i)->value());
     ASSERT_EQ(0, children->at(i)->n_children());
   }
 }
