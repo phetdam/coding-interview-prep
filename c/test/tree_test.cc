@@ -138,37 +138,6 @@ protected:
 };
 
 /**
- * Test fixture for `binary_tree` tests that require a base root.
- *
- * Ctor and dtor manage `malloc` + `free` for `binary_tree*` `root_`, and clean
- * up the child subtrees if there are still children attached.
- *
- * See `GenRootTest` definition for notes.
- */
-class BinaryTreeTest: public ::testing::Test {
-protected:
-  BinaryTreeTest() : root_(binary_tree_malloc_default(5)) {}
-  ~BinaryTreeTest() {
-    binary_tree_free_children_deep(root_);
-    binary_tree_free(root_);
-  }
-
-  /**
-   * Set up the `BinaryTreeTest` fixture instance.
-   *
-   * May cause assertion error if `root_` is not malloc'd correctly.
-   */
-  void SetUp() override
-  {
-    ASSERT_DOUBLE_EQ(5, root_->value);
-    ASSERT_EQ(nullptr, root_->left);
-    ASSERT_EQ(nullptr, root_->right);
-  }
-
-  binary_tree* root_;
-};
-
-/**
  * Test that making and freeing direct `gen_tree` children works as intended.
  *
  * @note Won't leak memory on failure since `GenTreeTest` dtor will clean up.
@@ -242,6 +211,37 @@ TEST_F(GenTreeTest, DepthFirstSearchTest)
     ASSERT_DOUBLE_EQ(root_node_values_exp[i], root_node_values_act[i]);
   }
 }
+
+/**
+ * Test fixture for `binary_tree` tests that require a base root.
+ *
+ * Ctor and dtor manage `malloc` + `free` for `binary_tree*` `root_`, and clean
+ * up the child subtrees if there are still children attached.
+ *
+ * See `GenRootTest` definition for notes.
+ */
+class BinaryTreeTest: public ::testing::Test {
+protected:
+  BinaryTreeTest() : root_(binary_tree_malloc_default(5)) {}
+  ~BinaryTreeTest() {
+    binary_tree_free_children_deep(root_);
+    binary_tree_free(root_);
+  }
+
+  /**
+   * Set up the `BinaryTreeTest` fixture instance.
+   *
+   * May cause assertion error if `root_` is not malloc'd correctly.
+   */
+  void SetUp() override
+  {
+    ASSERT_DOUBLE_EQ(5, root_->value);
+    ASSERT_EQ(nullptr, root_->left);
+    ASSERT_EQ(nullptr, root_->right);
+  }
+
+  binary_tree* root_;
+};
 
 /**
  * Test that making and freeing direct `binary_tree` children works as intended.
