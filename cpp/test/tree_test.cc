@@ -34,6 +34,7 @@ protected:
   void SetUp() override
   {
     ASSERT_EQ(root_->value(), root_value_);
+    ASSERT_EQ(0, root_->n_children());
   }
 
   /**
