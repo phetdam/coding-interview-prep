@@ -67,7 +67,7 @@ public:
 /**
  * Convenience templated function to generate tree children for any tree type.
  *
- * @param values `std::vector<double>` of values to supply the children
+ * @param values `double_vector&` of values to supply the children
  */
 template <class tree_t = tree>
 T_ptr_vector_ptr_t<tree_t> make_tree_ptr_vector(const double_vector& values)
