@@ -12,6 +12,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#include "pdcip/helpers.h"
+
 /**
  * Allocate a `gen_tree` instance on heap with given children.
  *
@@ -107,9 +109,7 @@ gen_tree_make_children(size_t n, const double *values)
     return NULL;
   }
   gen_tree **children = (gen_tree **) malloc(n * sizeof(gen_tree *));
-  for (size_t i = 0; i < n; i++) {
-    children[i] = gen_tree_malloc_default(values[i]);
-  }
+  map_func(gen_tree_malloc_default, values, children, n);
   return children;
 }
 
@@ -142,29 +142,64 @@ gen_tree_free_children_array_(gen_tree **children, size_t n_children, bool deep)
  * Perform DFS on a `gen_tree`.
  *
  * @param tree `gen_tree *` giving the root of the tree
- * @param n_children_p `size_t *` giving address to a writable `size_t` which
+ * @param n_nodes_p `size_t *` giving address to a writable `size_t` which
  *    will be assigned the number of `gen_tree *` in the specified `tree`.
  * @returns `gen_tree **` to array of `gen_tree *` of the nodes in the tree
- *    with `tree` as the root. Can be `NULL` if there are no children. Memory
- *    used by returned `gen_tree **` to hold `gen_tree *` must be freed.
+ *    with `tree` as the root. Can be `NULL` if tree is `NULL`. Memory used
+ *    by returned `gen_tree **` to hold `gen_tree *` must be freed.
  */
-/*
 gen_tree **
-gen_tree_dfs(const gen_tree *tree, size_t *n_children_p)
+gen_tree_dfs(const gen_tree *tree, size_t *n_nodes_p)
 {
-  assert(tree && n_children_p);
-  // if no children, we return NULL
-  if (!tree->n_children) {
+  assert(n_nodes_p);
+  // if NULL, write 0 and return NULL
+  if (!tree) {
+    *n_nodes_p = 0;
     return NULL;
   }
+  // if no children, we write 1 and return array of just tree
+  if (!tree->n_children) {
+    *n_nodes_p = 1;
+    gen_tree **nodes = (gen_tree **) malloc(sizeof(gen_tree *));
+    // silence warning about discarding const qualifier
+    *nodes = (gen_tree *) tree;
+    return nodes;
+  }
   // array of gen_tree **, each of which points to array of gen_tree *
-  gen_tree ***
-  children_ar = (gen_tree ***) malloc(tree->n_children * sizeof(gen_tree **));
-  // holds number of children in each subtree
-  size_t *n_children_ar = (size_t *) malloc(tree->n_children * sizeof(size_t));
-
+  gen_tree ***nodes_ar = (gen_tree ***) malloc(
+    tree->n_children * sizeof(gen_tree **)
+  );
+  // holds number of nodes in each subtree
+  size_t *n_nodes_ar = (size_t *) malloc(tree->n_children * sizeof(size_t));
+  // call recursively to populate
+  for (size_t i = 0; i < tree->n_children; i++) {
+    nodes_ar[i] = gen_tree_dfs(tree->children[i], n_nodes_ar + i);
+  }
+  // get total number of nodes in tree rooted at tree
+  array_sum_offset(n_nodes, size_t, n_nodes_ar, tree->n_children, 1);
+  // number of nodes (gen_tree *) we have copied so far from nodes_ar
+  size_t n_copied = 0;
+  // construct new children array we want to return
+  gen_tree **nodes = (gen_tree **) malloc(n_nodes * sizeof(gen_tree *));
+  for (size_t i = 0; i < tree->n_children; i++) {
+    for (size_t j = 0; j < n_nodes_ar[i]; j++) {
+      nodes[n_copied + j] = nodes_ar[i][j];
+    }
+    n_copied += n_nodes_ar[i];
+  }
+  // silence warning about discarding const qualifier
+  nodes[n_nodes - 1] = (gen_tree *) tree;
+  // don't need these anymore
+  for (size_t i = 0; i < tree->n_children; i++) {
+    // nodes_ar[i] is NULL when n_nodes_ar[i] is 0
+    if (nodes_ar[i]) {
+      free(nodes_ar[i]);
+    }
+  }
+  free(nodes_ar);
+  free(n_nodes_ar);
+  return nodes;
 }
-*/
 
 /**
  * Allocate a `binary_tree` instance on the heap.

@@ -116,10 +116,10 @@ gen_tree_free_children_array_(gen_tree **, size_t, bool);
 #define gen_tree_free_children_array_deep(ar, n) \
   gen_tree_free_children_array_(ar, n, true)
 
-/*
 gen_tree **
 gen_tree_dfs(const gen_tree *, size_t *);
 
+/*
 gen_tree **
 gen_tree_bfs(const gen_tree *, size_t *);
 */
