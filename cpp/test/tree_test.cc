@@ -277,13 +277,11 @@ TEST_F(BinaryTreeTest, SortedValuesTest)
 }
 
 /**
- * Test that depth-first search yields the expected result with `binary_tree`.
+ * Test that depth-first search gives the expected result with `binary_tree`.
  */
 TEST_F(BinaryTreeTest, DepthFirstSearchTest)
 {
   root_insert_values();
-  tree_ptr_vector_ptr nodes = tree::dfs(root_);
-  double_vector_ptr node_values = tree::value_vector(nodes);
   // values retrieved by depth-first search are {1.3, 8.1, 9, 6.5, 4}
   double_vector true_values(tree_values_.size());
   true_values[0] = tree_values_[1];
@@ -291,7 +289,18 @@ TEST_F(BinaryTreeTest, DepthFirstSearchTest)
   true_values[2] = tree_values_[3];
   true_values[3] = tree_values_[2];
   true_values[4] = tree_values_[0];
-  ASSERT_EQ(true_values, *node_values);
+  ASSERT_EQ(true_values, *tree::value_vector(tree::dfs(root_)));
+}
+
+/**
+ * Test that breadth-first search gives the expected result with `binary_tree`.
+ */
+TEST_F(BinaryTreeTest, BreadthFirstSearchTest)
+{
+  root_insert_values();
+  // values retrieved by breadth-first search happen to match the insertion
+  // order, so we can directly compare against tree_values_
+  ASSERT_EQ(tree_values_, *tree::value_vector(tree::bfs(root_)));
 }
 
 }  // namespace

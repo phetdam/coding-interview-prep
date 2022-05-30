@@ -145,7 +145,9 @@ tree_ptr_vector_ptr tree::bfs(const tree_ptr& root)
     tree_ptr cur_node = node_queue.front();
     node_queue.pop();
     for (tree_ptr child : *(cur_node->children())) {
-      node_queue.push(child);
+      if (child) {
+        node_queue.push(child);
+      }
     }
     nodes->push_back(cur_node);
   }
