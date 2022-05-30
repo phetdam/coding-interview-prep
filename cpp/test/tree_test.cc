@@ -7,10 +7,12 @@
 
 #include <algorithm>
 #include <memory>
+#include <vector>
 
 #include <gtest/gtest.h>
 
 #include "pdcip/cpp/tree.h"
+#include "pdcip/cpp/types.h"
 
 namespace pdcip {
 namespace tests {
@@ -18,22 +20,87 @@ namespace tests {
 namespace {
 
 /**
+ * Test fixture class managing commonly reused `tree` objects.
+ */
+class TreeTest: public ::testing::Test {
+protected:
+  TreeTest()
+    : root_(std::make_shared<tree>(5.7)),
+      test_children_values_(
+        std::make_shared<pdcip::double_vector>(
+          pdcip::double_vector({4.5, 1.3, 6.5, 9, 8.7})))
+  {}
+
+  /**
+   * Return `tree` children using `tree::make_children`.
+   *
+   * We often reuse this method for quickly constructing tiered trees.
+   */
+  tree_ptr_vector_ptr make_test_children()
+  {
+    return pdcip::tree::make_children(*test_children_values_);
+  }
+
+  /**
+   * Set the children of `root_` to those from `make_test_children`.
+   */
+  void give_root_direct() { root_->set_children(make_test_children()); }
+
+  /**
+   * Set the children of `root_` to be a subtree from `make_test_children`.
+   */
+  void give_root_subtree()
+  {
+    tree_ptr_vector_ptr first_children = make_test_children();
+    tree_ptr_vector_ptr second_children = make_test_children();
+    root_->set_children(first_children);
+    first_children->at(1)->set_children(second_children);
+  }
+
+  /**
+   * Return number of children in `test_children_values`.
+   */
+  size_t n_test_children() const
+  {
+    return static_cast<size_t>(test_children_values_->size());
+  }
+
+  tree_ptr root_;
+  double_vector_ptr test_children_values_;
+};
+
+/**
  * Test that created children have the right values and have no children.
  */
-TEST(TreeTests, MakeChildrenTest)
+TEST_F(TreeTest, MakeChildrenTest)
 {
-  std::vector<double> values({1.0, 5.6, 9.8});
-  pdcip::tree_ptr_vector_ptr children = pdcip::tree::make_children(values);
+  pdcip::tree_ptr_vector_ptr children = make_test_children();
   for (std::size_t i = 0; i < children->size(); i++) {
-    EXPECT_DOUBLE_EQ(values[i], children->at(i)->value());
-    EXPECT_EQ(nullptr, children->at(i)->children());
+    ASSERT_DOUBLE_EQ(test_children_values_->at(i), children->at(i)->value());
+    ASSERT_EQ(0, children->at(i)->n_children());
+  }
+}
+
+/**
+ * Test that depth-first search yields the expected result.
+ */
+TEST_F(TreeTest, DepthFirstSearchTest)
+{
+  give_root_subtree();
+  tree_ptr_vector_ptr nodes = pdcip::tree::dfs(root_);
+  ASSERT_EQ(11, nodes->size());
+  pdcip::double_vector true_values = {
+    4.5, 4.5, 1.3, 6.5, 9, 8.7, 1.3, 6.5, 9, 8.7, 5.7
+  };
+  for (size_t i = 0; i < nodes->size(); i++) {
+    ASSERT_DOUBLE_EQ(true_values[i], nodes->at(i)->value());
   }
 }
 
 /**
  * Test that `binary_tree` insertion works as expected.
  */
-TEST(BinaryTreeTest, SortedValuesTest)
+TEST(BinaryTreeTests, SortedValuesTest)
 {
   std::vector<double> values({4.5, 1.3, 6.5, 9});
   std::vector<double> values_sorted = values;
@@ -42,7 +109,7 @@ TEST(BinaryTreeTest, SortedValuesTest)
   for (auto x : values) {
     tree.insert(x);
   }
-  EXPECT_EQ(values_sorted, tree.sorted_values());
+  ASSERT_EQ(values_sorted, *(tree.sorted_values()));
 }
 
 }  // namespace

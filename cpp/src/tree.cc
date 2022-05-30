@@ -7,10 +7,14 @@
 
 #include "pdcip/cpp/tree.h"
 
+#include <cassert>
 #include <cmath>
+#include <queue>
 #include <memory>
 #include <vector>
 #include <utility>
+
+#include "pdcip/cpp/types.h"
 
 namespace pdcip {
 
@@ -20,9 +24,11 @@ namespace pdcip {
  * @param value `double` value of `tree` node
  * @param children `const tree_ptr_vector_ptr&` with children
  */
-tree::tree(double value, const tree_ptr_vector_ptr& children)
-  : value_(value), children_(children)
-{}
+tree::tree(double value, const tree_ptr_vector_ptr& children) : value_(value)
+{
+  assert(children && "children cannot be nullptr");
+  children_ = children;
+}
 
 /**
  * `tree` move constructor.
@@ -30,9 +36,11 @@ tree::tree(double value, const tree_ptr_vector_ptr& children)
  * @param value `double` value of `tree` node
  * @param children `tree_ptr_vector_ptr&&` with children
  */
-tree::tree(double value, tree_ptr_vector_ptr&& children)
-  : value_(value), children_(children)
-{}
+tree::tree(double value, tree_ptr_vector_ptr&& children) : value_(value)
+{
+  assert(children && "children cannot be nullptr");
+  children_ = std::move(children);
+}
 
 /**
  * Getter for the `tree` value.
@@ -83,10 +91,63 @@ void tree::set_children(tree_ptr_vector_ptr&& children)
  * Convenience method to generate `tree` children.
  *
  * @param values `std::vector<double>` of values to supply the children
+ * @returns `tree_ptr_vector_ptr` of `tree` children
  */
 tree_ptr_vector_ptr tree::make_children(const std::vector<double>& values)
 {
   return make_tree_ptr_vector<tree>(values);
+}
+
+/**
+ * Return nodes in the tree by depth-first search.
+ *
+ * @param root `const tree_ptr&` giving the root of the tree
+ * @returns `tree_ptr_vector_ptr` with all the nodes in the tree
+ */
+tree_ptr_vector_ptr tree::dfs(const tree_ptr& root)
+{
+  assert(root);
+  // if no children, then root is the only one
+  if (!root->children_) {
+    return std::make_shared<tree_ptr_vector>(tree_ptr_vector({root}));
+  }
+  // recursive collection of all subtree nodes
+  auto nodes_vec = std::make_shared<std::vector<tree_ptr_vector_ptr>>();
+  for (tree_ptr child : *root->children_) {
+    nodes_vec->push_back(tree::dfs(child));
+  }
+  auto nodes = std::make_shared<tree_ptr_vector>();
+  for (tree_ptr_vector_ptr subnodes : *nodes_vec) {
+    nodes->insert(nodes->end(), subnodes->begin(), subnodes->end());
+  }
+  nodes->push_back(root);
+  return nodes;
+}
+
+/**
+ * Return nodes in the tree by breadth-first search.
+ *
+ * @param root `const tree_ptr&` giving the root of the tree
+ * @returns `tree_ptr_vector_ptr` with all the nodes in the tree
+ */
+tree_ptr_vector_ptr tree::bfs(const tree_ptr& root)
+{
+  assert(root);
+  if (!root->children_) {
+    return std::make_shared<tree_ptr_vector>(tree_ptr_vector({root}));
+  }
+  tree_ptr_vector_ptr nodes = std::make_shared<tree_ptr_vector>();
+  // queue is a wrapped deque, which makes it slightly slower
+  std::queue<tree_ptr> node_queue({root});
+  while (node_queue.size()) {
+    tree_ptr cur_node = node_queue.front();
+    node_queue.pop();
+    for (tree_ptr child : *(cur_node->children())) {
+      node_queue.push(cur_node);
+    }
+    nodes->push_back(cur_node);
+  }
+  return nodes;
 }
 
 /**
@@ -227,22 +288,22 @@ const binary_tree* binary_tree::insert(double value)
 /**
  * Return values in the `binary_tree` in ascending order.
  */
-std::vector<double> binary_tree::sorted_values()
+double_vector_ptr binary_tree::sorted_values()
 {
   if (!children()) {
-    return std::vector<double>();
+    return std::make_shared<std::vector<double>>();
   }
-  std::vector<double> left_values(
-    left() ? left()->sorted_values() : std::vector<double>()
+  double_vector_ptr left_values(
+    left() ? left()->sorted_values() : std::make_shared<std::vector<double>>()
   );
-  std::vector<double> right_values(
-    right() ? right()->sorted_values() : std::vector<double>()
+  double_vector_ptr right_values(
+    right() ? right()->sorted_values() : std::make_shared<std::vector<double>>()
   );
   if (!std::isnan(value())) {
-    left_values.push_back(value());
+    left_values->push_back(value());
   }
-  left_values.insert(
-    left_values.end(), right_values.begin(), right_values.end()
+  left_values->insert(
+    left_values->end(), right_values->begin(), right_values->end()
   );
   return left_values;
 }

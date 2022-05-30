@@ -11,9 +11,14 @@
 #include <memory>
 #include <vector>
 
+namespace pdcip {
+
 template <class T>
 using vector_ptr_t = std::shared_ptr<std::vector<T>>;
 
+using double_vector = std::vector<double>;
 using double_vector_ptr = vector_ptr_t<double>;
+
+}  // namespace pdcip
 
 #endif  // PDCIP_CPP_TYPES_H_

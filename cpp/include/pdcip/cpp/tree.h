@@ -14,6 +14,8 @@
 #include <memory>
 #include <vector>
 
+#include "pdcip/cpp/types.h"
+
 namespace pdcip {
 
 template <class tree_t>
@@ -31,13 +33,17 @@ using tree_ptr_vector_ptr = tree_ptr_vector_ptr_t<tree>;
 class binary_tree;
 using binary_tree_ptr = tree_ptr_t<binary_tree>;
 using binary_tree_ptr_vector = tree_ptr_vector_t<binary_tree>;
+using binary_tree_ptr_vector_ptr = tree_ptr_vector_ptr_t<binary_tree>;
 
 /**
  * A general multi-child tree for numeric data.
  */
 class tree {
 public:
-  tree(double = NAN, const tree_ptr_vector_ptr& = nullptr);
+  tree(
+    double = NAN,
+    const tree_ptr_vector_ptr& = std::make_shared<tree_ptr_vector>()
+  );
   tree(double, tree_ptr_vector_ptr&&);
   double value() const;
   const tree_ptr_vector_ptr& children() const;
@@ -46,6 +52,8 @@ public:
   virtual void set_children(const tree_ptr_vector_ptr&);
   virtual void set_children(tree_ptr_vector_ptr&&);
   static tree_ptr_vector_ptr make_children(const std::vector<double>&);
+  static tree_ptr_vector_ptr dfs(const tree_ptr&);
+  static tree_ptr_vector_ptr bfs(const tree_ptr&);
 
 private:
   double value_;
@@ -70,7 +78,7 @@ public:
   void set_right(const binary_tree_ptr&);
   void set_right(binary_tree_ptr&&);
   const binary_tree* insert(double);
-  std::vector<double> sorted_values();
+  double_vector_ptr sorted_values();
 };
 
 /**
