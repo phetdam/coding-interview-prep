@@ -63,7 +63,7 @@ private:
 /**
  * A binary tree for numeric data.
  */
-class binary_tree: public tree {
+class binary_tree : public tree {
 public:
   binary_tree(
     double = NAN,
