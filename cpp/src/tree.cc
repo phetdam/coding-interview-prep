@@ -18,9 +18,9 @@ namespace pdcip {
  * `tree` constructor.
  *
  * @param value `double` value of `tree` node
- * @param children `const tree_children_ptr&` with children
+ * @param children `const tree_ptr_vector_ptr&` with children
  */
-tree::tree(double value, const tree_children_ptr& children)
+tree::tree(double value, const tree_ptr_vector_ptr& children)
   : value_(value), children_(children)
 {}
 
@@ -28,9 +28,9 @@ tree::tree(double value, const tree_children_ptr& children)
  * `tree` move constructor.
  *
  * @param value `double` value of `tree` node
- * @param children `tree_children_ptr&&` with children
+ * @param children `tree_ptr_vector_ptr&&` with children
  */
-tree::tree(double value, tree_children_ptr&& children)
+tree::tree(double value, tree_ptr_vector_ptr&& children)
   : value_(value), children_(children)
 {}
 
@@ -42,7 +42,7 @@ double tree::value() const { return value_; }
 /**
  * Getter for the `tree` children.
  */
-const tree_children_ptr& tree::children() const { return children_; }
+const tree_ptr_vector_ptr& tree::children() const { return children_; }
 
 /**
  * Return number of direct children of the `tree`.
@@ -62,9 +62,9 @@ void tree::set_value(double value) { value_ = value; }
 /**
  * Copy setter for the `tree` children.
  *
- * @param children `const tree_children_ptr&` with children
+ * @param children `const tree_ptr_vector_ptr&` with children
  */
-void tree::set_children(const tree_children_ptr& children)
+void tree::set_children(const tree_ptr_vector_ptr& children)
 {
   children_ = children;
 }
@@ -72,9 +72,9 @@ void tree::set_children(const tree_children_ptr& children)
 /**
  * Move setter for the `tree` children.
  *
- * @param children `tree_children_ptr&&` to move new children from
+ * @param children `tree_ptr_vector_ptr&&` to move new children from
  */
-void tree::set_children(tree_children_ptr&& children)
+void tree::set_children(tree_ptr_vector_ptr&& children)
 {
   children_ = std::move(children);
 }
@@ -84,9 +84,9 @@ void tree::set_children(tree_children_ptr&& children)
  *
  * @param values `std::vector<double>` of values to supply the children
  */
-tree_children_ptr tree::make_children(const std::vector<double>& values)
+tree_ptr_vector_ptr tree::make_children(const std::vector<double>& values)
 {
-  return make_tree_children<tree>(values);
+  return make_tree_ptr_vector<tree>(values);
 }
 
 /**
@@ -102,8 +102,8 @@ binary_tree::binary_tree(
   const std::shared_ptr<binary_tree>& right)
   : tree(
       value,
-      std::make_shared<tree_children>(
-        tree_children(
+      std::make_shared<tree_ptr_vector>(
+        tree_ptr_vector(
           { std::static_pointer_cast<tree>(left),
             std::static_pointer_cast<tree>(right)})))
 {}
@@ -132,8 +132,8 @@ std::shared_ptr<binary_tree> binary_tree::right() const
 void binary_tree::set_left(const std::shared_ptr<binary_tree>& new_left)
 {
   set_children(
-    std::make_shared<tree_children>(
-      tree_children(
+    std::make_shared<tree_ptr_vector>(
+      tree_ptr_vector(
         {std::static_pointer_cast<tree>(new_left), std::move(children()->at(1))}
       )
     )
@@ -148,8 +148,8 @@ void binary_tree::set_left(const std::shared_ptr<binary_tree>& new_left)
 void binary_tree::set_left(std::shared_ptr<binary_tree>&& new_left)
 {
   set_children(
-    std::make_shared<tree_children>(
-      tree_children(
+    std::make_shared<tree_ptr_vector>(
+      tree_ptr_vector(
         {std::static_pointer_cast<tree>(new_left), std::move(children()->at(1))}
       )
     )
@@ -164,8 +164,8 @@ void binary_tree::set_left(std::shared_ptr<binary_tree>&& new_left)
 void binary_tree::set_right(const std::shared_ptr<binary_tree>& new_right)
 {
   set_children(
-    std::make_shared<tree_children>(
-      tree_children(
+    std::make_shared<tree_ptr_vector>(
+      tree_ptr_vector(
         {
           std::move(children()->at(0)),
           std::static_pointer_cast<tree>(new_right)
@@ -183,8 +183,8 @@ void binary_tree::set_right(const std::shared_ptr<binary_tree>& new_right)
 void binary_tree::set_right(std::shared_ptr<binary_tree>&& new_right)
 {
   set_children(
-    std::make_shared<tree_children>(
-      tree_children(
+    std::make_shared<tree_ptr_vector>(
+      tree_ptr_vector(
         {
           std::move(children()->at(0)),
           std::static_pointer_cast<tree>(new_right)
