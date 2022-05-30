@@ -38,9 +38,8 @@ C/C++
 
 TBD. In short, build with CMake_ 3.16 or later.
 
-For C, unit tests require the Check_ testing framework, while for C++, unit
-tests require `Google Test`_. Note that the C code is not intended to be called
-from C++, i.e. the C headers have no
+Building C/C++ unit tests requires `Google Test`_. Note that the C code can be
+happily called by C++ code, i.e. the C headers contain
 
 .. code:: c
 
@@ -61,6 +60,11 @@ command. Doing so forces `Google Test`_ to link against the shared C runtime
 instead of linking against the static C runtime as it does by default.
 Furthermore, ensure that the correct debug or release build is being linked
 against.
+
+There are also some legacy C unit tests written using the Check_ unit testing
+framework which can be built if Check_ is installed and
+``-DBUILD_CHECK_TESTS=1`` is passed to the ``cmake`` build configuration
+command.
 
 C++ ABI compatibility
 ^^^^^^^^^^^^^^^^^^^^^
