@@ -38,8 +38,8 @@ C/C++
 
 TBD. In short, build with CMake_ 3.16 or later.
 
-Building C/C++ unit tests requires `Google Test`_. Note that the C code can be
-happily called by C++ code, i.e. the C headers contain
+Building C/C++ unit tests requires `Google Test`_. The C library can be called
+from C++ code, as the C headers contain
 
 .. code:: c
 
