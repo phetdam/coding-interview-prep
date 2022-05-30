@@ -151,13 +151,11 @@ tree_ptr_vector_ptr tree::bfs(const tree_ptr& root)
  * `binary_tree` constructor.
  *
  * @param value `double` value of `binary_tree` node
- * @param left `const std::shared_ptr<binary_tree>&` for left child
- * @param right `const std::shared_ptr<binary_tree>&` for right child
+ * @param left `const binary_tree_ptr&` for left child
+ * @param right `const binary_tree_ptr&` for right child
  */
 binary_tree::binary_tree(
-  double value,
-  const std::shared_ptr<binary_tree>& left,
-  const std::shared_ptr<binary_tree>& right)
+  double value, const binary_tree_ptr& left, const binary_tree_ptr& right)
   : tree(
       value,
       std::make_shared<tree_ptr_vector>(

@@ -6,9 +6,11 @@
  */
 
 #include <algorithm>
+#include <cmath>
 #include <cstddef>
 #include <iterator>
 #include <memory>
+#include <utility>
 #include <vector>
 
 #include <gtest/gtest.h>
@@ -24,7 +26,7 @@ namespace {
 /**
  * Test fixture class managing commonly reused `tree` objects.
  */
-class TreeTest: public ::testing::Test {
+class TreeTest : public ::testing::Test {
 protected:
   TreeTest() : root_(std::make_shared<tree>(root_value_)) {}
 
@@ -46,7 +48,7 @@ protected:
    */
   tree_ptr_vector_ptr make_test_children()
   {
-    return pdcip::tree::make_children(test_children_values_);
+    return tree::make_children(test_children_values_);
   }
 
   /**
@@ -73,22 +75,22 @@ protected:
     return static_cast<size_t>(test_children_values_.size());
   }
 
-  tree_ptr root_;
+  const tree_ptr root_;
 
   // initialization values for root_ and make_test_children return
-  static double root_value_;
-  static double_vector test_children_values_;
+  static const double root_value_;
+  static const double_vector test_children_values_;
 };
 
-double TreeTest::root_value_ = 5.7;
-double_vector TreeTest::test_children_values_({4.5, 1.3, 6.5, 9, 8.7});
+const double TreeTest::root_value_ = 5.7;
+const double_vector TreeTest::test_children_values_({4.5, 1.3, 6.5, 9, 8.7});
 
 /**
  * Test that created children have the right values and have no children.
  */
 TEST_F(TreeTest, MakeChildrenTest)
 {
-  pdcip::tree_ptr_vector_ptr children = make_test_children();
+  tree_ptr_vector_ptr children = make_test_children();
   for (std::size_t i = 0; i < children->size(); i++) {
     ASSERT_DOUBLE_EQ(test_children_values_[i], children->at(i)->value());
     ASSERT_EQ(0, children->at(i)->n_children());
@@ -115,7 +117,7 @@ TEST_F(TreeTest, DepthFirstSearchTest)
   //   root_value_
   //  }
   //
-  pdcip::double_vector true_values(test_children_values_);
+  double_vector true_values(test_children_values_);
   auto true_iterator = true_values.begin();
   std::advance(true_iterator, 1);
   true_values.insert(
@@ -147,7 +149,7 @@ TEST_F(TreeTest, BreadthFirstSearchTest)
   //   test_children_values_[test_children_values_.size() - 1]
   //  }
   //
-  pdcip::double_vector true_values({root_value_});
+  double_vector true_values({root_value_});
   for (std::size_t i = 0; i < 2; i++) {
     true_values.insert(
       true_values.end(),
@@ -162,18 +164,103 @@ TEST_F(TreeTest, BreadthFirstSearchTest)
 }
 
 /**
- * Test that `binary_tree` insertion works as expected.
+ * Test fixture class managinc commonly reused `binary_tree` objects.
  */
-TEST(BinaryTreeTests, SortedValuesTest)
-{
-  std::vector<double> values({4.5, 1.3, 6.5, 9});
-  std::vector<double> values_sorted = values;
-  std::sort(values_sorted.begin(), values_sorted.end());
-  pdcip::binary_tree tree;
-  for (auto x : values) {
-    tree.insert(x);
+class BinaryTreeTest : public ::testing::Test {
+protected:
+  /**
+   * `BinaryTreeTest` construtor that make `root_` an empty `binary_tree_ptr`.
+   */
+  BinaryTreeTest() : root_(std::make_shared<binary_tree>()) {}
+
+  /**
+   * Setup function that serves to check `root_` initialization.
+   */
+  void SetUp() override
+  {
+    ASSERT_TRUE(std::isnan(root_->value()));
+    ASSERT_EQ(nullptr, root_->left());
+    ASSERT_EQ(nullptr, root_->right());
   }
-  ASSERT_EQ(values_sorted, *(tree.sorted_values()));
+
+  /**
+   * Return the value of `root_` when it is populated with `tree_values_`.
+   *
+   * This is just the first value in `tree_values_`.
+   */
+  double root_value() const { return tree_values_[0]; }
+
+  /**
+   * Insert `tree_values_` into `root_`.
+   */
+  void root_insert_values() {
+    for (double value : tree_values_) {
+      root_->insert(value);
+    }
+  }
+
+  const binary_tree_ptr root_;
+
+  // values used for a full constructor call
+  static const double_pair init_pair_;
+  // values used to initialize the tree at root_ with values
+  static const double_vector tree_values_;
+};
+
+const double_pair BinaryTreeTest::init_pair_(2, 5.1);
+const double_vector BinaryTreeTest::tree_values_ = {4.5, 1.3, 6.5, 9, 8.1};
+
+/**
+ * Test that `binary_tree` full construction works as expected.
+ */
+TEST_F(BinaryTreeTest, FullInitTest)
+{
+  binary_tree root = binary_tree(
+    root_value(),
+    std::make_shared<binary_tree>(init_pair_.first),
+    std::make_shared<binary_tree>(init_pair_.second)
+  );
+  ASSERT_DOUBLE_EQ(root_value(), root.value());
+  ASSERT_DOUBLE_EQ(init_pair_.first, root.left()->value());
+  ASSERT_DOUBLE_EQ(init_pair_.second, root.right()->value());
+  ASSERT_EQ(nullptr, root.left()->left());
+  ASSERT_EQ(nullptr, root.left()->right());
+  ASSERT_EQ(nullptr, root.right()->left());
+  ASSERT_EQ(nullptr, root.right()->right());
+}
+
+/**
+ * Test that `binary_tree` value insertion works as expected.
+ */
+TEST_F(BinaryTreeTest, InsertValuesTest)
+{
+  root_insert_values();
+  // the resulting tree from inserting tree_values_ is:
+  //
+  //            4.5
+  //           +   +
+  //          1.3  6.5
+  //                 +
+  //                  9
+  //                 +
+  //                8.1
+  //
+  ASSERT_DOUBLE_EQ(root_value(), root_->value());
+  ASSERT_DOUBLE_EQ(tree_values_[1], root_->left()->value());
+  ASSERT_DOUBLE_EQ(tree_values_[2], root_->right()->value());
+  ASSERT_DOUBLE_EQ(tree_values_[3], root_->right()->right()->value());
+  ASSERT_DOUBLE_EQ(tree_values_[4], root_->right()->right()->left()->value());
+}
+
+/**
+ * Test that `binary_tree::sorted_values` works as expected.
+ */
+TEST_F(BinaryTreeTest, SortedValuesTest)
+{
+  std::vector<double> values_sorted = tree_values_;
+  std::sort(values_sorted.begin(), values_sorted.end());
+  root_insert_values();
+  ASSERT_EQ(values_sorted, *(root_->sorted_values()));
 }
 
 /**

@@ -134,11 +134,11 @@ protected:
   gen_tree* root_;
 
   // initialization values for root_, make_direct_children return
-  static double root_value_;
+  static const double root_value_;
   static const std::vector<double> direct_values_;
 };
 
-double GenTreeTest::root_value_ = 1.7;
+const double GenTreeTest::root_value_ = 1.7;
 const std::vector<double> GenTreeTest::direct_values_({4.5, 1.8, 8.9, 2, 6.5});
 
 /**

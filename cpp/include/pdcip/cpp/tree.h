@@ -70,7 +70,6 @@ public:
     const binary_tree_ptr& = nullptr,
     const binary_tree_ptr& = nullptr
   );
-  binary_tree(double, binary_tree_ptr&&, binary_tree_ptr&&);
   binary_tree_ptr left() const;
   binary_tree_ptr right() const;
   void set_left(const binary_tree_ptr&);
@@ -87,8 +86,7 @@ public:
  * @param values `std::vector<double>` of values to supply the children
  */
 template <class tree_t = tree>
-tree_ptr_vector_ptr_t<tree_t> make_tree_ptr_vector(
-  const std::vector<double>& values)
+tree_ptr_vector_ptr_t<tree_t> make_tree_ptr_vector(const double_vector& values)
 {
   tree_ptr_vector_ptr_t<tree_t>
   children = std::make_shared<tree_ptr_vector_t<tree_t>>(

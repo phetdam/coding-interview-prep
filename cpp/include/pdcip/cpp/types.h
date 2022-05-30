@@ -9,6 +9,7 @@
 #define PDCIP_CPP_TYPES_H_
 
 #include <memory>
+#include <utility>
 #include <vector>
 
 namespace pdcip {
@@ -18,6 +19,7 @@ using vector_ptr_t = std::shared_ptr<std::vector<T>>;
 
 using double_vector = std::vector<double>;
 using double_vector_ptr = vector_ptr_t<double>;
+using double_pair = std::pair<double, double>;
 
 }  // namespace pdcip
 
