@@ -88,6 +88,42 @@ gen_tree_free_deep(gen_tree *);
 gen_tree **
 gen_tree_make_children(size_t, const double *);
 
+void
+gen_tree_free_children_array_(gen_tree **, size_t, bool);
+
+/**
+ * Frees `gen_tree *` array returned by `gen_tree_make_children`.
+ *
+ * This macro does not free any children of the `gen_tree *` specified; use
+ * `gen_tree_free_children_array_deep` for that purpose.
+ *
+ * @param ar `gen_tree *` to contiguous `gen_tree *` to free
+ * @param n `size_t` giving number of `gen_tree *` to free in `ar`
+ * @returns `void`
+ */
+#define gen_tree_free_children_array(ar, n) \
+  gen_tree_free_children_array_(ar, n, false)
+
+/**
+ * Deep frees `gen_tree *` array returned by `gen_tree_make_children`.
+ *
+ * Frees the children of the `gen_tree *` specified by `ar`.
+ *
+ * @param ar `gen_tree *` to contiguous `gen_tree *` to free
+ * @param n `size_t` giving number of `gen_tree *` to free in `ar`
+ * @returns `void`
+ */
+#define gen_tree_free_children_array_deep(ar, n) \
+  gen_tree_free_children_array_(ar, n, true)
+
+/*
+gen_tree **
+gen_tree_dfs(const gen_tree *, size_t *);
+
+gen_tree **
+gen_tree_bfs(const gen_tree *, size_t *);
+*/
+
 /**
  * A binary tree for numeric data.
  */
@@ -149,6 +185,14 @@ binary_tree_insert(binary_tree *, double);
 
 double *
 binary_tree_sorted_values(const binary_tree *, size_t *);
+
+/*
+binary_tree **
+binary_tree_bfs(const binary_tree *, size_t *);
+
+binary_tree **
+binary_tree_dfs(const binary_tree *, size_t *);
+*/
 
 #ifdef __cplusplus
 }

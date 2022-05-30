@@ -85,7 +85,7 @@ gen_tree_free_children_(gen_tree *tree, bool deep)
 void
 gen_tree_free_deep(gen_tree *tree)
 {
-  gen_tree_free_children(tree);
+  gen_tree_free_children_deep(tree);
   gen_tree_free(tree);
 }
 
@@ -112,6 +112,59 @@ gen_tree_make_children(size_t n, const double *values)
   }
   return children;
 }
+
+/**
+ * Frees an array of `gen_tree *` allocated by `gen_tree_make_children`.
+ *
+ * @note To [deep] free the children of a `gen_tree *`, it is preferred to use
+ *    macros `gen_tree_free_children`, `gen_tree_free_children_deep` instead
+ *    of this function or its macros on the `gen_tree` children.
+ *
+ * @param children `gen_tree **` to contiguous `gen_tree *`
+ * @param n_children `size_t` giving number of `gen_tree *` to free
+ * @param deep `bool` where if `true`, the entire child subtree of each
+ *    `gen_tree *` will also be freed. If `false`, child subtrees left alone.
+ */
+void
+gen_tree_free_children_array_(gen_tree **children, size_t n_children, bool deep)
+{
+  assert(children && n_children);
+  for (size_t i = 0; i < n_children; i++) {
+    if (deep) {
+      gen_tree_free_children_deep(children[i]);
+    }
+    gen_tree_free(children[i]);
+  }
+  free(children);
+}
+
+/**
+ * Perform DFS on a `gen_tree`.
+ *
+ * @param tree `gen_tree *` giving the root of the tree
+ * @param n_children_p `size_t *` giving address to a writable `size_t` which
+ *    will be assigned the number of `gen_tree *` in the specified `tree`.
+ * @returns `gen_tree **` to array of `gen_tree *` of the nodes in the tree
+ *    with `tree` as the root. Can be `NULL` if there are no children. Memory
+ *    used by returned `gen_tree **` to hold `gen_tree *` must be freed.
+ */
+/*
+gen_tree **
+gen_tree_dfs(const gen_tree *tree, size_t *n_children_p)
+{
+  assert(tree && n_children_p);
+  // if no children, we return NULL
+  if (!tree->n_children) {
+    return NULL;
+  }
+  // array of gen_tree **, each of which points to array of gen_tree *
+  gen_tree ***
+  children_ar = (gen_tree ***) malloc(tree->n_children * sizeof(gen_tree **));
+  // holds number of children in each subtree
+  size_t *n_children_ar = (size_t *) malloc(tree->n_children * sizeof(size_t));
+
+}
+*/
 
 /**
  * Allocate a `binary_tree` instance on the heap.
@@ -172,7 +225,7 @@ binary_tree_free_children_(binary_tree *tree, bool deep)
 void
 binary_tree_free_deep(binary_tree *tree)
 {
-  binary_tree_free_children(tree);
+  binary_tree_free_children_deep(tree);
   binary_tree_free(tree);
 }
 
