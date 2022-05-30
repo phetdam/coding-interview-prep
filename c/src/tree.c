@@ -198,6 +198,7 @@ gen_tree_dfs(const gen_tree *tree, size_t *n_nodes_p)
   }
   free(nodes_ar);
   free(n_nodes_ar);
+  *n_nodes_p = n_nodes;
   return nodes;
 }
 

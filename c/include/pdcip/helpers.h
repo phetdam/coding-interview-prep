@@ -84,7 +84,7 @@
  * @param start Leftmost index to start applying at
  * @param end Rightmost index to stop applying at (not included)
  */
-#define map_const_func_range(func, ar, start, end) \
+#define map_call_func_range(func, ar, start, end) \
   check_index_endpoints(start, end); \
   for (size_t i = start, i < end; i++) { func(ar[i]); }
 
@@ -97,8 +97,8 @@
  * @param ar Name of array we want to apply `func` to
  * @param n_items Number of items in the array
  */
-#define map_const_func(func, ar, n_items) \
-  map_const_func_range(func, ar, 0, n_items)
+#define map_call_func(func, ar, n_items) \
+  map_call_func_range(func, ar, 0, n_items)
 
 /**
  * Apply function to a range of array elements, writing to another array.

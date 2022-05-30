@@ -11,6 +11,7 @@
 
 #include <gtest/gtest.h>
 
+#include "pdcip/helpers.h"
 #include "pdcip/tree.h"
 
 /**
@@ -24,7 +25,8 @@ namespace {
 /**
  * Test fixture for `gen_tree` tests that require a base root and children.
  *
- * Ctor and dtor manage `malloc` + `free` for `gen_tree*` `root_`.
+ * Ctor and dtor manage `malloc` + `free` for `gen_tree*` `root_`, and clean
+ * up the children if there are children still attached.
  *
  * @note `SetUp` method is used since we use `ASSERT_*` macros to do some
  *    checks. These `ASSERT_*` macros can't be used in ctor/dtor.
@@ -36,7 +38,11 @@ protected:
       direct_values_({4.5, 1.8, 8.9, 2, 6.5})
   {}
 
-  ~GenTreeTest() { gen_tree_free(root_); }
+  ~GenTreeTest() {
+    // already checks if children is NULL
+    gen_tree_free_children_deep(root_);
+    gen_tree_free(root_);
+  }
 
   /**
    * Set up the `GenRootTest` fixture instance.
@@ -58,13 +64,72 @@ protected:
    * @note Children must be freed later with `gen_tree_free_children` if bound
    *    as children of `gen_tree *` or manually freed later!
    */
-  gen_tree** gen_tree_make_direct_children()
+  gen_tree** make_direct_children()
   {
     return gen_tree_make_children(n_direct_children(), direct_values_.data());
   }
 
   /**
-   * Return number of direct children made by `gen_tree_make_direct_children`.
+   * Add direct children from `make_direct_children` to `root_`.
+   *
+   * @note Do not call any `::malloc_` methods after calling until
+   *    `free_direct_children` has been called to free the memory.
+   */
+  void malloc_direct_children()
+  {
+    gen_tree_set_children(root_, n_direct_children(), make_direct_children());
+  }
+
+  /**
+   * Free direct children added to `root_`.
+   *
+   * Also checks if `root_` has had its state properly reset.
+   *
+   * @note Do not call unless cleaning up after `malloc_direct_children` call.
+   */
+  void free_direct_children()
+  {
+    gen_tree_free_children(root_);
+    ASSERT_EQ(0, root_->n_children);
+    ASSERT_EQ(nullptr, root_->children);
+  }
+
+  /**
+   * Add subtree using `make_direct_children` to `root_`.
+   *
+   * First layer of children is from `make_direct_children`, and the second
+   * leftmost child in the first layer of children also has children from a
+   * call to the `make_direct_children` method.
+   *
+   * @note Do not call any `::malloc` metods after calling until `free_subtree`
+   *    has been called to free the memory used.
+   */
+  void malloc_subtree()
+  {
+    gen_tree** first_children = make_direct_children();
+    gen_tree** second_children = make_direct_children();
+    gen_tree_set_children(root_, n_direct_children(), first_children);
+    gen_tree_set_children(
+      first_children[1], n_direct_children(), second_children
+    );
+  }
+
+  /**
+   * Free subtree added to `root_`.
+   *
+   * Also checks if `root_` has had its state properly reset.
+   *
+   * @note Do not call unless cleaning up after `malloc_subtree`.
+   */
+  void free_subtree()
+  {
+    gen_tree_free_children_deep(root_);
+    ASSERT_EQ(0, root_->n_children);
+    ASSERT_EQ(nullptr, root_->children);
+  }
+
+  /**
+   * Return number of direct children made by `make_direct_children`.
    */
   size_t n_direct_children() const { return direct_values_.size(); }
 
@@ -75,14 +140,18 @@ protected:
 /**
  * Test fixture for `binary_tree` tests that require a base root.
  *
- * Ctor and dtor manage `malloc` + `free` for `bianry_tree*` `root_`.
+ * Ctor and dtor manage `malloc` + `free` for `binary_tree*` `root_`, and clean
+ * up the child subtrees if there are still children attached.
  *
  * See `GenRootTest` definition for notes.
  */
 class BinaryTreeTest: public ::testing::Test {
 protected:
   BinaryTreeTest() : root_(binary_tree_malloc_default(5)) {}
-  ~BinaryTreeTest() { binary_tree_free(root_); }
+  ~BinaryTreeTest() {
+    binary_tree_free_children_deep(root_);
+    binary_tree_free(root_);
+  }
 
   /**
    * Set up the `BinaryTreeTest` fixture instance.
@@ -102,20 +171,17 @@ protected:
 /**
  * Test that making and freeing direct `gen_tree` children works as intended.
  *
- * @note Leaks memory on failure due to checking inside loop.
+ * @note Won't leak memory on failure since `GenTreeTest` dtor will clean up.
  */
 TEST_F(GenTreeTest, MakeFreeChildrenTest)
 {
-  gen_tree **children = gen_tree_make_direct_children();
+  malloc_direct_children();
   for (unsigned int i = 0; i < n_direct_children(); i++) {
-    ASSERT_DOUBLE_EQ(direct_values_.data()[i], children[i]->value);
-    ASSERT_EQ(0, children[i]->n_children);
-    ASSERT_EQ(nullptr, children[i]->children);
+    ASSERT_DOUBLE_EQ(direct_values_.data()[i], root_->children[i]->value);
+    ASSERT_EQ(0, root_->children[i]->n_children);
+    ASSERT_EQ(nullptr, root_->children[i]->children);
   }
-  gen_tree_set_children(root_, n_direct_children(), children);
-  gen_tree_free_children(root_);
-  ASSERT_EQ(0, root_->n_children);
-  ASSERT_EQ(nullptr, root_->children);
+  free_direct_children();
 }
 
 /**
@@ -123,15 +189,8 @@ TEST_F(GenTreeTest, MakeFreeChildrenTest)
  */
 TEST_F(GenTreeTest, MakeFreeChildrenDeepTest)
 {
-  gen_tree **first_children = gen_tree_make_direct_children();
-  gen_tree **second_children = gen_tree_make_direct_children();
-  gen_tree_set_children(root_, n_direct_children(), first_children);
-  gen_tree_set_children(
-    first_children[1], n_direct_children(), second_children
-  );
-  gen_tree_free_children_deep(root_);
-  ASSERT_EQ(0, root_->n_children);
-  ASSERT_EQ(nullptr, root_->children);
+  malloc_subtree();
+  free_subtree();
 }
 
 /**
@@ -139,7 +198,7 @@ TEST_F(GenTreeTest, MakeFreeChildrenDeepTest)
  */
 TEST_F(GenTreeTest, MakeFreeChildrenArrayTest)
 {
-  gen_tree **children = gen_tree_make_direct_children();
+  gen_tree** children = make_direct_children();
   gen_tree_free_children_array(children, n_direct_children());
 }
 
@@ -148,11 +207,40 @@ TEST_F(GenTreeTest, MakeFreeChildrenArrayTest)
  */
 TEST_F(GenTreeTest, MakeFreeChildrenArrayDeepTest)
 {
-  gen_tree **children = gen_tree_make_direct_children();
+  gen_tree** children = make_direct_children();
   for (unsigned i = 0; i < (n_direct_children() / 2); i++) {
-    children[i]->children = gen_tree_make_direct_children();
+    children[i]->children = make_direct_children();
   }
   gen_tree_free_children_array_deep(children, n_direct_children());
+}
+
+/**
+ * Test that depth-first search on `gen_tree` works as expected.
+ */
+TEST_F(GenTreeTest, DepthFirstSearchTest)
+{
+  malloc_subtree();
+  // write n_nodes, get array of gen_tree*
+  size_t n_nodes;
+  gen_tree **root_nodes = gen_tree_dfs(root_, &n_nodes);
+  // if NULL, then nothing to free
+  ASSERT_TRUE(root_nodes);
+  // expected values, actual values
+  double root_node_values_exp[] = {
+    4.5, 4.5, 1.8, 8.9, 2, 6.5, 1.8, 8.9, 2, 6.5, 1.7
+  };
+  double root_node_values_act[n_nodes];
+  for (unsigned i = 0; i < n_nodes; i++) {
+    root_node_values_act[i] = root_nodes[i]->value;
+  }
+  // no longer need the copied gen_tree * and we clean up the subtree
+  free(root_nodes);
+  free_subtree();
+  // now we can do our comparison
+  ASSERT_EQ(11, n_nodes);
+  for (unsigned i = 0; i < n_nodes; i++) {
+    ASSERT_DOUBLE_EQ(root_node_values_exp[i], root_node_values_act[i]);
+  }
 }
 
 /**
@@ -163,8 +251,8 @@ TEST_F(BinaryTreeTest, MakeFreeChildrenTest)
   root_->left = binary_tree_malloc_default(2.3);
   root_->right = binary_tree_malloc_default(4.6);
   binary_tree_free_children(root_);
-  ASSERT_EQ(nullptr, root_->left);
-  ASSERT_EQ(nullptr, root_->right);
+  EXPECT_EQ(nullptr, root_->left);
+  EXPECT_EQ(nullptr, root_->right);
 }
 
 /**
@@ -183,8 +271,8 @@ TEST_F(BinaryTreeTest, MakeFreeChildrenDeepTest)
     )
   );
   binary_tree_free_children_deep(root_);
-  ASSERT_EQ(nullptr, root_->left);
-  ASSERT_EQ(nullptr, root_->right);
+  EXPECT_EQ(nullptr, root_->left);
+  EXPECT_EQ(nullptr, root_->right);
 }
 
 /**
@@ -209,7 +297,7 @@ TEST_F(BinaryTreeTest, SortedValuesTest)
     )
   );
   size_t n_values_act;
-  double *values_act = binary_tree_sorted_values(root_, &n_values_act);
+  double* values_act = binary_tree_sorted_values(root_, &n_values_act);
   // recall that root_->value is 5
   double values_exp[] = {2.7, 3, 3.3, 4.5, 4.9, 5, 5.6, 7.2, 8, 9};
   // clean up now to reduce memory leak (values have been copied)
