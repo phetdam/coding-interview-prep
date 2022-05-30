@@ -7,6 +7,7 @@
 
 #include <stdlib.h>
 
+#include <iterator>
 #include <vector>
 
 #include <gtest/gtest.h>
@@ -31,12 +32,9 @@ namespace {
  * @note `SetUp` method is used since we use `ASSERT_*` macros to do some
  *    checks. These `ASSERT_*` macros can't be used in ctor/dtor.
  */
-class GenTreeTest: public ::testing::Test {
+class GenTreeTest : public ::testing::Test {
 protected:
-  GenTreeTest()
-    : root_(gen_tree_malloc_default(1.7)),
-      direct_values_({4.5, 1.8, 8.9, 2, 6.5})
-  {}
+  GenTreeTest() : root_(gen_tree_malloc_default(root_value_)) {}
 
   ~GenTreeTest() {
     // already checks if children is NULL
@@ -51,7 +49,7 @@ protected:
    */
   void SetUp() override
   {
-    ASSERT_DOUBLE_EQ(1.7, root_->value);
+    ASSERT_DOUBLE_EQ(root_value_, root_->value);
     ASSERT_EQ(0, root_->n_children);
     ASSERT_EQ(nullptr, root_->children);
   }
@@ -134,8 +132,14 @@ protected:
   size_t n_direct_children() const { return direct_values_.size(); }
 
   gen_tree* root_;
-  const std::vector<double> direct_values_;
+
+  // initialization values for root_, make_direct_children return
+  static double root_value_;
+  static const std::vector<double> direct_values_;
 };
+
+double GenTreeTest::root_value_ = 1.7;
+const std::vector<double> GenTreeTest::direct_values_({4.5, 1.8, 8.9, 2, 6.5});
 
 /**
  * Test that making and freeing direct `gen_tree` children works as intended.
@@ -194,11 +198,28 @@ TEST_F(GenTreeTest, DepthFirstSearchTest)
   gen_tree **root_nodes = gen_tree_dfs(root_, &n_nodes);
   // if NULL, then nothing to free
   ASSERT_TRUE(root_nodes);
-  // expected values, actual values
-  double root_node_values_exp[] = {
-    4.5, 4.5, 1.8, 8.9, 2, 6.5, 1.8, 8.9, 2, 6.5, 1.7
-  };
-  double root_node_values_act[n_nodes];
+  // expected values, formed from direct_values_ and root_value_. values:
+  //
+  // {
+  //   direct_values_[0],
+  //   direct_values_[0],
+  //   /* ... */
+  //   direct_values_[direct_values_.size() - 1],
+  //   direct_values_[1],
+  //   /* ... */
+  //   direct_values_[direct_values_.size() - 1],
+  //   root_value_
+  //  }
+  //
+  std::vector<double> root_node_values_exp(direct_values_);
+  auto root_node_iter_exp = root_node_values_exp.begin();
+  std::advance(root_node_iter_exp, 1);
+  root_node_values_exp.insert(
+    root_node_iter_exp, direct_values_.begin(), direct_values_.end()
+  );
+  root_node_values_exp.push_back(root_value_);
+  // actual values, populate from root_nodes
+  std::vector<double> root_node_values_act(n_nodes);
   for (unsigned i = 0; i < n_nodes; i++) {
     root_node_values_act[i] = root_nodes[i]->value;
   }
@@ -206,7 +227,7 @@ TEST_F(GenTreeTest, DepthFirstSearchTest)
   free(root_nodes);
   free_subtree();
   // now we can do our comparison
-  ASSERT_EQ(11, n_nodes);
+  ASSERT_EQ(root_node_values_exp.size(), n_nodes);
   for (unsigned i = 0; i < n_nodes; i++) {
     ASSERT_DOUBLE_EQ(root_node_values_exp[i], root_node_values_act[i]);
   }
@@ -220,7 +241,7 @@ TEST_F(GenTreeTest, DepthFirstSearchTest)
  *
  * See `GenRootTest` definition for notes.
  */
-class BinaryTreeTest: public ::testing::Test {
+class BinaryTreeTest : public ::testing::Test {
 protected:
   BinaryTreeTest() : root_(binary_tree_malloc_default(5)) {}
   ~BinaryTreeTest() {
