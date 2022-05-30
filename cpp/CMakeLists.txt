@@ -46,4 +46,4 @@ include_directories(include)
 add_subdirectory(src)
 
 # build C++ tests using Google Test if minimum version of Google Test found
-include(BuildCppTests)
+include(BuildGTestTests)
