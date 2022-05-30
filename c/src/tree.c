@@ -139,7 +139,7 @@ gen_tree_free_children_array_(gen_tree **children, size_t n_children, bool deep)
 }
 
 /**
- * Perform DFS on a `gen_tree`.
+ * Perform depth-first search on a `gen_tree`.
  *
  * @param tree `gen_tree *` giving the root of the tree
  * @param n_nodes_p `size_t *` giving address to a writable `size_t` which
