@@ -8,7 +8,7 @@ target_link_libraries(pdcip_test pdcip_c GTest::Main)
 gtest_discover_tests(pdcip_test)
 
 # build legacy tests that use the Check C unit testing framework
-if(DEFINED BUILD_CHECK_TESTS)
+if(BUILD_CHECK_TESTS)
     # soft dependency on the Check C unit testing framework
     set(CHECK_MIN_VERSION 0.15)
 
