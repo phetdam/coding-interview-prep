@@ -21,6 +21,23 @@ using double_vector = std::vector<double>;
 using double_vector_ptr = vector_ptr_t<double>;
 using double_pair = std::pair<double, double>;
 
+template <class T>
+using T_ptr_t = std::shared_ptr<T>;
+template <class T>
+using T_ptr_vector_t = std::vector<T_ptr_t<T>>;
+template <class T>
+using T_ptr_vector_ptr_t = std::shared_ptr<T_ptr_vector_t<T>>;
+
+class tree;
+using tree_ptr = T_ptr_t<tree>;
+using tree_ptr_vector = T_ptr_vector_t<tree>;
+using tree_ptr_vector_ptr = T_ptr_vector_ptr_t<tree>;
+
+class binary_tree;
+using binary_tree_ptr = T_ptr_t<binary_tree>;
+using binary_tree_ptr_vector = T_ptr_vector_t<binary_tree>;
+using binary_tree_ptr_vector_ptr = T_ptr_vector_ptr_t<binary_tree>;
+
 }  // namespace pdcip
 
 #endif  // PDCIP_CPP_TYPES_H_

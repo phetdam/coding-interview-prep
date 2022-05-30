@@ -18,23 +18,6 @@
 
 namespace pdcip {
 
-template <class tree_t>
-using tree_ptr_t = std::shared_ptr<tree_t>;
-template <class tree_t>
-using tree_ptr_vector_t = std::vector<tree_ptr_t<tree_t>>;
-template <class tree_t>
-using tree_ptr_vector_ptr_t = std::shared_ptr<tree_ptr_vector_t<tree_t>>;
-
-class tree;
-using tree_ptr = tree_ptr_t<tree>;
-using tree_ptr_vector = tree_ptr_vector_t<tree>;
-using tree_ptr_vector_ptr = tree_ptr_vector_ptr_t<tree>;
-
-class binary_tree;
-using binary_tree_ptr = tree_ptr_t<binary_tree>;
-using binary_tree_ptr_vector = tree_ptr_vector_t<binary_tree>;
-using binary_tree_ptr_vector_ptr = tree_ptr_vector_ptr_t<binary_tree>;
-
 /**
  * A general multi-child tree for numeric data.
  */
@@ -87,11 +70,11 @@ public:
  * @param values `std::vector<double>` of values to supply the children
  */
 template <class tree_t = tree>
-tree_ptr_vector_ptr_t<tree_t> make_tree_ptr_vector(const double_vector& values)
+T_ptr_vector_ptr_t<tree_t> make_tree_ptr_vector(const double_vector& values)
 {
-  tree_ptr_vector_ptr_t<tree_t>
-  children = std::make_shared<tree_ptr_vector_t<tree_t>>(
-    tree_ptr_vector_t<tree_t>(values.size())
+  T_ptr_vector_ptr_t<tree_t>
+  children = std::make_shared<T_ptr_vector_t<tree_t>>(
+    T_ptr_vector_t<tree_t>(values.size())
   );
   for (std::size_t i = 0; i < values.size(); i++) {
     (*children)[i] = std::make_shared<tree_t>(tree_t(values[i]));
