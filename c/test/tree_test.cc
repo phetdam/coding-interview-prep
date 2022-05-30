@@ -195,7 +195,7 @@ TEST_F(GenTreeTest, DepthFirstSearchTest)
   malloc_subtree();
   // write n_nodes, get array of gen_tree*
   size_t n_nodes;
-  gen_tree **root_nodes = gen_tree_dfs(root_, &n_nodes);
+  gen_tree** root_nodes = gen_tree_dfs(root_, &n_nodes);
   // if NULL, then nothing to free
   ASSERT_TRUE(root_nodes);
   // expected values, formed from direct_values_ and root_value_. values:

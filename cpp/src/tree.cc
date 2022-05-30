@@ -133,9 +133,6 @@ tree_ptr_vector_ptr tree::dfs(const tree_ptr& root)
 tree_ptr_vector_ptr tree::bfs(const tree_ptr& root)
 {
   assert(root);
-  if (!root->children_) {
-    return std::make_shared<tree_ptr_vector>(tree_ptr_vector({root}));
-  }
   tree_ptr_vector_ptr nodes = std::make_shared<tree_ptr_vector>();
   // queue is a wrapped deque, which makes it slightly slower
   std::queue<tree_ptr> node_queue({root});
@@ -143,7 +140,7 @@ tree_ptr_vector_ptr tree::bfs(const tree_ptr& root)
     tree_ptr cur_node = node_queue.front();
     node_queue.pop();
     for (tree_ptr child : *(cur_node->children())) {
-      node_queue.push(cur_node);
+      node_queue.push(child);
     }
     nodes->push_back(cur_node);
   }

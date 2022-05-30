@@ -6,6 +6,8 @@
  */
 
 #include <algorithm>
+#include <cstddef>
+#include <iterator>
 #include <memory>
 #include <vector>
 
@@ -100,11 +102,61 @@ TEST_F(TreeTest, DepthFirstSearchTest)
 {
   give_root_subtree();
   tree_ptr_vector_ptr nodes = pdcip::tree::dfs(root_);
-  ASSERT_EQ(11, nodes->size());
-  pdcip::double_vector true_values = {
-    4.5, 4.5, 1.3, 6.5, 9, 8.7, 1.3, 6.5, 9, 8.7, 5.7
-  };
-  for (size_t i = 0; i < nodes->size(); i++) {
+  // expected values from test_children_values_ and root_value_. values:
+  //
+  // {
+  //   test_children_values_[0],
+  //   test_children_values_[0],
+  //   /* ... */
+  //   test_children_values_[test_children_values_.size() - 1],
+  //   test_children_values_[1],
+  //   /* ... */
+  //   test_children_values_[test_children_values_.size() - 1],
+  //   root_value_
+  //  }
+  //
+  pdcip::double_vector true_values(test_children_values_);
+  auto true_iterator = true_values.begin();
+  std::advance(true_iterator, 1);
+  true_values.insert(
+    true_iterator, test_children_values_.begin(), test_children_values_.end()
+  );
+  true_values.push_back(root_value_);
+  ASSERT_EQ(true_values.size(), nodes->size());
+  for (std::size_t i = 0; i < nodes->size(); i++) {
+    ASSERT_DOUBLE_EQ(true_values[i], nodes->at(i)->value());
+  }
+}
+
+/**
+ * Test that breadth-first search yields the expected result.
+ */
+TEST_F(TreeTest, BreadthFirstSearchTest)
+{
+  give_root_subtree();
+  tree_ptr_vector_ptr nodes = pdcip::tree::bfs(root_);
+  // expected values from test_children_values_ and root_value_. values:
+  //
+  // {
+  //   root_value_,
+  //   test_children_values_[0],
+  //   /* ... */
+  //   test_children_values_[test_children_values_.size() - 1],
+  //   test_children_values_[0],
+  //   /* ... */
+  //   test_children_values_[test_children_values_.size() - 1]
+  //  }
+  //
+  pdcip::double_vector true_values({root_value_});
+  for (std::size_t i = 0; i < 2; i++) {
+    true_values.insert(
+      true_values.end(),
+      test_children_values_.begin(),
+      test_children_values_.end()
+    );
+  }
+  ASSERT_EQ(true_values.size(), nodes->size());
+  for (std::size_t i = 0; i < nodes->size(); i++) {
     ASSERT_DOUBLE_EQ(true_values[i], nodes->at(i)->value());
   }
 }
@@ -123,6 +175,10 @@ TEST(BinaryTreeTests, SortedValuesTest)
   }
   ASSERT_EQ(values_sorted, *(tree.sorted_values()));
 }
+
+/**
+ * Test that depth-first search yields the expected result with `binary_tree`.
+ */
 
 }  // namespace
 
