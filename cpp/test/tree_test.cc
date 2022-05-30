@@ -31,7 +31,7 @@ protected:
   TreeTest() : root_(std::make_shared<tree>(root_value_)) {}
 
   /**
-   * Set up the `TreeTest` instance.
+   * Set up the `TreeTest` instance per test.
    *
    * Performs some checking of the initialized members.
    */
@@ -174,13 +174,24 @@ protected:
   BinaryTreeTest() : root_(std::make_shared<binary_tree>()) {}
 
   /**
-   * Setup function that serves to check `root_` initialization.
+   * Per-test setup function that serves to check `root_` initialization.
    */
   void SetUp() override
   {
     ASSERT_TRUE(std::isnan(root_->value()));
     ASSERT_EQ(nullptr, root_->left());
     ASSERT_EQ(nullptr, root_->right());
+  }
+
+  /**
+   * Per-suite (class) setup function.
+   *
+   * We use this to setup `tree_values_sorted_`.
+   */
+  static void SetUpTestSuite()
+  {
+    tree_values_sorted_ = tree_values_;
+    std::sort(tree_values_sorted_.begin(), tree_values_sorted_.end());
   }
 
   /**
@@ -203,12 +214,16 @@ protected:
 
   // values used for a full constructor call
   static const double_pair init_pair_;
-  // values used to initialize the tree at root_ with values
+  // values used to initialize the tree at root_ with values + sorted version.
+  // note sorted version cannot be const since we need to assign to it
   static const double_vector tree_values_;
+  static double_vector tree_values_sorted_;
 };
 
 const double_pair BinaryTreeTest::init_pair_(2, 5.1);
 const double_vector BinaryTreeTest::tree_values_ = {4.5, 1.3, 6.5, 9, 8.1};
+// cannot leave uninitialized, so just make it an empty
+double_vector BinaryTreeTest::tree_values_sorted_;
 
 /**
  * Test that `binary_tree` full construction works as expected.
@@ -257,15 +272,27 @@ TEST_F(BinaryTreeTest, InsertValuesTest)
  */
 TEST_F(BinaryTreeTest, SortedValuesTest)
 {
-  std::vector<double> values_sorted = tree_values_;
-  std::sort(values_sorted.begin(), values_sorted.end());
   root_insert_values();
-  ASSERT_EQ(values_sorted, *(root_->sorted_values()));
+  ASSERT_EQ(tree_values_sorted_, *(root_->sorted_values()));
 }
 
 /**
  * Test that depth-first search yields the expected result with `binary_tree`.
  */
+TEST_F(BinaryTreeTest, DepthFirstSearchTest)
+{
+  root_insert_values();
+  tree_ptr_vector_ptr nodes = tree::dfs(root_);
+  double_vector_ptr node_values = tree::value_vector(nodes);
+  // values retrieved by depth-first search are {1.3, 8.1, 9, 6.5, 4}
+  double_vector true_values(tree_values_.size());
+  true_values[0] = tree_values_[1];
+  true_values[1] = tree_values_[4];
+  true_values[2] = tree_values_[3];
+  true_values[3] = tree_values_[2];
+  true_values[4] = tree_values_[0];
+  ASSERT_EQ(true_values, *node_values);
+}
 
 }  // namespace
 

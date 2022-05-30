@@ -90,10 +90,10 @@ void tree::set_children(tree_ptr_vector_ptr&& children)
 /**
  * Convenience method to generate `tree` children.
  *
- * @param values `std::vector<double>` of values to supply the children
+ * @param values `double_vector` of values to supply the children
  * @returns `tree_ptr_vector_ptr` of `tree` children
  */
-tree_ptr_vector_ptr tree::make_children(const std::vector<double>& values)
+tree_ptr_vector_ptr tree::make_children(const double_vector& values)
 {
   return make_tree_ptr_vector<tree>(values);
 }
@@ -113,8 +113,13 @@ tree_ptr_vector_ptr tree::dfs(const tree_ptr& root)
   }
   // recursive collection of all subtree nodes
   auto nodes_vec = std::make_shared<std::vector<tree_ptr_vector_ptr>>();
+  // ignore any children that are nullptr; some subclasses, ex. binary_tree,
+  // may have nullptr children. binary_tree does that so left, right methods
+  // will return nullptr if missing the left and/or right child[ren]
   for (tree_ptr child : *root->children_) {
-    nodes_vec->push_back(tree::dfs(child));
+    if (child) {
+      nodes_vec->push_back(tree::dfs(child));
+    }
   }
   auto nodes = std::make_shared<tree_ptr_vector>();
   for (tree_ptr_vector_ptr subnodes : *nodes_vec) {
@@ -145,6 +150,21 @@ tree_ptr_vector_ptr tree::bfs(const tree_ptr& root)
     nodes->push_back(cur_node);
   }
   return nodes;
+}
+
+/**
+ * Return `double_vector_ptr` with `tree` values from a `tree_ptr` vector.
+ *
+ * @param tree_nodes `const tree_ptr_vector_ptr&` with `tree_ptr` instances
+ */
+double_vector_ptr tree::value_vector(const tree_ptr_vector_ptr& tree_nodes)
+{
+  double_vector_ptr
+  node_values = std::make_shared<double_vector>(tree_nodes->size());
+  for (std::size_t i = 0; i < tree_nodes->size(); i++) {
+    (*node_values)[i] = tree_nodes->at(i)->value();
+  }
+  return node_values;
 }
 
 /**

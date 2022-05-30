@@ -51,9 +51,10 @@ public:
   void set_value(double);
   virtual void set_children(const tree_ptr_vector_ptr&);
   virtual void set_children(tree_ptr_vector_ptr&&);
-  static tree_ptr_vector_ptr make_children(const std::vector<double>&);
+  static tree_ptr_vector_ptr make_children(const double_vector&);
   static tree_ptr_vector_ptr dfs(const tree_ptr&);
   static tree_ptr_vector_ptr bfs(const tree_ptr&);
+  static double_vector_ptr value_vector(const tree_ptr_vector_ptr&);
 
 private:
   double value_;
