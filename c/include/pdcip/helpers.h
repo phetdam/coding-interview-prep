@@ -25,7 +25,7 @@
  *
  * @param name Name of variable to bind sum to
  * @param type Type of the final variable, ex. `size_t`, `double`
- * @param ar Name of the `type *` array we are looping through
+ * @param ar `type *` array we are looping through
  * @param start Leftmost index to start at
  * @param end Rightmost index to end at (not included)
  */
@@ -39,7 +39,7 @@
  *
  * @param name Name of variable to bind sum to
  * @param type Type of the final variable, ex. `size_t`, `double`
- * @param ar Name of the `type *` array we are looping through
+ * @param ar `type *` array we are looping through
  * @param start Leftmost index to start at
  * @param end Rightmost index to end at (not included)
  * @param offset `type` that will be added to `name`
@@ -55,7 +55,7 @@
  *
  * @param name Name of variable to bind sum to
  * @param type Type of the final variable, ex. `size_t`, `double`
- * @param ar Name of the `type *` array we are looping through
+ * @param ar `type *` array we are looping through
  * @param n_items Number of elements in `ar` to process, from `*ar`
  */
 #define array_sum(name, type, ar, n_items) \
@@ -66,7 +66,7 @@
  *
  * @param name Name of variable to bind sum to
  * @param type Type of the final variable, ex. `size_t`, `double`
- * @param ar Name of the `type *` array we are looping through
+ * @param ar `type *` array we are looping through
  * @param n_items Number of elements in `ar` to process, from `*ar`
  * @param offset `type` that will be added to `name`
  */
