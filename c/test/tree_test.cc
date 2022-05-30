@@ -135,6 +135,27 @@ TEST_F(GenTreeTest, MakeFreeChildrenDeepTest)
 }
 
 /**
+ * Test that making and shallow freeing `gen_tree` child arrays works.
+ */
+TEST_F(GenTreeTest, MakeFreeChildrenArrayTest)
+{
+  gen_tree **children = gen_tree_make_direct_children();
+  gen_tree_free_children_array(children, n_direct_children());
+}
+
+/**
+ * Test that making and deep freeing `gen_tree` child arrays works.
+ */
+TEST_F(GenTreeTest, MakeFreeChildrenArrayDeepTest)
+{
+  gen_tree **children = gen_tree_make_direct_children();
+  for (unsigned i = 0; i < (n_direct_children() / 2); i++) {
+    children[i]->children = gen_tree_make_direct_children();
+  }
+  gen_tree_free_children_array_deep(children, n_direct_children());
+}
+
+/**
  * Test that making and freeing direct `binary_tree` children works as intended.
  */
 TEST_F(BinaryTreeTest, MakeFreeChildrenTest)
