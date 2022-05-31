@@ -28,6 +28,7 @@ public:
     const tree_ptr_vector_ptr& = std::make_shared<tree_ptr_vector>()
   );
   tree(double, tree_ptr_vector_ptr&&);
+  virtual ~tree() = default;
   double value() const;
   const tree_ptr_vector_ptr& children() const;
   std::size_t n_children() const;
