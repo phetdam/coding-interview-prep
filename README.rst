@@ -19,8 +19,9 @@ Simple multi-language implementations of common data structures and algorithms.
 
 Mostly a way for me to learn or refresh my knowledge of different programming
 languages, their corresponding build systems, and exercise some design thinking
-when implementing things in different languages. Source code is [#]_ separated
-by language into different subprojects.
+when implementing things in different languages. Source code is separated
+by language [#]_ into different subprojects located in the appropriately named
+top-level directories.
 
 Note that originally, this repo was named ``coding-interview-prep``, with
 ``pdcip`` chosen as the namespace and library name in each language
