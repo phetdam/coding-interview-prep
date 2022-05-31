@@ -38,6 +38,16 @@ using binary_tree_ptr = T_ptr_t<binary_tree>;
 using binary_tree_ptr_vector = T_ptr_vector_t<binary_tree>;
 using binary_tree_ptr_vector_ptr = T_ptr_vector_ptr_t<binary_tree>;
 
+class vertex;
+using vertex_ptr = T_ptr_t<vertex>;
+using vertex_ptr_vector = T_ptr_vector_t<vertex>;
+using vertex_ptr_vector_ptr = T_ptr_vector_ptr_t<vertex>;
+
+class edge;
+using edge_ptr = T_ptr_t<edge>;
+using edge_ptr_vector = T_ptr_vector_t<edge>;
+using edge_ptr_vector_ptr = T_ptr_vector_ptr_t<edge>;
+
 }  // namespace pdcip
 
 #endif  // PDCIP_CPP_TYPES_H_
