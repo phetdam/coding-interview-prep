@@ -1,21 +1,25 @@
-.. README.rst for coding-interview-prep
+.. README.rst for pdcip
 
-coding-interview-prep
-=====================
+pdcip
+=====
 
-Simple [#]_ code often written, referenced, or used during technical interviews.
+Simple multi-language implementations of common data structures and algorithms.
 
-Contains simple implementations of fundamental data structures, algorithms,
-fixes of buggy code, etc. usually found in questions asked during software
-engineering, quant, or technical research position interviews.
+Mostly a way for me to learn or refresh my knowledge of different programming
+languages, their corresponding build systems, and exercise some design thinking
+when implementing things in different languages. Source code is separated by
+language into different subproject directories, each buildable with an
+appropriate, popular cross-platform build system.
 
-Since some questions are language dependent (ex. C++ references are very
-different from Python references), the first level of subdirectories splits the
-source by language, with the subsequent level specifying topics.
+Note that originally, this repo was named ``coding-interview-prep``, with
+``pdcip`` chosen as the namespace and library name in each language
+implementation, an acronym for "PhetDam Coding Interview Prep". Now it has no
+real meaning anymore, although an alternate interpretation for the ``cip`` part
+could be "Coding Implementation Practice".
 
-.. [#] To be fair, the implementations here are an order of magnitude cleaner
-   than what is typically written under pressure in an interview. Unless asked,
-   you wouldn't worry about inheritance and perfect-looking code.
+.. Contains simple implementations of fundamental data structures, algorithms,
+   fixes of buggy code, etc. usually found in questions asked during software
+   engineering, quant, or technical research position interviews.
 
 Contents
 --------
