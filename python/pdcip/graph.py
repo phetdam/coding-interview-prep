@@ -67,7 +67,9 @@ class Graph:
        Does not support duplicated edges in the graph, i.e. edges that have
        identical start vertex, end vertex, and edge weight.
 
-    Uses a dict to allow constant time checking of edge connection.
+    Uses dicts to allow constant time checking of edge connection to emulate
+    adjacency matrix lookup performance. Edge and vertex membership checking
+    is also constant time because of this implementation detail.
     """
 
     def __init__(self, vertices: Iterable[Vertex], edges: Iterable[Edge]):
@@ -149,6 +151,18 @@ class Graph:
         """Adds several edges to the graph."""
         for edge in edges:
             self.add_edge(edge)
+
+    def has_vertex(self, vertex: Vertex) -> bool:
+        """True if vertex is in the graph."""
+        return True if vertex in self._vertex_map else False
+
+    def has_edge(self, edge: Edge) -> bool:
+        """True if edge is in the graph."""
+        edge_tuple = (edge.start, edge.end)
+        if edge_tuple in self._edge_map:
+            if edge.weight in self._edge_map[edge_tuple]:
+                return True
+        return False
 
     def connects(
         self,
