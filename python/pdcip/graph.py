@@ -5,25 +5,20 @@
 
 # pylint: disable=bad-continuation
 
-from dataclasses import dataclass, field
-from typing import Iterable, List, Union
+from dataclasses import dataclass
+from typing import Iterable, List
 
 # from pdcip.enums import SearchStrategy
 
 
 @dataclass
 class Vertex:
-    """General graph vertex implementation.
-
-    node_index is useful for graphs that use an adjacency matrix to determine
-    adjacency by providing a way to number the nodes. Starts from 0.
-    """
+    """General graph vertex implementation."""
 
     value: float
-    node_index: Union[int, None] = None
 
 
-@dataclass(init=False, eq=True)
+@dataclass(eq=True)
 class Edge:
     """General directed graph edge implementation with optional weight.
 
@@ -34,7 +29,6 @@ class Edge:
     start: Vertex
     end: Vertex
     weight: float = 1.
-    vertices: field(init=False)
 
     def __post_init__(self):
         self.vertices = [self.start, self.end]
