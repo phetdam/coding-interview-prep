@@ -97,3 +97,47 @@ class GraphTestCase(unittest.TestCase):
             self.graph.add_edge(
                 Edge(self.vertices[0], self.vertices[2], weight=7)
             )
+
+    def test_graph_has_vertex(self):
+        """Test that Graph has_vertex works as expected."""
+        self.assertTrue(self.graph.has_vertex(self.vertices[0]))
+        # Vertex with same value is treated as different Vertex
+        self.assertFalse(self.graph.has_vertex(Vertex(self.vertices[0].value)))
+
+    def test_graph_has_edge(self):
+        """Test that Graph has_edge works as expected."""
+        self.assertTrue(self.graph.has_edge(self.edges[0]))
+        # Edge with same start, end vertices is treated as same Edge
+        self.assertTrue(
+            self.graph.has_edge(Edge(self.vertices[0], self.vertices[2]))
+        )
+        # however, if we change the weight, it is a different Edge
+        self.assertFalse(
+            self.graph.has_edge(
+                Edge(self.vertices[0], self.vertices[2], weight=1.2)
+            )
+        )
+
+    def test_graph_connects(self):
+        """Test that Graph connects method works as expected."""
+        # vertices[0], vertices[1] have two directed edges
+        self.assertTrue(
+            self.graph.connects(self.vertices[0], self.vertices[1])
+        )
+        self.assertTrue(
+            self.graph.connects(self.vertices[1], self.vertices[0])
+        )
+        # vertices[0], vertices[2] does not have reverse edge
+        self.assertTrue(
+            self.graph.connects(self.vertices[0], self.vertices[2])
+        )
+        self.assertFalse(
+            self.graph.connects(self.vertices[2], self.vertices[0])
+        )
+        # however, if we set directed=False to treat the Graph as undirected,
+        # then connects returns True on self.vertices[2], self.vertices[0]
+        self.assertTrue(
+            self.graph.connects(
+                self.vertices[2], self.vertices[0], directed=False
+            )
+        )
