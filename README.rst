@@ -40,6 +40,10 @@ real meaning anymore, although an alternate interpretation for ``cip`` could be
 Features
 --------
 
+.. _BFS: https://en.wikipedia.org/wiki/Breadth-first_search
+
+.. _DFS: https://en.wikipedia.org/wiki/Depth-first_search
+
 The following table shows current subproject languages, build system support,
 and testing frameworks used.
 
@@ -59,9 +63,9 @@ and in what languages.
 +------------------+-------------------+
 | Item             | Languages         |
 +==================+===================+
-| BFS (tree)       | C, C++, Python    |
+| BFS_ (tree)      | C, C++, Python    |
 +------------------+-------------------+
-| DFS (tree)       | C, C++, Python    |
+| DFS_ (tree)      | C, C++, Python    |
 +------------------+-------------------+
 | binary tree      | C, C++, Python    |
 +------------------+-------------------+
