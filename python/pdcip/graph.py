@@ -17,6 +17,9 @@ class Vertex:
 
     value: float
 
+    def __hash__(self) -> int:
+        return id(self)
+
 
 @dataclass(eq=True)
 class Edge:
