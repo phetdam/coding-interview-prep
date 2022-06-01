@@ -13,7 +13,13 @@ from typing import Iterable, List
 
 @dataclass
 class Vertex:
-    """General graph vertex implementation."""
+    """General graph vertex implementation.
+
+    .. note::
+
+       Mutable objects typically must not be hashable, but since a Vertex's
+       hash shouldn't depend on its value, we reimplement __hash__.
+    """
 
     value: float
 
