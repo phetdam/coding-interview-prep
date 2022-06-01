@@ -48,7 +48,9 @@ class GraphTestCase(unittest.TestCase):
         Edge(vertices[1], vertices[3]),
         Edge(vertices[3], vertices[1])
     ]
-    graph = Graph(vertices, edges)
+
+    def setUp(self):
+        self.graph = Graph(self.vertices, self.edges)
 
     def test_graph_properties(self):
         """Test that the Graph properties work as expected."""
@@ -56,3 +58,42 @@ class GraphTestCase(unittest.TestCase):
         self.assertEqual(self.edges, self.graph.edges)
         self.assertEqual(len(self.vertices), self.graph.n_vertices)
         self.assertEqual(len(self.edges), self.graph.n_edges)
+
+    def test_graph_add_vertices(self):
+        """Test that Graph add_vertices works as expected.
+
+        Indirectly tests add_vertex, which is wrapped.
+        """
+        # these are not duplicates even though we used these values before
+        self.graph.add_vertices([Vertex(5), Vertex(4.1)])
+        self.assertEqual(len(self.vertices) + 2, self.graph.n_vertices)
+
+    def test_graph_add_edges(self):
+        """Test that Graph add_edges works as expected.
+
+        Indirectly tests add_edge, which is wrapped.
+        """
+        # add new edges with default weight
+        self.graph.add_edges(
+            [
+                Edge(self.vertices[2], self.vertices[0]),
+                Edge(self.vertices[2], self.vertices[1])
+            ]
+        )
+        self.assertEqual(len(self.edges) + 2, self.graph.n_edges)
+        # add duplicate edges with different weight (not counted as duplicate)
+        self.graph.add_edges(
+            [
+                Edge(self.vertices[0], self.vertices[2], weight=7),
+                Edge(self.vertices[0], self.vertices[2], weight=11.2),
+                Edge(self.vertices[0], self.vertices[1], weight=5.)
+            ]
+        )
+        self.assertEqual(len(self.edges) + 5, self.graph.n_edges)
+        # cannot add an exactly new duplicate edge
+        with self.assertRaises(ValueError):
+            self.graph.add_edge(Edge(self.vertices[0], self.vertices[2]))
+        with self.assertRaises(ValueError):
+            self.graph.add_edge(
+                Edge(self.vertices[0], self.vertices[2], weight=7)
+            )

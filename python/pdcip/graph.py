@@ -138,7 +138,7 @@ class Graph:
         if edge_tuple not in self._edge_map:
             self._edge_map[edge_tuple] = {edge.weight: None}
         elif edge.weight not in self._edge_map[edge_tuple]:
-            self._edge_map[edge_tuple] = edge.weight
+            self._edge_map[edge_tuple][edge.weight] = None
         else:
             raise ValueError(
                 f"Cannot add duplicate edge {edge} to {self.__class__.__name__}"
