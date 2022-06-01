@@ -59,11 +59,15 @@ and in what languages.
 +------------------+-------------------+
 | Item             | Languages         |
 +==================+===================+
-| tree             | C, C++, Python    |
+| BFS (tree)       | C, C++, Python    |
++------------------+-------------------+
+| DFS (tree)       | C, C++, Python    |
 +------------------+-------------------+
 | binary tree      | C, C++, Python    |
 +------------------+-------------------+
 | graph            | Python            |
++------------------+-------------------+
+| tree             | C, C++, Python    |
 +------------------+-------------------+
 
 .. [#] In the past, setuptools_ was the de-facto default Python build system.
