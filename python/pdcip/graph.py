@@ -3,18 +3,16 @@
 .. codeauthor:: Derek Huang <djh458@stern.nyu.edu>
 """
 
-# pylint: disable=bad-continuation,missing-function-docstring
+# pylint: disable=bad-continuation
 
-from dataclasses import dataclass
-from typing import List, Union
-
-import numpy as np
+from dataclasses import dataclass, field
+from typing import Iterable, List, Union
 
 # from pdcip.enums import SearchStrategy
 
 
 @dataclass
-class GraphVertex:
+class Vertex:
     """General graph vertex implementation.
 
     node_index is useful for graphs that use an adjacency matrix to determine
@@ -25,188 +23,148 @@ class GraphVertex:
     node_index: Union[int, None] = None
 
 
-@dataclass(init=False)
-class GraphEdge:
-    """General graph edge implementation for an adjacency list graph.
+@dataclass(init=False, eq=True)
+class Edge:
+    """General directed graph edge implementation with optional weight.
 
-    Edge direction is specified as head_vertex -> tail_vertex.
-
-    Parameters
-    ----------
-    bidirectional : bool, default=False
-        True to represent a bidirectional edge between the vertices.
+    Edge direction is specified as start -> end. Two Edge objects are
+    considered equal if their start, end, and weight all are equal.
     """
 
-    def __init__(self, head_vertex: GraphVertex, tail_vertex: GraphVertex):
-        self.head_vertex = head_vertex
-        self.tail_vertex = tail_vertex
-        self.vertices = [self.head_vertex, self.tail_vertex]
+    start: Vertex
+    end: Vertex
+    weight: float = 1.
+    vertices: field(init=False)
+
+    def __post_init__(self):
+        self.vertices = [self.start, self.end]
 
     def connects(
         self,
-        vert_a: GraphVertex,
-        vert_b: GraphVertex,
-        directed: bool = False
+        vert_a: Vertex,
+        vert_b: Vertex,
+        directed: bool = True
     ) -> bool:
         """True if both vertices are connected by this edge.
 
         Parameters
         ----------
-        directed : bool, default=False
-            If True, then return True only if vert_a is the head vertex and
-            vert_b is the tail vertex to emulate edge in directed graph.
+        directed : bool, default=True
+            If True, then return True only if vert_a is the start vertex and
+            vert_b is the end vertex to emulate edge in directed graph.
         """
         if directed:
-            return vert_a == self.head_vertex and vert_b == self.tail_vertex
+            return vert_a == self.start and vert_b == self.end
         return vert_a in self.vertices and vert_b in self.vertices
 
 
 @dataclass
-class GraphBase:
-    """Base class for graph implementations."""
+class Graph:
+    """General graph implementation.
 
-    vertices: List[GraphVertex]
+    .. note::
+
+       Does not support duplicated edges in the graph, i.e. edges that have
+       identical start vertex, end vertex, and edge weight.
+
+    Uses a dict to allow constant time checking of edge connection.
+    """
+
+    def __init__(self, vertices: Iterable[Vertex], edges: Iterable[Edge]):
+        self._vertex_map = {vertex: None for vertex in vertices}
+        # note the two levels of mapping are there to support weights. if no
+        # weights, {(edge.start, edge.end): None for edge in edges} is enough.
+        self._edge_map = {}
+        for edge in edges:
+            self.add_edge(edge)
+
+    @property
+    def vertices(self) -> List[Vertex]:
+        """Return list of vertices in the graph."""
+        return [vertex for vertex in self._vertex_map]
+
+    @property
+    def edges(self) -> List[Edge]:
+        """Return list of edges in the graph.
+
+        .. note::
+
+           Since the graph does not actually store Edge objects, unlike
+           self.vertices, these Edge instances are all fresh instances.
+        """
+        return [
+            Edge(start, end, weight=weight)
+            for (start, end) in self._edge_map
+            for weight in self._edge_map[(start, end)]
+        ]
 
     @property
     def n_vertices(self) -> int:
         """Return number of vertices in graph."""
-        return len(self.vertices)
-
-    def add_vertex(self, vert: GraphVertex) -> GraphVertex:
-        """Append new vertex to the vertex list."""
-        self.vertices.append(vert)
-        return vert
-
-    def add_edge(self, edge: GraphEdge) -> GraphEdge:
-        """Append new edge to the edge list."""
-        raise NotImplementedError
-
-    def connects(
-        self,
-        vert_a: GraphVertex,
-        vert_b: GraphVertex,
-        directed: bool = True
-    ) -> bool:
-        """True if the nodes are connected, False otherwise.
-
-        See GraphEdge.connects for parameter documentation.
-        """
-        raise NotImplementedError
-
-
-@dataclass
-class AdjacencyListGraph(GraphBase):
-    """General graph implementation using adjacency lists."""
-
-    edges: List[GraphEdge]
+        return len(self._vertex_map)
 
     @property
     def n_edges(self) -> int:
-        """Return number of edges in graph."""
+        """Return number of edges in graph.
+
+        .. note::
+
+           This operation has time complexity linear in the number of edges.
+        """
         return len(self.edges)
 
-    def add_edge(self, edge: GraphEdge) -> GraphEdge:
-        """Append new edge to the edge list."""
-        self.edges.append(edge)
-        return edge
+    def add_vertex(self, vertex: Vertex) -> None:
+        """Adds a vertex to the graph.
 
-    def connects(
-        self,
-        vert_a: GraphVertex,
-        vert_b: GraphVertex,
-        directed: bool = True
-    ) -> bool:
-        """True if the nodes are connected, False otherwise.
+        .. note::
 
-        See GraphEdge.connects for parameter documentation.
+           If this Vertex reference is already in the graph, it will be
+           silently overwritten. No duplicate vertex will be added.
         """
-        vertex_set = set(self.vertices)
-        if vert_a not in vertex_set or vert_b not in vertex_set:
-            return False
-        for edge in self.edges:
-            if edge.connects(vert_a, vert_b, directed=directed):
-                return True
-        return False
+        self._vertex_map[vertex] = None
 
+    def add_vertices(self, vertices: Iterable[Vertex]) -> None:
+        """Adds several vertices to the graph.
 
-@dataclass(init=False)
-class AdjacencyMatrixGraph(GraphBase):
-    """General implementation using an adjacency matrix.
+        See self.add_vertex for how duplicate vertices are handled.
+        """
+        for vertex in vertices:
+            self.add_vertex(vertex)
 
-    All vertices must either have node_index set or have copy_with_indices=True
-    to get a copy of the vertices with node_index set by list order.
-
-    Adjacency list has nonnegative integer values, with values greater than
-    one representing duplicate edges between two nodes.
-
-    Parameters
-    ----------
-    copy_with_indices : bool, default=True
-        True to copy the passed vertices, setting each's node_index value.
-        False to not make a copy and overwrite each's node_index value.
-    """
-
-    def __init__(
-        self,
-        vertices: List[GraphVertex],
-        copy_with_indices: bool = True
-    ):
-        if copy_with_indices:
-            self.vertices = [
-                GraphVertex(vert.value, node_index=i)
-                for i, vert in enumerate(vertices)
-            ]
+    def add_edge(self, edge: Edge) -> None:
+        """Adds an edge to the graph."""
+        edge_tuple = (edge.start, edge.end)
+        # note the two levels of mapping are there to support weights. if no
+        # weights, (edge.start, edge.end) set of keys is enough.
+        if edge_tuple not in self._edge_map:
+            self._edge_map[edge_tuple] = {edge.weight: None}
+        elif edge.weight not in self._edge_map[edge_tuple]:
+            self._edge_map[edge_tuple] = edge.weight
         else:
-            self.vertices = vertices
-            for i, vert in enumerate(self.vertices):
-                vert.node_index = i
+            raise ValueError(
+                f"Cannot add duplicate edge {edge} to {self.__class__.__name__}"
+            )
 
-    # pylint: disable=no-member
-
-    def add_edge(self, edge: GraphEdge) -> GraphEdge:
-        """Add new edge to the graph.
-
-        The node_index properties of the vertices must be set already.
-
-        Note the edge will not be physically stored.
-        """
-        self.adjacency_matrix[
-            edge.head_vertex.node_index, edge.tail_vertex.node_index
-        ] += 1
-        return edge
+    def add_edges(self, edges: Iterable[Edge]) -> None:
+        """Adds several edges to the graph."""
+        for edge in edges:
+            self.add_edge(edge)
 
     def connects(
         self,
-        vert_a: GraphVertex,
-        vert_b: GraphVertex,
+        vert_a: Vertex,
+        vert_b: Vertex,
         directed: bool = True
     ) -> bool:
         """True if the nodes are connected, False otherwise.
 
-        The node_index properties of the vertices must be set already.
-
-        See GraphEdge.connects for parameter documentation.
+        See Edge.connects for parameter documentation.
         """
-        ab_connects = (
-            self.adjacency_matrix[vert_a.node_index, vert_b.node_index] > 0
-        )
-        if directed:
-            return ab_connects
-        return (
-            ab_connects or
-            self.adjacenecy_matrix[vert_b.node_index, vert_a.node_index] > 0
-        )
-
-    # pylint: enable=no-member
-
-    def __setattr__(self, name: str, value: object):
-        """Custom __setattr__ to auto-update adjacency matrix with vertices."""
-        if name == "adjacency_matrix":
-            raise AttributeError("Cannot set adjacency_matrix manually")
-        super().__setattr__(name, value)
-        # by setting vertices first, we can use n_vertices
-        if name == "vertices":
-            super().__setattr__(
-                "adjacency_matrix",
-                np.zeros((self.n_vertices, self.n_vertices))
-            )
+        # don't even need to look at _edge_map if not in _vertex_map
+        if vert_a not in self._vertex_map or vert_b not in self._vertex_map:
+            return False
+        if (vert_a, vert_b) in self._edge_map:
+            return True
+        if not directed and (vert_b, vert_a) in self._edge_map:
+            return True
+        return False
