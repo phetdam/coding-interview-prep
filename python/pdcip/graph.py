@@ -71,8 +71,8 @@ class Graph:
        identical start vertex, end vertex, and edge weight.
 
     Uses dicts to allow constant time checking of edge connection to emulate
-    adjacency matrix lookup performance. Edge and vertex membership checking
-    is also constant time because of this implementation detail.
+    adjacency matrix lookup performance while minimizing memory use. Edge and
+    vertex membership checking is also constant time due to this.
     """
 
     def __init__(self, vertices: Iterable[Vertex], edges: Iterable[Edge]):
