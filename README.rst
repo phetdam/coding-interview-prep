@@ -40,8 +40,8 @@ real meaning anymore, although an alternate interpretation for ``cip`` could be
 Features
 --------
 
-We can summarize subproject language, build system support, and testing
-frameworks with the following table:
+The following table shows current subproject languages, build system support,
+and testing frameworks used.
 
 +----------+------------------+---------------------+
 | Language | Build System     | Testing Framework   |
@@ -65,8 +65,6 @@ and in what languages.
 +------------------+-------------------+
 | graph            | Python            |
 +------------------+-------------------+
-
-These tables are still expanding, so stay tuned.
 
 .. [#] In the past, setuptools_ was the de-facto default Python build system.
 
