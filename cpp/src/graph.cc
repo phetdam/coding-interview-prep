@@ -159,4 +159,18 @@ bool edge::connects(
   return false;
 }
 
+/**
+ * Test two `edge` instances for equality.
+ *
+ * @param first `const edge&` the first edge
+ * @param second `const edge&` the second edge
+ */
+bool operator==(const edge& first, const edge& second)
+{
+  return
+    first.start() == second.start() &&
+    first.end() == second.end() &&
+    first.weight() == second.weight();
+}
+
 }  // namespace pdcip
