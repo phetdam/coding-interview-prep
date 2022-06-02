@@ -20,7 +20,7 @@
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4514 4625 4626 5026 5027)
-#endif  /* _MSC_VER */
+#endif  // _MSC_VER
 
 namespace pdcip {
 namespace tests {
