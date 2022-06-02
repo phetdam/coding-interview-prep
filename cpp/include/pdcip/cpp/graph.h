@@ -33,12 +33,16 @@ private:
 /**
  * Graph directed edge with optional weight.
  *
+ * @note The `edge` implementation allows loops, i.e. for the start and end
+ *    `vertex_ptr` instances to be the same `shared_ptr`.
+ *
  * @note `edge` instances that have the same vertex pointers and the same
  *     weight are considered equal under `==`.
  */
 class edge {
 public:
-  edge(const vertex_ptr&, const vertex_ptr&, double weight = 1);
+  edge(const vertex_ptr&, const vertex_ptr&, double = 1);
+  edge(vertex_ptr&&, vertex_ptr&&, double = 1);
   const vertex_ptr& start() const;
   const vertex_ptr& end() const;
   double weight() const;
