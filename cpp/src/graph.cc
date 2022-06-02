@@ -11,6 +11,8 @@
 #include <cmath>
 #include <utility>
 
+#include "pdcip/cpp/types.h"
+
 namespace pdcip {
 
 /**
