@@ -10,6 +10,11 @@
 #include <assert.h>
 #include <stddef.h>
 
+#ifdef _MSC_VER
+// C4296 issued when check_index_endpoints used on unsigned types
+#pragma warning(disable : 4296)
+#endif  /* _MSC_VER */
+
 /**
  * Checks that index range specified by two endpoints is valid.
  *

@@ -15,6 +15,10 @@
 #include "pdcip/helpers.h"
 #include "pdcip/tree.h"
 
+#ifdef _MSC_VER
+#pragma warning(disable : 4625 4626)
+#endif  /* _MSC_VER */
+
 /**
  * @note Google naming convention is followed as no underscores allowed.
  * @note Google Test documentation recommends testing if a pointer if `NULL`
