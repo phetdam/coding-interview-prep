@@ -12,7 +12,7 @@
 
 #ifdef _MSC_VER
 // C4296 issued when check_index_endpoints used on unsigned types
-#pragma warning(disable: 4296)
+#pragma warning (disable: 4296)
 #endif  /* _MSC_VER */
 
 /**

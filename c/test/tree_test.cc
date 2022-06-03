@@ -16,7 +16,7 @@
 #include "pdcip/tree.h"
 
 #ifdef _MSC_VER
-#pragma warning(disable: 4625 4626)
+#pragma warning (disable: 4625 4626)
 #endif  /* _MSC_VER */
 
 /**
