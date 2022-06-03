@@ -20,19 +20,7 @@ namespace pdcip {
  *
  * @param value `double` value to assign to the `vertex`
  */
-vertex::vertex(double value) : value_(value) {}
-
-/**
- * Returns the value assigned to the `vertex`.
- */
-double vertex::value() const { return value_; }
-
-/**
- * Assigns a new value to the `vertex`.
- *
- * @param value `double` new value to assign to the `vertex`
- */
-void vertex::set_value(double value) { value_ = value; }
+vertex::vertex(double value) : T_mutable_t<double>(value) {}
 
 /**
  * `edge` constructor.
@@ -44,7 +32,7 @@ void vertex::set_value(double value) { value_ = value; }
  * @param weight `double` optional edge weight
  */
 edge::edge(const vertex_ptr& start, const vertex_ptr& end, double weight)
-  : weight_(weight)
+  : T_mutable_t<double>(weight)
 {
   assert(start && end);
   start_ = start;
@@ -61,7 +49,7 @@ edge::edge(const vertex_ptr& start, const vertex_ptr& end, double weight)
  * @param weight `double` optional edge weight
  */
 edge::edge(vertex_ptr&& start, vertex_ptr&& end, double weight)
-  : weight_(weight)
+  : T_mutable_t<double>(weight)
 {
   assert(start && end);
   start_ = std::move(start);
@@ -80,8 +68,10 @@ const vertex_ptr& edge::end() const { return end_; }
 
 /**
  * Returns the weight of the `edge`.
+ *
+ * @note Calls the standard `value` function of the `T_mutable_t`.
  */
-double edge::weight() const { return weight_; }
+double edge::weight() const { return value(); }
 
 /**
  * Sets the start `vertex` by copy.
@@ -137,7 +127,7 @@ void edge::set_end(vertex_ptr&& vert)
 void edge::set_weight(double weight)
 {
   assert(!std::isnan(weight));
-  weight_ = weight;
+  set_value(weight);
 }
 
 /**

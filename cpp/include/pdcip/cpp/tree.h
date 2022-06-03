@@ -21,7 +21,7 @@ namespace pdcip {
 /**
  * A general multi-child tree for numeric data.
  */
-class tree {
+class tree : public T_mutable_t<double> {
 public:
   tree(
     double = NAN,
@@ -29,19 +29,15 @@ public:
   );
   tree(double, tree_ptr_vector_ptr&&);
   virtual ~tree() = default;
-  double value() const;
   const tree_ptr_vector_ptr& children() const;
   std::size_t n_children() const;
-  void set_value(double);
   virtual void set_children(const tree_ptr_vector_ptr&);
   virtual void set_children(tree_ptr_vector_ptr&&);
   static tree_ptr_vector_ptr make_children(const double_vector&);
   static tree_ptr_vector_ptr dfs(const tree_ptr&);
   static tree_ptr_vector_ptr bfs(const tree_ptr&);
   static double_vector_ptr value_vector(const tree_ptr_vector_ptr&);
-
 private:
-  double value_;
   tree_ptr_vector_ptr children_;
 };
 

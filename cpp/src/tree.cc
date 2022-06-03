@@ -24,7 +24,8 @@ namespace pdcip {
  * @param value `double` value of `tree` node
  * @param children `const tree_ptr_vector_ptr&` with children
  */
-tree::tree(double value, const tree_ptr_vector_ptr& children) : value_(value)
+tree::tree(double value, const tree_ptr_vector_ptr& children)
+  : T_mutable_t<double>(value)
 {
   assert(children && "children cannot be nullptr");
   children_ = children;
@@ -36,16 +37,12 @@ tree::tree(double value, const tree_ptr_vector_ptr& children) : value_(value)
  * @param value `double` value of `tree` node
  * @param children `tree_ptr_vector_ptr&&` with children
  */
-tree::tree(double value, tree_ptr_vector_ptr&& children) : value_(value)
+tree::tree(double value, tree_ptr_vector_ptr&& children)
+  : T_mutable_t<double>(value)
 {
   assert(children && "children cannot be nullptr");
   children_ = std::move(children);
 }
-
-/**
- * Getter for the `tree` value.
- */
-double tree::value() const { return value_; }
 
 /**
  * Getter for the `tree` children.
@@ -59,13 +56,6 @@ std::size_t tree::n_children() const
 {
   return static_cast<std::size_t>(children_->size());
 }
-
-/**
- * Setter for the `tree` value.
- *
- * @param value `double` new value to assign the `tree` node
- */
-void tree::set_value(double value) { value_ = value; }
 
 /**
  * Copy setter for the `tree` children.

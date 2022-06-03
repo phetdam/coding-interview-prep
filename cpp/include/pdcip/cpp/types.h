@@ -8,6 +8,7 @@
 #ifndef PDCIP_CPP_TYPES_H_
 #define PDCIP_CPP_TYPES_H_
 
+#include <cmath>
 #include <memory>
 #include <utility>
 #include <vector>
@@ -47,6 +48,31 @@ class edge;
 using edge_ptr = T_ptr_t<edge>;
 using edge_ptr_vector = T_ptr_vector_t<edge>;
 using edge_ptr_vector_ptr = T_ptr_vector_ptr_t<edge>;
+
+class single_link;
+using single_link_ptr = T_ptr_t<single_link>;
+
+class double_link;
+using double_link_ptr = T_ptr_t<double_link>;
+
+/**
+ * A base class for any object that holds a mutable `T` value.
+ *
+ * The `T` can be either copy set or moved.
+ */
+template <class T>
+class T_mutable_t {
+public:
+  T_mutable_t() : value_(NAN) {}
+  T_mutable_t(const T& value) : value_(value) {}
+  T_mutable_t(T&& value) : value_(std::move(value)) {}
+  virtual ~T_mutable_t() = default;
+  T value() const { return value_; };
+  void set_value(const T& value) { value_ = value; }
+  void set_value(T&& value) { value_ = std::move(value); }
+private:
+  T value_;
+};
 
 }  // namespace pdcip
 

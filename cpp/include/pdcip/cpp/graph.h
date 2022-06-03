@@ -28,14 +28,9 @@ using graph_edge_map = std::unordered_map<
  *
  * @note `vertex` instances that have the same value are distinct.
  */
-class vertex {
+class vertex : public T_mutable_t<double> {
 public:
   vertex(double = NAN);
-  double value() const;
-  void set_value(double);
-
-private:
-  double value_;
 };
 
 /**
@@ -47,7 +42,7 @@ private:
  * @note `edge` instances that have the same vertex pointers and the same
  *     weight are considered equal under `==`.
  */
-class edge {
+class edge : public T_mutable_t<double> {
 public:
   edge(const vertex_ptr&, const vertex_ptr&, double = 1);
   edge(vertex_ptr&&, vertex_ptr&&, double = 1);
@@ -60,11 +55,9 @@ public:
   void set_end(vertex_ptr&&);
   void set_weight(double);
   bool connects(const vertex_ptr&, const vertex_ptr&, bool = false);
-
 private:
   vertex_ptr start_;
   vertex_ptr end_;
-  double weight_;
 };
 
 bool operator==(const edge&, const edge&);
@@ -103,7 +96,6 @@ public:
   bool has_edge(const edge&);
   bool has_edge(edge&&);
   bool connects(const vertex_ptr&, const vertex_ptr&, bool = true);
-
 private:
   graph_vertex_map vertices_;
   graph_edge_map edges_;
