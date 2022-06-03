@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.16)
 project(
     pdcip-cpp
     VERSION 0.1.0
-    DESCRIPTION "C++ interview code"
-    HOMEPAGE_URL https://github.com/phetdam/coding-interview-prep/tree/master/cpp
+    DESCRIPTION "C++ implementations of data structures and algorithms"
+    HOMEPAGE_URL https://github.com/phetdam/pdcip
     LANGUAGES CXX
 )
 
