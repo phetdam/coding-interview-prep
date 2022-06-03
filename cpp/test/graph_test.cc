@@ -74,7 +74,7 @@ TEST_F(EdgeTest, ConnectsTest)
 /**
  * Test that the `==`, `!=` operator overload for `edge` works as expected.
  */
-TEST_F(EdgeTest, EqNeTest)
+TEST_F(EdgeTest, EqualsNotEqualsTest)
 {
   double other_edge_weight_ = 7;
   edge_ptr other_edge_ = std::make_shared<edge>(
