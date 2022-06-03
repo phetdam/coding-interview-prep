@@ -28,7 +28,7 @@ using graph_edge_map = std::unordered_map<
  *
  * @note `vertex` instances that have the same value are distinct.
  */
-class vertex : public T_mutable_t<double> {
+class vertex : public T_value_t<double> {
 public:
   vertex(double = NAN);
 };
@@ -42,7 +42,7 @@ public:
  * @note `edge` instances that have the same vertex pointers and the same
  *     weight are considered equal under `==`.
  */
-class edge : public T_mutable_t<double> {
+class edge : public T_value_t<double> {
 public:
   edge(const vertex_ptr&, const vertex_ptr&, double = 1);
   edge(vertex_ptr&&, vertex_ptr&&, double = 1);

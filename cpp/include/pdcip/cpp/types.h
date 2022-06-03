@@ -61,12 +61,12 @@ using double_link_ptr = T_ptr_t<double_link>;
  * The `T` can be either copy set or moved.
  */
 template <class T>
-class T_mutable_t {
+class T_value_t {
 public:
-  T_mutable_t() : value_(NAN) {}
-  T_mutable_t(const T& value) : value_(value) {}
-  T_mutable_t(T&& value) : value_(std::move(value)) {}
-  virtual ~T_mutable_t() = default;
+  T_value_t() : value_(NAN) {}
+  T_value_t(const T& value) : value_(value) {}
+  T_value_t(T&& value) : value_(std::move(value)) {}
+  virtual ~T_value_t() = default;
   T value() const { return value_; };
   void set_value(const T& value) { value_ = value; }
   void set_value(T&& value) { value_ = std::move(value); }

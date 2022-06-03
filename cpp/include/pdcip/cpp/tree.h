@@ -21,7 +21,7 @@ namespace pdcip {
 /**
  * A general multi-child tree for numeric data.
  */
-class tree : public T_mutable_t<double> {
+class tree : public T_value_t<double> {
 public:
   tree(
     double = NAN,

@@ -25,7 +25,7 @@ namespace pdcip {
  * @param children `const tree_ptr_vector_ptr&` with children
  */
 tree::tree(double value, const tree_ptr_vector_ptr& children)
-  : T_mutable_t<double>(value)
+  : T_value_t<double>(value)
 {
   assert(children && "children cannot be nullptr");
   children_ = children;
@@ -38,7 +38,7 @@ tree::tree(double value, const tree_ptr_vector_ptr& children)
  * @param children `tree_ptr_vector_ptr&&` with children
  */
 tree::tree(double value, tree_ptr_vector_ptr&& children)
-  : T_mutable_t<double>(value)
+  : T_value_t<double>(value)
 {
   assert(children && "children cannot be nullptr");
   children_ = std::move(children);
