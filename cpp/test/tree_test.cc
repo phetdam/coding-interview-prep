@@ -17,13 +17,14 @@
 
 #include "pdcip/cpp/tree.h"
 #include "pdcip/cpp/types.h"
+#include "pdcip/cpp/testing/msvc.h"
 
 #ifdef _MSC_VER
-#pragma warning (disable: 4514 4625 4626 5026 5027)
+#pragma warning (disable: 4514 GTEST_FIXTURE_WARNINGS)
 #endif  // _MSC_VER
 
 namespace pdcip {
-namespace tests {
+namespace testing {
 
 namespace {
 
@@ -309,5 +310,5 @@ TEST_F(BinaryTreeTest, BreadthFirstSearchTest)
 
 }  // namespace
 
-}  // namespace pdcip::tests
+}  // namespace pdcip::testing
 }  // namespace pdcip
