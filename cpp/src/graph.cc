@@ -186,4 +186,17 @@ bool operator!=(const edge& first, const edge& second)
   return !(first == second);
 }
 
+/**
+ * `graph` copy from object constructor.
+ *
+ * @param vertices `const vertex_ptr_vector&` with graph vertices
+ * @param edges `const edge_ptr_vector&` with edge vertices
+ */
+/*
+graph::graph(const vertex_ptr_vector& vertices, const edge_ptr_vector& edges)
+{
+
+}
+*/
+
 }  // namespace pdcip

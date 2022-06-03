@@ -9,11 +9,19 @@
 #define PDCIP_CPP_GRAPH_H_
 
 #include <cmath>
+#include <cstddef>
+#include <unordered_map>
 #include <utility>
 
 #include "pdcip/cpp/types.h"
 
 namespace pdcip {
+
+using graph_vertex_map = std::unordered_map<vertex_ptr, std::nullptr_t>;
+using graph_edge_map = std::unordered_map<
+  std::pair<vertex_ptr, vertex_ptr>,
+  std::shared_ptr<std::unordered_map<double, std::nullptr_t>>
+>;
 
 /**
  * Graph vertex class for holding numeric data.
@@ -69,7 +77,7 @@ bool operator!=(const edge&, const edge&);
  *     identical start, end vertices and edge weight.
  *
  * Uses `std::unordered_map` to allow constant time checking of edge
- * conectivity to emulate adjacency matrix lookup performance while minimizing
+ * connectivity to emulate adjacency matrix lookup performance while minimizing
  * memory use. Edge + vertex membership checking is also constant due to this.
  */
 class graph {
@@ -95,6 +103,10 @@ public:
   bool has_edge(const edge&);
   bool has_edge(edge&&);
   bool connects(const vertex_ptr&, const vertex_ptr&, bool = true);
+
+private:
+  graph_vertex_map vertices_;
+  graph_edge_map edges_;
 };
 
 }  // namespace pdcip
