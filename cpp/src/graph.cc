@@ -145,17 +145,17 @@ void edge::set_weight(double weight)
  *
  * @param start `const vertex_ptr&` starting vertex
  * @param end `const vertex_ptr&` ending vertex
- * @param directed `bool` where if `true`, the `edge` acts like a directed
- *    edge (the default), while if `false`, the `edge` acts undirected.
+ * @param undirected `bool` where if `false`, the `edge` acts like a directed
+ *    edge (the default), while if `true`, the `edge` acts as if undirected.
  */
 bool edge::connects(
-  const vertex_ptr& start, const vertex_ptr& end, bool directed)
+  const vertex_ptr& start, const vertex_ptr& end, bool undirected)
 {
   assert(start && end);
   if (this->start() == start && this->end() == end) {
     return true;
   }
-  if (!directed && this->end() == start && this->start() == end) {
+  if (undirected && this->end() == start && this->start() == end) {
     return true;
   }
   return false;
@@ -173,6 +173,17 @@ bool operator==(const edge& first, const edge& second)
     first.start() == second.start() &&
     first.end() == second.end() &&
     first.weight() == second.weight();
+}
+
+/**
+ * Test two `edge` instances for inequality.
+ *
+ * @param first `const edge&` the first edge
+ * @param second `const edge&` the second edge
+ */
+bool operator!=(const edge& first, const edge& second)
+{
+  return !(first == second);
 }
 
 }  // namespace pdcip

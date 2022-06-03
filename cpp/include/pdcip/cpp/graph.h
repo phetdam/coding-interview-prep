@@ -51,7 +51,7 @@ public:
   void set_end(const vertex_ptr&);
   void set_end(vertex_ptr&&);
   void set_weight(double);
-  bool connects(const vertex_ptr&, const vertex_ptr&, bool = true);
+  bool connects(const vertex_ptr&, const vertex_ptr&, bool = false);
 
 private:
   vertex_ptr start_;
@@ -60,6 +60,7 @@ private:
 };
 
 bool operator==(const edge&, const edge&);
+bool operator!=(const edge&, const edge&);
 
 /**
  * General graph implementation.
