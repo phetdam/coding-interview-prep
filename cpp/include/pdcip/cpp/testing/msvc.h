@@ -11,7 +11,7 @@
 #ifdef _MSC_VER
 
 /**
- * MSVC warnings emitted with /W4 or above specified.
+ * MSVC warnings emitted on Google Test tests with /W4 or above specified.
  *
  * Usage: `#pragma warning (disable: GTEST_FIXTURE_WARNINGS)`
  */
