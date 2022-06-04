@@ -7,6 +7,8 @@
 
 #include "pdcip/cpp/link.h"
 
+#include <cstddef>
+#include <memory>
 #include <utility>
 
 #include "pdcip/cpp/types.h"
@@ -32,6 +34,14 @@ single_link::single_link(double value, const single_link_ptr& next)
 single_link::single_link(double value, single_link_ptr&& next)
   : T_value_t<double>(value), T_next_t<single_link_ptr>(std::move(next))
 {}
+
+/**
+ * Return the number of forward links in the chain of nodes.
+ */
+std::size_t single_link::n_links() const
+{
+  return count_links<single_link>(this);
+}
 
 /**
  * `double_link` constructor through copy.
@@ -60,5 +70,13 @@ double_link::double_link(
     T_prev_t<double_link_ptr>(std::move(prev)),
     T_next_t<double_link_ptr>(std::move(next))
 {}
+
+/**
+ * Return the number of forward links in the chain of nodes.
+ */
+std::size_t double_link::n_links() const
+{
+  return count_links<double_link>(this);
+}
 
 }  // namespac pdcip
