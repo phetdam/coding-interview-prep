@@ -17,7 +17,7 @@ include(SetCppDefaults)
 
 # debug and release flags, handle MSVC case specifically
 if(MSVC)
-    add_compile_options(/Wall /wd5045)
+    add_compile_options(/Wall /wd5045 /wd4820)
     if(CMAKE_BUILD_TYPE STREQUAL Release)
         add_compile_options(/O2)
     else()

@@ -73,6 +73,24 @@ private:
 };
 
 /**
+ * Base class template for any object that holds a mutable `T` prev value.
+ *
+ * The `T` `prev` can be either copy set or moved.
+ */
+template <class T>
+class T_prev_t {
+public:
+  T_prev_t(const T& prev) : prev_(prev) {}
+  T_prev_t(T&& prev) : prev_(std::move(prev)) {}
+  virtual ~T_prev_t() = default;
+  const T& prev() const { return prev_; }
+  void set_prev(const T& prev) { prev_ = prev; }
+  void set_prev(T&& prev) { prev_ = std::move(prev); }
+private:
+  T prev_;
+};
+
+/**
  * Base class template for any object that holds a mutable `T` next value.
  *
  * The `T` `next` can be either copy set or moved.
@@ -83,7 +101,7 @@ public:
   T_next_t(const T& next) : next_(next) {}
   T_next_t(T&& next) : next_(std::move(next)) {}
   virtual ~T_next_t() = default;
-  const T& value() const { return next_; }
+  const T& next() const { return next_; }
   void set_next(const T& next) { next_ = next; }
   void set_next(T&& next) { next_ = std::move(next); }
 private:
