@@ -23,6 +23,7 @@ class single_link
 public:
   single_link(double = NAN, const single_link_ptr& = nullptr);
   single_link(double, single_link_ptr&&);
+  std::size_t n_next() const;
   std::size_t n_links() const;
 };
 
@@ -40,18 +41,21 @@ public:
     const double_link_ptr& = nullptr
   );
   double_link(double, double_link_ptr&&, double_link_ptr&&);
+  std::size_t n_prev() const;
+  std::size_t n_next() const;
   std::size_t n_links() const;
 };
 
 /**
- * Template function that returns number of forward links.
+ * Template function that returns number of nodes in a chain of nodes.
  *
- * In other words, returns node count using `next` until `nullptr` is reached.
+ * Uses `next` to discover more nodes until `nullptr` is reached. The returned
+ * count includes the current `head` node passed as a parameter.
  *
  * @note On circular linked lists, this function will loop forever!
  *
- * @tparam link_ptr_t Linked list node pointer, bare or smart
- * @param head `const link_ptr_t&` linked list head
+ * @tparam link_t linked list node type
+ * @param head `const T_ptr_t<link_t>&` linked list head
  */
 template <class link_t>
 std::size_t count_links(const T_ptr_t<link_t>& head)
@@ -72,8 +76,8 @@ std::size_t count_links(const T_ptr_t<link_t>& head)
  *
  * @see count_links(const link_ptr_t)
  *
- * @tparam link_t Name of the linked list node type
- * @param head `const T_ptr_t<link_t>&` linked list head
+ * @tparam link_t linked list node type
+ * @param head `const link_t*` linked list head
  */
 template <class link_t>
 std::size_t count_links(const link_t* head)

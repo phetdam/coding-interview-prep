@@ -36,12 +36,17 @@ single_link::single_link(double value, single_link_ptr&& next)
 {}
 
 /**
- * Return the number of forward links in the chain of nodes.
+ * Return number of links next in the chain of nodes after `this`.
  */
-std::size_t single_link::n_links() const
+std::size_t single_link::n_next() const
 {
-  return count_links<single_link>(this);
+  return count_links<single_link>(this->next());
 }
+
+/**
+ * Return number of links accessible in the chain of nodes, including `this`.
+ */
+std::size_t single_link::n_links() const { return n_next() + 1; }
 
 /**
  * `double_link` constructor through copy.
@@ -72,11 +77,30 @@ double_link::double_link(
 {}
 
 /**
- * Return the number of forward links in the chain of nodes.
+ * Return the number of links previous in the chain of nodes.
  */
-std::size_t double_link::n_links() const
+std::size_t double_link::n_prev() const
 {
-  return count_links<double_link>(this);
+  double_link_ptr cur = this->prev();
+  std::size_t n_prev = 0;
+  while (cur) {
+    cur = cur->prev();
+    n_prev++;
+  }
+  return n_prev;
 }
+
+/**
+ * Return number of links next in the chain of nodes after `this`.
+ */
+std::size_t double_link::n_next() const
+{
+  return count_links<double_link>(this->next());
+}
+
+/**
+ * Return number of links accessible in the chain of nodes, including `this`.
+ */
+std::size_t double_link::n_links() const { return n_prev() + n_next() + 1; }
 
 }  // namespac pdcip
