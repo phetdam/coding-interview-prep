@@ -103,4 +103,4 @@ std::size_t double_link::n_next() const
  */
 std::size_t double_link::n_links() const { return n_prev() + n_next() + 1; }
 
-}  // namespac pdcip
+}  // namespace pdcip
