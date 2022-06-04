@@ -58,7 +58,8 @@ and testing frameworks used.
 +----------+------------------+---------------------+
 
 The next table shows which data structures/algorithms have been implemented
-and in what languages.
+and in what languages. Languages for which implementation is incomplete are
+marked with an asterisk ``*``.
 
 +------------------+-------------------+
 | Item             | Languages         |
@@ -70,6 +71,8 @@ and in what languages.
 | binary tree      | C, C++, Python    |
 +------------------+-------------------+
 | graph            | Python            |
++------------------+-------------------+
+| linked list      | C++*              |
 +------------------+-------------------+
 | tree             | C, C++, Python    |
 +------------------+-------------------+
