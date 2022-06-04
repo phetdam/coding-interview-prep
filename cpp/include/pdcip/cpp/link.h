@@ -47,7 +47,7 @@ public:
 };
 
 /**
- * Template function that returns number of nodes in a chain of nodes.
+ * Template function returning number of nodes in a chain of nodes.
  *
  * Uses `next` to discover more nodes until `nullptr` is reached. The returned
  * count includes the current `head` node passed as a parameter.
@@ -70,7 +70,7 @@ std::size_t count_links(const T_ptr_t<link_t>& head)
 }
 
 /**
- * Template function that returns number of forward links.
+ * Template function returning number of nodes in a chain of nodes.
  *
  * Version of the above that uses a raw pointer instead.
  *
