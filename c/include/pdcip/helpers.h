@@ -10,20 +10,34 @@
 #include <assert.h>
 #include <stddef.h>
 
-#ifdef _MSC_VER
-// C4296 issued when check_index_endpoints used on unsigned types
-#pragma warning (disable: 4296)
-#endif  /* _MSC_VER */
-
 /**
  * Checks that index range specified by two endpoints is valid.
+ *
+ * @note Defined based on compiler to suppress warning when `start` is passed
+ *    an unsigned value, as of course `>= 0` will be `true`.
  *
  * @param start Leftmost index
  * @param end Rightmost index
  */
+#if defined(_MSC_VER)
+#define check_index_endpoints(start, end) \
+  __pragma (warning (push)) \
+  __pragma (warning (disable: 4296)) \
+  assert(start >= 0); \
+  assert(end >= start); \
+  __pragma (warning(pop))
+#elif defined(__GNUC__) || defined(__clang__)
+#define check_index_endpoints(start, end) \
+  _Pragma ("GCC diagnostic push") \
+  _Pragma ("GCC diagnostic ignored \"-Wtype-limits\"") \
+  assert(start >= 0); \
+  assert(end >= start); \
+  _Pragma ("GCC diagnostic pop")
+#else  /* !defined(_MSC_VER) && !defined(__GNUC__) && !defined(__clang__) */
 #define check_index_endpoints(start, end) \
   assert(start >= 0); \
   assert(end >= start)
+#endif /* !defined(_MSC_VER) && !defined(__GNUC__) && !defined(__clang__) */
 
 /**
  * Binds [partial] sum of array elements to a name in current scope.

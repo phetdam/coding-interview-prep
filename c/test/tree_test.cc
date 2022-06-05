@@ -5,6 +5,8 @@
  * @copyright MIT License
  */
 
+#include "pdcip/tree.h"
+
 #include <stdlib.h>
 
 #include <iterator>
@@ -13,7 +15,6 @@
 #include <gtest/gtest.h>
 
 #include "pdcip/helpers.h"
-#include "pdcip/tree.h"
 
 #ifdef _MSC_VER
 #pragma warning (disable: 4625 4626)
