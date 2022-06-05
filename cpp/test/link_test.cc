@@ -12,6 +12,11 @@
 #include <gtest/gtest.h>
 
 #include "pdcip/cpp/types.h"
+#include "pdcip/cpp/testing/msvc.h"
+
+#ifdef _MSC_VER
+#pragma warning (disable: GTEST_FIXTURE_WARNINGS)
+#endif  // _MSC_VER
 
 namespace pdcip {
 namespace testing {
