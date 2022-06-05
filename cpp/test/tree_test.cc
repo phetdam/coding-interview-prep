@@ -5,6 +5,8 @@
  * @copyright MIT License
  */
 
+#include "pdcip/cpp/tree.h"
+
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
@@ -15,7 +17,6 @@
 
 #include <gtest/gtest.h>
 
-#include "pdcip/cpp/tree.h"
 #include "pdcip/cpp/types.h"
 #include "pdcip/cpp/testing/msvc.h"
 

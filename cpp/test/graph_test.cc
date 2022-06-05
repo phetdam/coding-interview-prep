@@ -5,11 +5,12 @@
  * @copyright MIT License
  */
 
+#include "pdcip/cpp/graph.h"
+
 #include <memory>
 
 #include <gtest/gtest.h>
 
-#include "pdcip/cpp/graph.h"
 #include "pdcip/cpp/types.h"
 #include "pdcip/cpp/testing/msvc.h"
 
