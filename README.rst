@@ -82,6 +82,11 @@ marked with an asterisk ``*``.
 Building from source
 --------------------
 
+   Note:
+
+   In the future, each subproject directory will get its own ``README.rst``
+   including build instructions.
+
 C/C++
 ~~~~~
 
