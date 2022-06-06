@@ -33,12 +33,16 @@ protected:
   static const double_vector next_values_;
   static const double next_value_first_;
   static const double next_value_last_;
+  static const double filler_value_;
+  static const double_vector filler_values_;
 };
 
 double LinkTest::head_value_ = 5;
 const double_vector LinkTest::next_values_ = {7.1, 4.5, 6.7, 1, 9.8};
 const double LinkTest::next_value_first_ = LinkTest::next_values_.front();
 const double LinkTest::next_value_last_ = LinkTest::next_values_.back();
+const double LinkTest::filler_value_ = -1;
+const double_vector LinkTest::filler_values_(10, LinkTest::filler_value_);
 
 /**
  * Test fixture for `single_link` tests.
@@ -57,8 +61,8 @@ protected:
  */
 TEST_F(SingleLinkTest, CountLinksTest)
 {
-  single_link::insert_next(head_, next_values_);
-  ASSERT_EQ(next_values_.size() + 1, count_links<single_link>(head_));
+  single_link::insert_next(head_, filler_values_);
+  ASSERT_EQ(filler_values_.size() + 1, count_links<single_link>(head_));
 }
 
 /**
@@ -105,6 +109,23 @@ TEST_F(SingleLinkTest, AppendLinkTest)
 }
 
 /**
+ * Test that the `append_links` template works as expected with `single_link`.
+ */
+TEST_F(SingleLinkTest, AppendLinksTest)
+{
+  auto insert_pair = single_link::insert_next(head_, filler_values_);
+  auto append_pair = append_links<single_link>(head_, next_values_);
+  ASSERT_DOUBLE_EQ(
+    insert_pair.second->next()->value(), append_pair.first->value()
+  );
+  single_link_ptr cur = append_pair.first;
+  for (double value : next_values_) {
+    ASSERT_DOUBLE_EQ(value, cur->value());
+    cur = cur->next();
+  }
+}
+
+/**
  * Test fixture for `double_link` tests.
  */
 class DoubleLinkTest : public LinkTest {
@@ -121,8 +142,8 @@ protected:
  */
 TEST_F(DoubleLinkTest, CountLinksTest)
 {
-  double_link::insert_next(head_, next_values_);
-  ASSERT_EQ(next_values_.size() + 1, count_links<double_link>(head_));
+  double_link::insert_next(head_, filler_values_);
+  ASSERT_EQ(filler_values_.size() + 1, count_links<double_link>(head_));
 }
 
 /**
@@ -175,11 +196,38 @@ TEST_F(DoubleLinkTest, InsertLinksTest)
  */
 TEST_F(DoubleLinkTest, AppendLinkTest)
 {
-  auto link_pair = double_link::insert_next(head_, next_values_);
-  auto last = append_link<double_link>(head_, head_value_);
-  ASSERT_DOUBLE_EQ(head_value_, last->value());
+  auto last = append_link<double_link>(head_, next_value_first_);
+  ASSERT_DOUBLE_EQ(next_value_first_, last->value());
+  ASSERT_DOUBLE_EQ(head_->value(), last->prev()->value());
+  ASSERT_DOUBLE_EQ(head_->next()->value(), last->value());
+  // essentially an append call, without using append_links
+  auto link_pair = double_link::insert_next(last, filler_values_);
+  last = append_link<double_link>(head_, next_value_first_);
+  ASSERT_DOUBLE_EQ(next_value_first_, last->value());
   ASSERT_DOUBLE_EQ(link_pair.second->next()->value(), last->value());
   ASSERT_DOUBLE_EQ(link_pair.second->value(), last->prev()->value());
+}
+
+/**
+ * Test that the `append_links` template works as expected with `double_link`.
+ */
+TEST_F(DoubleLinkTest, AppendLinksTest)
+{
+  auto insert_pair = double_link::insert_next(head_, filler_values_);
+  auto append_pair = append_links<double_link>(head_, next_values_);
+  ASSERT_DOUBLE_EQ(next_value_first_, append_pair.first->value());
+  ASSERT_DOUBLE_EQ(
+    insert_pair.second->value(), append_pair.first->prev()->value()
+  );
+  ASSERT_DOUBLE_EQ(
+    insert_pair.second->next()->value(), append_pair.first->value()
+  );
+  double_link_ptr cur = append_pair.first->next();
+  for (unsigned int i = 1; i < next_values_.size(); i++) {
+    ASSERT_DOUBLE_EQ(next_values_[i], cur->value());
+    ASSERT_DOUBLE_EQ(next_values_[i - 1], cur->prev()->value());
+    cur = cur->next();
+  }
 }
 
 }  // namespace

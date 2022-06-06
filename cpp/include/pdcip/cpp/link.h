@@ -187,9 +187,12 @@ T_ptr_pair_t<link_t> append_links(
   const T_ptr_t<link_t>& head, const double_vector& values)
 {
   T_ptr_t<link_t> cur = head;
-  T_ptr_t<link_t> first = head;
+  T_ptr_t<link_t> first;
   for (double value : values) {
     cur = append_link(cur, value);
+    if (!first) {
+      first = cur;
+    }
   }
   T_ptr_t<link_t> last = cur;
   return std::make_pair<T_ptr_t<link_t>, T_ptr_t<link_t>>(
