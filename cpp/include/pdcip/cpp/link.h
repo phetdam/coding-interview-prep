@@ -50,10 +50,10 @@ public:
   std::size_t n_prev() const;
   std::size_t n_next() const;
   std::size_t n_links() const;
-  /*
-  double_link_ptr insert_prev(double);
-  double_link_ptr_pair insert_prev(const double_vector&);
-  */
+  static double_link_ptr insert_prev(const double_link_ptr&, double);
+  static double_link_ptr_pair insert_prev(
+    const double_link_ptr&, const double_vector&
+  );
   static double_link_ptr insert_next(const double_link_ptr&, double);
   static double_link_ptr_pair insert_next(
     const double_link_ptr&, const double_vector&
@@ -146,9 +146,7 @@ T_ptr_pair_t<link_t> insert_links(
     }
   }
   T_ptr_t<link_t> last = cur;
-  return std::make_pair<T_ptr_t<link_t>, T_ptr_t<link_t>>(
-    std::move(first), std::move(last)
-  );
+  return std::make_pair(first, last);
 }
 
 /**
@@ -195,9 +193,7 @@ T_ptr_pair_t<link_t> append_links(
     }
   }
   T_ptr_t<link_t> last = cur;
-  return std::make_pair<T_ptr_t<link_t>, T_ptr_t<link_t>>(
-    std::move(first), std::move(last)
-  );
+  return std::make_pair(first, last);
 }
 
 }  // namespace pdcip

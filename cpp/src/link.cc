@@ -54,7 +54,7 @@ std::size_t single_link::n_links() const { return n_next() + 1; }
  * Insert a link between `head` and its next link.
  *
  * @param head `const single_link_ptr&` linked list head
- * @param value `double` value of node to insert between `this`, `this->next()`
+ * @param value `double` value of node to insert between `head`, `head->next()`
  * @returns `single_link_ptr` pointing to the inserted node
  */
 single_link_ptr single_link::insert_next(
@@ -74,8 +74,8 @@ single_link_ptr single_link::insert_next(
  *
  * @param head `const single_link_ptr&` linked list head
  * @param values `const double_vector&` with values of the nodes to insert
- *    between node `this` and node `this->next()`
- * @returns `double_link_pair` giving the first and last nodes inserted
+ *    between node `head` and node `head->next()`
+ * @returns `single_link_ptr_pair` giving the first and last nodes inserted
  */
 single_link_ptr_pair single_link::insert_next(
   const single_link_ptr& head, const double_vector& values)
@@ -139,10 +139,46 @@ std::size_t double_link::n_next() const
 std::size_t double_link::n_links() const { return n_prev() + n_next() + 1; }
 
 /**
- * Insert a link between `this` and the next link.
+ * Insert a link between `head` and its previous link.
  *
  * @param head `const double_link_ptr&` linked list head
- * @param value `double` value of node to insert between `this`, `this->next()`
+ * @param value `double` value of node to insert between `head->prev()`, `head`
+ * @returns `double_link_ptr` pointing to the inserted node
+ */
+double_link_ptr double_link::insert_prev(
+  const double_link_ptr& head, double value)
+{
+  assert(!std::isnan(value));
+  double_link_ptr new_link = std::make_shared<double_link>(value);
+  if (head->prev()) {
+    new_link->set_prev(head->prev());
+    head->prev()->set_next(new_link);
+  }
+  head->set_prev(new_link);
+  new_link->set_next(head);
+  return new_link;
+}
+
+/**
+ * Insert multiple links between `head` and its previous link.
+ *
+ * @param head `const double_link_ptr&` linked list head
+ * @param values `const double_vector&` with values of the nodes to insert
+ *    between node `head->prev()` and node `head`
+ * @returns `double_link_ptr_pair` giving the first and last nodes inserted
+ */
+double_link_ptr_pair double_link::insert_prev(
+  const double_link_ptr& head, const double_vector& values)
+{
+  return std::pair<double_link_ptr, double_link_ptr>();
+}
+
+
+/**
+ * Insert a link between `head` and its next link.
+ *
+ * @param head `const double_link_ptr&` linked list head
+ * @param value `double` value of node to insert between `head`, `head->next()`
  * @returns `double_link_ptr` pointing to the inserted node
  */
 double_link_ptr double_link::insert_next(
@@ -160,12 +196,12 @@ double_link_ptr double_link::insert_next(
 }
 
 /**
- * Insert multiple links between `this` and the next link.
+ * Insert multiple links between `head` and its next link.
  *
  * @param head `const double_link_ptr&` linked list head
  * @param values `const double_vector&` with values of the nodes to insert
- *    between node `this` and node `this->next()`
- * @returns `double_link_pair` giving the first and last nodes inserted
+ *    between node `head` and node `head->next()`
+ * @returns `double_link_ptr_pair` giving the first and last nodes inserted
  */
 double_link_ptr_pair double_link::insert_next(
   const double_link_ptr& head, const double_vector& values)
