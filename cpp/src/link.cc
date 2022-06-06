@@ -49,6 +49,29 @@ std::size_t single_link::n_next() const
 std::size_t single_link::n_links() const { return n_next() + 1; }
 
 /**
+ * Insert a link between `this` and the next link.
+ *
+ * @param value `double` value of node to insert between `this`, `this->next()`
+ * @returns `single_link_ptr` pointing to the inserted node
+ */
+single_link_ptr single_link::insert_next(double value)
+{
+  return insert_link<single_link>(this, value);
+}
+
+/**
+ * Insert multiple links between `this` and the next link.
+ *
+ * @param values `const double_vector&` with values of the nodes to insert
+ *    between node `this` and node `this->next()`
+ * @returns `double_link_pair` giving the first and last nodes inserted
+ */
+single_link_ptr_pair single_link::insert_next(const double_vector& values)
+{
+  return insert_links<single_link>(this, values);
+}
+
+/**
  * `double_link` constructor through copy.
  *
  * @param value `double` value to assign to node
@@ -102,5 +125,28 @@ std::size_t double_link::n_next() const
  * Return number of links accessible in the chain of nodes, including `this`.
  */
 std::size_t double_link::n_links() const { return n_prev() + n_next() + 1; }
+
+/**
+ * Insert a link between `this` and the next link.
+ *
+ * @param value `double` value of node to insert between `this`, `this->next()`
+ * @returns `double_link_ptr` pointing to the inserted node
+ */
+double_link_ptr double_link::insert_next(double value)
+{
+  return insert_link<double_link>(this, value);
+}
+
+/**
+ * Insert multiple links between `this` and the next link.
+ *
+ * @param values `const double_vector&` with values of the nodes to insert
+ *    between node `this` and node `this->next()`
+ * @returns `double_link_pair` giving the first and last nodes inserted
+ */
+double_link_ptr_pair double_link::insert_next(const double_vector& values)
+{
+  return insert_links<double_link>(this, values);
+}
 
 }  // namespace pdcip
