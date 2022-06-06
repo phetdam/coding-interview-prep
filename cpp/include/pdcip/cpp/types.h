@@ -50,9 +50,11 @@ using edge_ptr_vector_ptr = T_ptr_vector_ptr_t<edge>;
 
 class single_link;
 using single_link_ptr = T_ptr_t<single_link>;
+using single_link_ptr_vector = T_ptr_vector_t<single_link>;
 
 class double_link;
 using double_link_ptr = T_ptr_t<double_link>;
+using double_link_ptr_vector = T_ptr_vector_t<double_link>;
 
 /**
  * Base class template for any object that holds a mutable `T` value.
