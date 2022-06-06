@@ -170,7 +170,18 @@ double_link_ptr double_link::insert_prev(
 double_link_ptr_pair double_link::insert_prev(
   const double_link_ptr& head, const double_vector& values)
 {
-  return std::pair<double_link_ptr, double_link_ptr>();
+  if (!values.size()) {
+    return double_link_ptr_pair();
+  }
+  double_link_ptr last = head;
+  double_link_ptr first;
+  for (double value : values) {
+    last = insert_prev(last, value);
+    if (!first) {
+      first = last;
+    }
+  }
+  return std::make_pair(first, last);
 }
 
 

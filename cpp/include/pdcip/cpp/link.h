@@ -137,15 +137,14 @@ template <class link_t>
 T_ptr_pair_t<link_t> insert_links(
   const T_ptr_t<link_t>& head, const double_vector& values)
 {
-  T_ptr_t<link_t> cur = head;
+  T_ptr_t<link_t> last = head;
   T_ptr_t<link_t> first;
   for (double value : values) {
-    cur = link_t::insert_next(cur, value);
+    last = link_t::insert_next(last, value);
     if (!first) {
-      first = cur;
+      first = last;
     }
   }
-  T_ptr_t<link_t> last = cur;
   return std::make_pair(first, last);
 }
 
@@ -184,15 +183,14 @@ template <class link_t>
 T_ptr_pair_t<link_t> append_links(
   const T_ptr_t<link_t>& head, const double_vector& values)
 {
-  T_ptr_t<link_t> cur = head;
+  T_ptr_t<link_t> last = head;
   T_ptr_t<link_t> first;
   for (double value : values) {
-    cur = append_link(cur, value);
+    last = append_link(last, value);
     if (!first) {
-      first = cur;
+      first = last;
     }
   }
-  T_ptr_t<link_t> last = cur;
   return std::make_pair(first, last);
 }
 
