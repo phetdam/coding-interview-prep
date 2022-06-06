@@ -24,68 +24,111 @@ namespace testing {
 namespace {
 
 /**
- * Test fixture class for all linked list node tests.
- *
- * @note Later reorganize to have separate static functions adding links next
- *    and previous to a specified head node. Maybe add to library?
+ * Test fixture base class for all linked list node tests.
  */
 class LinkTest : public ::testing::Test {
 protected:
-  LinkTest()
-    : single_head_(std::make_shared<single_link>(head_value_)),
-      double_head_(std::make_shared<double_link>(head_value_))
-  {}
-
-  /**
-   * Setup function checking the sanity of the head nodes.
-   */
-  void SetUp() override
-  {
-    ASSERT_DOUBLE_EQ(head_value_, single_head_->value());
-    ASSERT_EQ(nullptr, single_head_->next());
-    ASSERT_DOUBLE_EQ(head_value_, double_head_->value());
-    ASSERT_EQ(nullptr, double_head_->prev());
-    ASSERT_EQ(nullptr, double_head_->next());
-  }
-
-  /**
-   * Add next links to `single_head_`.
-   */
-  void add_next_links()
-  {
-    single_link_ptr cur = single_head_;
-    for (double value : next_link_values_) {
-      cur->set_next(std::make_shared<single_link>(value));
-      cur = cur->next();
-      ASSERT_DOUBLE_EQ(value, cur->value());
-      ASSERT_EQ(nullptr, cur->next());
-    }
-  }
-
-  single_link_ptr single_head_;
-  double_link_ptr double_head_;
+  virtual ~LinkTest() = default;
   static double head_value_;
-  static const double next_link_value_;
-  static const double_vector next_link_values_;
+  static const double_vector next_values_;
+  static const double next_value_first_;
+  static const double next_value_last_;
 };
 
 double LinkTest::head_value_ = 5;
-const double LinkTest::next_link_value_ = 7.1;
-const double_vector LinkTest::next_link_values_ = {
-  LinkTest::next_link_value_, 4.5, 6.7, 1, 9.8
+const double_vector LinkTest::next_values_ = {7.1, 4.5, 6.7, 1, 9.8};
+const double LinkTest::next_value_first_ = LinkTest::next_values_.front();
+const double LinkTest::next_value_last_ = LinkTest::next_values_.back();
+
+/**
+ * Test fixture for `single_link` tests.
+ */
+class SingleLinkTest : public LinkTest {
+protected:
+  SingleLinkTest() : head_(std::make_shared<single_link>(head_value_)) {}
+  const single_link_ptr head_;
 };
 
-// this way, we can split the fixture tests into different suites
-using SingleLinkTest = LinkTest;
-using DoubleLinkTest = LinkTest;
+/**
+ * Test that `insert_link` template works as expected with `single_link`.
+ *
+ * Tests both the case where next node is null and when next node is not null.
+ */
+TEST_F(SingleLinkTest, InsertLinkTest)
+{
+  auto next_ = insert_link<single_link>(head_, next_value_first_);
+  ASSERT_EQ(head_->next(), next_);
+  ASSERT_DOUBLE_EQ(next_value_first_, head_->next()->value());
+  next_ = insert_link<single_link>(head_, next_value_first_ + 1);
+  ASSERT_EQ(head_->next(), next_);
+  ASSERT_DOUBLE_EQ(next_value_first_ + 1, head_->next()->value());
+}
+
+/**
+ * Test that `insert_links` template works as expected.
+ */
+TEST_F(SingleLinkTest, InsertLinksTest)
+{
+  auto link_pair = insert_links<single_link>(head_, next_values_);
+  single_link_ptr cur = link_pair.first;
+  ASSERT_EQ(head_->next(), cur);
+  for (double value : next_values_) {
+    ASSERT_DOUBLE_EQ(value, cur->value());
+    if (!cur->next()) {
+      ASSERT_EQ(link_pair.second, cur);
+    }
+    cur = cur->next();
+  }
+}
 
 /**
  * Test that the `single_link::n_next` method works as intended.
  */
-TEST_F(SingleLinkTest, NNextTest)
+TEST_F(SingleLinkTest, DISABLED_NNextTest)
 {
-  add_next_links();
-  ASSERT_EQ(next_link_values_.size(), single_head_->n_next());
+  // add_next_links();
+  ASSERT_EQ(next_values_.size(), head_->n_next());
+}
+
+/**
+ * Test fixture for `double_link` tests.
+ */
+class DoubleLinkTest : public LinkTest {
+protected:
+  DoubleLinkTest() : head_(std::make_shared<double_link>(head_value_)) {}
+  const double_link_ptr head_;
+};
+
+/**
+ * Test that `insert_link` template works as expected with `double_link`.
+ *
+ * Tests both the case where next node is null and when next node is not null.
+ */
+TEST_F(DoubleLinkTest, InsertLinkTest)
+{
+  auto next_ = insert_link<double_link>(head_, next_value_first_);
+  ASSERT_EQ(head_->next(), next_);
+  ASSERT_DOUBLE_EQ(next_value_first_, head_->next()->value());
+  next_ = insert_link<double_link>(head_, next_value_first_ + 1);
+  ASSERT_EQ(head_->next(), next_);
+  ASSERT_DOUBLE_EQ(next_value_first_ + 1, head_->next()->value());
+}
+
+/**
+ * Test that `insert_links` template works as expected.
+ */
+TEST_F(DoubleLinkTest, InsertLinksTest)
+{
+  auto link_pair = insert_links<double_link>(head_, next_values_);
+  double_link_ptr cur = link_pair.first;
+  ASSERT_EQ(head_->next(), cur);
+  for (double value : next_values_) {
+    ASSERT_DOUBLE_EQ(value, cur->value());
+    if (!cur->next()) {
+      ASSERT_EQ(link_pair.second, cur);
+    }
+    cur = cur->next();
+  }
 }
 
 }  // namespace

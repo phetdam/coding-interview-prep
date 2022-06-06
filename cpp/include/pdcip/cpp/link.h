@@ -27,8 +27,10 @@ public:
   single_link(double, single_link_ptr&&);
   std::size_t n_next() const;
   std::size_t n_links() const;
-  single_link_ptr insert_next(double);
-  single_link_ptr_pair insert_next(const double_vector&);
+  static single_link_ptr insert_next(const single_link_ptr&, double);
+  static single_link_ptr_pair insert_next(
+    const single_link_ptr&, const double_vector&
+  );
 };
 
 /**
@@ -52,8 +54,10 @@ public:
   double_link_ptr insert_prev(double);
   double_link_ptr_pair insert_prev(const double_vector&);
   */
-  double_link_ptr insert_next(double);
-  double_link_ptr_pair insert_next(const double_vector&);
+  static double_link_ptr insert_next(const double_link_ptr&, double);
+  static double_link_ptr_pair insert_next(
+    const double_link_ptr&, const double_vector&
+  );
 };
 
 /**
@@ -104,6 +108,8 @@ std::size_t count_links(const link_t* head)
 /**
  * Inserts a "next" node between current node and its next node.
  *
+ * @note Requires that the `link_t` type implements `insert_next`.
+ *
  * @tparam link_t linked list node type
  * @param head `const T_ptr_t<link_t>&` linked list head
  * @param value `double` value of node to insert between `head`, `head->next()`
@@ -112,33 +118,13 @@ std::size_t count_links(const link_t* head)
 template <class link_t>
 T_ptr_t<link_t> insert_link(const T_ptr_t<link_t>& head, double value)
 {
-  return insert_link<link_t>(head.get(), value);
-}
-
-/**
- * Inserts a "next" node between current node and its next node.
- *
- * @tparam link_t linked list node type
- * @param head `link_t*` linked list head
- * @param value `double` value of node to insert between `head`, `head->next()`
- * @returns `T_ptr_t<link_t>` pointing to the inserted node
- */
-template <class link_t>
-T_ptr_t<link_t> insert_link(link_t* head, double value)
-{
-  assert(!std::isnan(value));
-  T_ptr_t<link_t> new_link = std::make_shared<link_t>(value);
-  if (!head->next()) {
-    head->set_next(new_link);
-    return new_link;
-  }
-  new_link->set_next(head->next());
-  head->set_next(new_link);
-  return new_link;
+  return link_t::insert_next(head, value);
 }
 
 /**
  * Insert multiple "next" nodes between current nodes and its next node.
+ *
+ * @note Requires that the `link_t` type implements `insert_next`.
  *
  * @tparam link_t linked list node type
  * @param head `const T_ptr_t<link_t>&` linked list head
@@ -154,7 +140,7 @@ T_ptr_pair_t<link_t> insert_links(
   T_ptr_t<link_t> cur = head;
   T_ptr_t<link_t> first;
   for (double value : values) {
-    cur = insert_link(cur, value);
+    cur = link_t::insert_next(cur, value);
     if (!first) {
       first = cur;
     }
@@ -166,37 +152,9 @@ T_ptr_pair_t<link_t> insert_links(
 }
 
 /**
- * Insert multiple "next" nodes between current nodes and its next node.
- *
- * @tparam link_t linked list node type
- * @param head `link_t*` linked list head
- * @param values `const double_vector&` values of nodes to insert between
- *    `head` node and its `head->next()` next node
- * @returns `T_ptr_pair_t<link_t>` giving pointer to the first of the inserted
- *    nodes and the last of inserted nodes as a pair
- */
-template <class link_t>
-T_ptr_pair_t<link_t> insert_links(
-  link_t* head, const double_vector& values)
-{
-  link_t* cur = head;
-  T_ptr_t<link_t> cur_shared;
-  T_ptr_t<link_t> first;
-  for (double value : values) {
-    cur_shared = insert_link(cur, value);
-    if (!first) {
-      first = cur_shared;
-    }
-    cur = cur_shared.get();
-  }
-  T_ptr_t<link_t> last = cur_shared;
-  return std::make_pair<T_ptr_t<link_t>, T_ptr_t<link_t>>(
-    std::move(first), std::move(last)
-  );
-}
-
-/**
  * Append a "next" node after the last node in a chain with head `head`.
+ *
+ * @note Requires that the `link_t` type implements `insert_next`.
  *
  * @tparam link_t linked list node type
  * @param head `const T_ptr_t<link_t>&` linked list head
@@ -214,25 +172,9 @@ T_ptr_t<link_t> append_link(const T_ptr_t<link_t>& head, double value)
 }
 
 /**
- * Append a "next" node after the last node in a chain with head `head`.
- *
- * @tparam link_t linked list node type
- * @param head `link_t*` linked list head
- * @param value `double` value of node to insert after last node in chain
- * @returns `T_ptr_t<link_t>` giving the appended node
- */
-template <class link_t>
-T_ptr_t<link_t> append_link(link_t* head, double value)
-{
-  link_t* cur = head;
-  while (cur->next()) {
-    cur = cur->next().get();
-  }
-  return insert_link<link_t>(cur, value);
-}
-
-/**
  * Appends multiple "next" nodes after last node in a chain with head `head`.
+ *
+ * @note Requires that the `link_t` type implements `insert_next`.
  *
  * @tparam link_t linked list node type
  * @param head `const T_ptr_t<link_t>&` linked list head
@@ -248,35 +190,6 @@ T_ptr_pair_t<link_t> append_links(
   T_ptr_t<link_t> first = head;
   for (double value : values) {
     cur = append_link(cur, value);
-  }
-  T_ptr_t<link_t> last = cur;
-  return std::make_pair<T_ptr_t<link_t>, T_ptr_t<link_t>>(
-    std::move(first), std::move(last)
-  );
-}
-
-/**
- * Appends multiple "next" nodes after last node in a chain with head `head`.
- *
- * @tparam link_t linked list node type
- * @param head `link_t*` linked list head
- * @param values `const double_vector&` values of nodes to insert at end
- * @returns `T_ptr_pair_t<link_t>` giving pointer to the first of the appended
- *    nodes and the last of appended nodes as a pair
- */
-template <class link_t>
-T_ptr_pair_t<link_t> append_links(
-  link_t* head, const double_vector& values)
-{
-  link_t* cur = head;
-  T_ptr_t<link_t> cur_shared;
-  T_ptr_t<link_t> first;
-  for (double value : values) {
-    cur_shared = append_link(cur, value);
-    if (!first) {
-      first = cur_shared;
-    }
-    cur = cur_shared.get();
   }
   T_ptr_t<link_t> last = cur;
   return std::make_pair<T_ptr_t<link_t>, T_ptr_t<link_t>>(
