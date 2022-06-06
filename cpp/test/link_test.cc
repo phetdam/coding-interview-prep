@@ -103,15 +103,22 @@ protected:
  * Test that `insert_link` template works as expected with `double_link`.
  *
  * Tests both the case where next node is null and when next node is not null.
+ *
+ * @note The inserted node's `prev` attribute is *NOT* `head_` but rather a
+ *    copy of that `std::shared_ptr` (pointing to the same node)!
  */
 TEST_F(DoubleLinkTest, InsertLinkTest)
 {
   auto next_ = insert_link<double_link>(head_, next_value_first_);
   ASSERT_EQ(head_->next(), next_);
+  // note that ASSERT_EQ(head_, next_->prev()) will give an error
   ASSERT_DOUBLE_EQ(next_value_first_, head_->next()->value());
+  ASSERT_DOUBLE_EQ(head_value_, next_->prev()->value());
   next_ = insert_link<double_link>(head_, next_value_first_ + 1);
   ASSERT_EQ(head_->next(), next_);
+  // again, ASSERT_EQ(head_, next_->prev()) will give an error
   ASSERT_DOUBLE_EQ(next_value_first_ + 1, head_->next()->value());
+  ASSERT_DOUBLE_EQ(head_value_, next_->prev()->value());
 }
 
 /**

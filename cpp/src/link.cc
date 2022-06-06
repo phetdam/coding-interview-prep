@@ -150,11 +150,6 @@ double_link_ptr double_link::insert_next(
 {
   assert(!std::isnan(value));
   double_link_ptr new_link = std::make_shared<double_link>(value);
-  if (!head->next()) {
-    head->set_next(new_link);
-
-    return new_link;
-  }
   if (head->next()) {
     new_link->set_next(head->next());
     head->next()->set_prev(new_link);
