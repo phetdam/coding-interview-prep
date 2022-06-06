@@ -50,6 +50,18 @@ protected:
 };
 
 /**
+ * Test that the `count_links` template works as expected with `single_link`.
+ *
+ * @note Indirectly tests `single_link::insert_next`, which is already
+ *    indirectly tested by the `InsertLinksTest` for the `SingleLinkTest`.
+ */
+TEST_F(SingleLinkTest, CountLinksTest)
+{
+  single_link::insert_next(head_, next_values_);
+  ASSERT_EQ(next_values_.size() + 1, count_links<single_link>(head_));
+}
+
+/**
  * Test that `insert_link` template works as expected with `single_link`.
  *
  * Tests both the case where next node is null and when next node is not null.
@@ -82,15 +94,6 @@ TEST_F(SingleLinkTest, InsertLinksTest)
 }
 
 /**
- * Test that the `single_link::n_next` method works as intended.
- */
-TEST_F(SingleLinkTest, DISABLED_NNextTest)
-{
-  // add_next_links();
-  ASSERT_EQ(next_values_.size(), head_->n_next());
-}
-
-/**
  * Test fixture for `double_link` tests.
  */
 class DoubleLinkTest : public LinkTest {
@@ -98,6 +101,18 @@ protected:
   DoubleLinkTest() : head_(std::make_shared<double_link>(head_value_)) {}
   const double_link_ptr head_;
 };
+
+/**
+ * Test that the `count_links` template works as expected with `double_link`.
+ *
+ * @note Indirectly tests `single_link::insert_next`, which is already
+ *    indirectly tested by the `InsertLinksTest` for the `SingleLinkTest`.
+ */
+TEST_F(DoubleLinkTest, CountLinksTest)
+{
+  double_link::insert_next(head_, next_values_);
+  ASSERT_EQ(next_values_.size() + 1, count_links<double_link>(head_));
+}
 
 /**
  * Test that `insert_link` template works as expected with `double_link`.
