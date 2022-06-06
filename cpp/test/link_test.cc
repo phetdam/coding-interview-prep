@@ -111,26 +111,32 @@ TEST_F(DoubleLinkTest, InsertLinkTest)
 {
   auto next_ = insert_link<double_link>(head_, next_value_first_);
   ASSERT_EQ(head_->next(), next_);
-  // note that ASSERT_EQ(head_, next_->prev()) will give an error
+  // note that ASSERT_EQ(head_, next_->prev()) is false
   ASSERT_DOUBLE_EQ(next_value_first_, head_->next()->value());
   ASSERT_DOUBLE_EQ(head_value_, next_->prev()->value());
   next_ = insert_link<double_link>(head_, next_value_first_ + 1);
   ASSERT_EQ(head_->next(), next_);
-  // again, ASSERT_EQ(head_, next_->prev()) will give an error
+  // again, ASSERT_EQ(head_, next_->prev()) is false
   ASSERT_DOUBLE_EQ(next_value_first_ + 1, head_->next()->value());
   ASSERT_DOUBLE_EQ(head_value_, next_->prev()->value());
 }
 
 /**
  * Test that `insert_links` template works as expected.
+ *
+ * @note See comments in `InsertLinkTest` for `DoubleLinkTest` fixture on why
+ *    `ASSERT_EQ(head_, next_->prev())` assertion will fail.
  */
 TEST_F(DoubleLinkTest, InsertLinksTest)
 {
   auto link_pair = insert_links<double_link>(head_, next_values_);
-  double_link_ptr cur = link_pair.first;
-  ASSERT_EQ(head_->next(), cur);
-  for (double value : next_values_) {
-    ASSERT_DOUBLE_EQ(value, cur->value());
+  ASSERT_EQ(head_->next(), link_pair.first);
+  ASSERT_DOUBLE_EQ(next_value_first_, link_pair.first->value());
+  ASSERT_DOUBLE_EQ(head_value_, link_pair.first->prev()->value());
+  double_link_ptr cur = link_pair.first->next();
+  for (unsigned int i = 1; i < next_values_.size(); i++) {
+    ASSERT_DOUBLE_EQ(next_values_[i], cur->value());
+    ASSERT_DOUBLE_EQ(next_values_[i - 1], cur->prev()->value());
     if (!cur->next()) {
       ASSERT_EQ(link_pair.second, cur);
     }
