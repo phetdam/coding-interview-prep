@@ -94,6 +94,17 @@ TEST_F(SingleLinkTest, InsertLinksTest)
 }
 
 /**
+ * Test that the `append_link` template works as expected with `single_link`.
+ */
+TEST_F(SingleLinkTest, AppendLinkTest)
+{
+  auto link_pair = single_link::insert_next(head_, next_values_);
+  auto last = append_link<single_link>(head_, head_value_);
+  ASSERT_DOUBLE_EQ(head_value_, last->value());
+  ASSERT_DOUBLE_EQ(link_pair.second->next()->value(), last->value());
+}
+
+/**
  * Test fixture for `double_link` tests.
  */
 class DoubleLinkTest : public LinkTest {
@@ -157,6 +168,18 @@ TEST_F(DoubleLinkTest, InsertLinksTest)
     }
     cur = cur->next();
   }
+}
+
+/**
+ * Test that the `append_link` template works as expected with `double_link`.
+ */
+TEST_F(DoubleLinkTest, AppendLinkTest)
+{
+  auto link_pair = double_link::insert_next(head_, next_values_);
+  auto last = append_link<double_link>(head_, head_value_);
+  ASSERT_DOUBLE_EQ(head_value_, last->value());
+  ASSERT_DOUBLE_EQ(link_pair.second->next()->value(), last->value());
+  ASSERT_DOUBLE_EQ(link_pair.second->value(), last->prev()->value());
 }
 
 }  // namespace
