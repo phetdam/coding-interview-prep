@@ -84,6 +84,23 @@ single_link_ptr_pair single_link::insert_next(
 }
 
 /**
+ * Overloaded `<<` operator to allow streaming to `std::cout`.
+ *
+ * @param os `std::ostream&` original output stream
+ * @param head `const single_link_ptr&` linked list head.
+ */
+std::ostream& operator<<(std::ostream& os, const single_link_ptr& head)
+{
+  single_link_ptr cur = head;
+  while (cur) {
+    os << "[" << cur->value() << "]->";
+    cur = cur->next();
+  }
+  os << "[nullptr]";
+  return os;
+}
+
+/**
  * `double_link` constructor through copy.
  *
  * @param value `double` value to assign to node

@@ -7,7 +7,10 @@
 
 #include "pdcip/cpp/link.h"
 
+#include <ios>
 #include <memory>
+#include <sstream>
+#include <string>
 
 #include <gtest/gtest.h>
 
@@ -123,6 +126,24 @@ TEST_F(SingleLinkTest, AppendLinksTest)
     ASSERT_DOUBLE_EQ(value, cur->value());
     cur = cur->next();
   }
+}
+
+/**
+ * Test that the `<<` overload works as expected with `single_link_ptr`.
+ */
+TEST_F(SingleLinkTest, OstreamOverloadTest)
+{
+  single_link::insert_next(head_, next_values_);
+  std::ostringstream exp_stream;
+  single_link_ptr cur = head_;
+  while (cur) {
+    exp_stream << "[" << cur->value() << "]->";
+    cur = cur->next();
+  }
+  exp_stream << "[nullptr]";
+  std::ostringstream act_stream;
+  act_stream << head_;
+  ASSERT_EQ(exp_stream.str(), act_stream.str());
 }
 
 /**

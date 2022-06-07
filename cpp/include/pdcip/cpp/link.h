@@ -11,6 +11,7 @@
 #include <cassert>
 #include <cmath>
 #include <cstddef>
+#include <ostream>
 #include <utility>
 
 #include "pdcip/cpp/types.h"
@@ -32,6 +33,8 @@ public:
     const single_link_ptr&, const double_vector&
   );
 };
+
+std::ostream& operator<<(std::ostream&, const single_link_ptr&);
 
 /**
  * A simple double-linked list node implementation.
@@ -59,6 +62,8 @@ public:
     const double_link_ptr&, const double_vector&
   );
 };
+
+// std::ostream& operator<<(std::ostream&, const double_link_ptr&);
 
 /**
  * Template function returning number of nodes in a chain of nodes.
