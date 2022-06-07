@@ -137,7 +137,7 @@ TEST_F(SingleLinkTest, OstreamOverloadTest)
   std::ostringstream exp_stream;
   single_link_ptr cur = head_;
   while (cur) {
-    exp_stream << "[" << cur->value() << "]->";
+    exp_stream << "[" << cur->value() << "]-->";
     cur = cur->next();
   }
   std::cout << head_ << std::endl;

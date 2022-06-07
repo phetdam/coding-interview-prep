@@ -11,11 +11,23 @@
 #include <cmath>
 #include <cstddef>
 #include <memory>
+#include <string>
 #include <utility>
 
 #include "pdcip/cpp/types.h"
 
 namespace pdcip {
+
+namespace {
+
+/**
+ * String used to represent `nullptr` at the end of a linked list.
+ *
+ * Gets streamed into an output stream by the `operator<<` overload.
+ */
+std::string sentinel_string = "X";
+
+}  // namespace
 
 /**
  * `single_link` constructor through copy.
@@ -93,10 +105,10 @@ std::ostream& operator<<(std::ostream& os, const single_link_ptr& head)
 {
   single_link_ptr cur = head;
   while (cur) {
-    os << "[" << cur->value() << "]->";
+    os << "[" << cur->value() << "]-->";
     cur = cur->next();
   }
-  os << "[X]";
+  os << "[" << sentinel_string << "]";
   return os;
 }
 
