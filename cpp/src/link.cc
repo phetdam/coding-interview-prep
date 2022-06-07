@@ -96,7 +96,7 @@ std::ostream& operator<<(std::ostream& os, const single_link_ptr& head)
     os << "[" << cur->value() << "]->";
     cur = cur->next();
   }
-  os << "[nullptr]";
+  os << "[X]";
   return os;
 }
 

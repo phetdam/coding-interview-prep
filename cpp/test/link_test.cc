@@ -140,7 +140,8 @@ TEST_F(SingleLinkTest, OstreamOverloadTest)
     exp_stream << "[" << cur->value() << "]->";
     cur = cur->next();
   }
-  exp_stream << "[nullptr]";
+  std::cout << head_ << std::endl;
+  exp_stream << "[X]";
   std::ostringstream act_stream;
   act_stream << head_;
   ASSERT_EQ(exp_stream.str(), act_stream.str());
