@@ -176,7 +176,7 @@ double_link_ptr_pair double_link::insert_prev(
   double_link_ptr last = head;
   double_link_ptr first;
   for (double value : values) {
-    last = insert_prev(last, value);
+    last = insert_prev(head, value);
     if (!first) {
       first = last;
     }

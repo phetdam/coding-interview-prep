@@ -68,15 +68,15 @@ TEST_F(SingleLinkTest, CountLinksTest)
 /**
  * Test that `insert_link` template works as expected with `single_link`.
  *
- * Tests both the case where next node is null and when next node is not null.
+ * Tests both cases where next node is and is not null.
  */
 TEST_F(SingleLinkTest, InsertLinkTest)
 {
-  auto next_ = insert_link<single_link>(head_, next_value_first_);
-  ASSERT_EQ(head_->next(), next_);
+  auto next = insert_link<single_link>(head_, next_value_first_);
+  ASSERT_EQ(head_->next(), next);
   ASSERT_DOUBLE_EQ(next_value_first_, head_->next()->value());
-  next_ = insert_link<single_link>(head_, next_value_first_ + 1);
-  ASSERT_EQ(head_->next(), next_);
+  next = insert_link<single_link>(head_, next_value_first_ + 1);
+  ASSERT_EQ(head_->next(), next);
   ASSERT_DOUBLE_EQ(next_value_first_ + 1, head_->next()->value());
 }
 
@@ -147,32 +147,66 @@ TEST_F(DoubleLinkTest, CountLinksTest)
 }
 
 /**
+ * Test that `insert_prev` works as expected for a single value.
+ *
+ * Tests both cases where the prev node is and is not null.
+ */
+TEST_F(DoubleLinkTest, InsertSinglePrevTest)
+{
+  auto prev = double_link::insert_prev(head_, next_value_first_);
+  ASSERT_DOUBLE_EQ(next_value_first_, head_->prev()->value());
+  ASSERT_DOUBLE_EQ(head_value_, prev->next()->value());
+  prev = double_link::insert_prev(head_, next_value_first_ + 1);
+  ASSERT_DOUBLE_EQ(next_value_first_ + 1, head_->prev()->value());
+  ASSERT_DOUBLE_EQ(head_value_, prev->next()->value());
+  ASSERT_DOUBLE_EQ(next_value_first_, prev->prev()->value());
+}
+
+/**
+ * Tests that `insert_prev` works as expected for a vector of values.
+ */
+TEST_F(DoubleLinkTest, InsertManyPrevTest)
+{
+  auto link_pair = double_link::insert_prev(head_, next_values_);
+  ASSERT_DOUBLE_EQ(next_value_first_, link_pair.first->value());
+  ASSERT_DOUBLE_EQ(head_value_, link_pair.second->next()->value());
+  ASSERT_DOUBLE_EQ(next_value_last_, head_->prev()->value());
+  double_link_ptr cur = link_pair.first->next();
+  for (unsigned i = 1; i < next_values_.size(); i++) {
+    ASSERT_DOUBLE_EQ(next_values_[i], cur->value());
+    ASSERT_DOUBLE_EQ(next_values_[i], cur->prev()->next()->value());
+    ASSERT_DOUBLE_EQ(next_values_[i - 1], cur->prev()->value());
+    cur = cur->next();
+  }
+}
+
+/**
  * Test that `insert_link` template works as expected with `double_link`.
  *
- * Tests both the case where next node is null and when next node is not null.
+ * Tests both cases where next node is and is not null.
  *
  * @note The inserted node's `prev` attribute is *NOT* `head_` but rather a
  *    copy of that `std::shared_ptr` (pointing to the same node)!
  */
 TEST_F(DoubleLinkTest, InsertLinkTest)
 {
-  auto next_ = insert_link<double_link>(head_, next_value_first_);
-  ASSERT_EQ(head_->next(), next_);
+  auto next = insert_link<double_link>(head_, next_value_first_);
+  ASSERT_EQ(head_->next(), next);
   // note that ASSERT_EQ(head_, next_->prev()) is false
   ASSERT_DOUBLE_EQ(next_value_first_, head_->next()->value());
-  ASSERT_DOUBLE_EQ(head_value_, next_->prev()->value());
-  next_ = insert_link<double_link>(head_, next_value_first_ + 1);
-  ASSERT_EQ(head_->next(), next_);
-  // again, ASSERT_EQ(head_, next_->prev()) is false
+  ASSERT_DOUBLE_EQ(head_value_, next->prev()->value());
+  next = insert_link<double_link>(head_, next_value_first_ + 1);
+  ASSERT_EQ(head_->next(), next);
+  // again, ASSERT_EQ(head_, next->prev()) is false
   ASSERT_DOUBLE_EQ(next_value_first_ + 1, head_->next()->value());
-  ASSERT_DOUBLE_EQ(head_value_, next_->prev()->value());
+  ASSERT_DOUBLE_EQ(head_value_, next->prev()->value());
 }
 
 /**
  * Test that `insert_links` template works as expected.
  *
  * @note See comments in `InsertLinkTest` for `DoubleLinkTest` fixture on why
- *    `ASSERT_EQ(head_, next_->prev())` assertion will fail.
+ *    `ASSERT_EQ(head_, next->prev())` assertion will fail.
  */
 TEST_F(DoubleLinkTest, InsertLinksTest)
 {
