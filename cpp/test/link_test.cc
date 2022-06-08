@@ -130,8 +130,10 @@ TEST_F(SingleLinkTest, AppendLinksTest)
 
 /**
  * Test that the `<<` overload works as expected with `single_link_ptr`.
+ *
+ * @note `<<` is the insertion operator, `>>` is the extraction operator.
  */
-TEST_F(SingleLinkTest, OstreamOverloadTest)
+TEST_F(SingleLinkTest, InsertionOperatorTest)
 {
   single_link::insert_next(head_, next_values_);
   std::ostringstream exp_stream;
@@ -140,7 +142,6 @@ TEST_F(SingleLinkTest, OstreamOverloadTest)
     exp_stream << "[" << cur->value() << "]-->";
     cur = cur->next();
   }
-  std::cout << head_ << std::endl;
   exp_stream << "[X]";
   std::ostringstream act_stream;
   act_stream << head_;
@@ -284,6 +285,39 @@ TEST_F(DoubleLinkTest, AppendLinksTest)
     ASSERT_DOUBLE_EQ(next_values_[i - 1], cur->prev()->value());
     cur = cur->next();
   }
+}
+
+/**
+ * Test that the `<<` overload works as expected with `double_link_ptr`.
+ *
+ * Also tests the case where the "head" of the nodes isn't actually the head.
+ */
+TEST_F(DoubleLinkTest, InsertionOperatorTest)
+{
+  double_link::insert_next(head_, next_values_);
+  std::ostringstream exp_stream;
+  double_link_ptr cur = head_;
+  while (cur) {
+    exp_stream << "[" << cur->value() << "]===";
+    cur = cur->next();
+  }
+  exp_stream << "[X]";
+  std::ostringstream act_stream;
+  act_stream << head_;
+  ASSERT_EQ(exp_stream.str(), act_stream.str());
+  // now we test from head_->next. no need to call clear and str("") since we
+  //just create new ostringstream objects manually
+  cur = head_->next();
+  exp_stream = std::ostringstream();
+  exp_stream << "[...]===";
+  while (cur) {
+    exp_stream << "[" << cur->value() << "]===";
+    cur = cur->next();
+  }
+  exp_stream << "[X]";
+  act_stream = std::ostringstream();
+  act_stream << head_->next();
+  ASSERT_EQ(exp_stream.str(), act_stream.str());
 }
 
 }  // namespace

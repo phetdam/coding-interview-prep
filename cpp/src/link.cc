@@ -249,4 +249,27 @@ double_link_ptr_pair double_link::insert_next(
   return insert_links<double_link>(head, values);
 }
 
+/**
+ * Overloaded `<<` operator to allow streaming to `std::cout`.
+ *
+ * @note If `head` is not actually the head of the double linked list, there is
+ *    an additional `[...]` node stream at the beginning.
+ *
+ * @param os `std::ostream&` original output stream
+ * @param head `const double_link_ptr&` linked list head.
+ */
+std::ostream& operator<<(std::ostream& os, const double_link_ptr& head)
+{
+  double_link_ptr cur = head;
+  if (head && head->prev()) {
+      os << "[...]===";
+  }
+  while (cur) {
+    os << "[" << cur->value() << "]===";
+    cur = cur->next();
+  }
+  os << "[" << sentinel_string << "]";
+  return os;
+}
+
 }  // namespace pdcip

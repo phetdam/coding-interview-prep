@@ -32,6 +32,8 @@ public:
   static single_link_ptr_pair insert_next(
     const single_link_ptr&, const double_vector&
   );
+protected:
+  using T_next_t<single_link_ptr>::set_next;
 };
 
 std::ostream& operator<<(std::ostream&, const single_link_ptr&);
@@ -61,9 +63,12 @@ public:
   static double_link_ptr_pair insert_next(
     const double_link_ptr&, const double_vector&
   );
+protected:
+  using T_prev_t<double_link_ptr>::set_prev;
+  using T_next_t<double_link_ptr>::set_next;
 };
 
-// std::ostream& operator<<(std::ostream&, const double_link_ptr&);
+std::ostream& operator<<(std::ostream&, const double_link_ptr&);
 
 /**
  * Template function returning number of nodes in a chain of nodes.
