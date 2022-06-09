@@ -271,6 +271,29 @@ double_link_ptr_pair double_link::insert_next(
 }
 
 /**
+ * Reverse the links in a linked list with head `head`.
+ *
+ * @param head `const double_link_ptr&` linked list head
+ * @returns `double_link_ptr` giving the new linked list head
+ */
+double_link_ptr double_link::reverse(const double_link_ptr& head)
+{
+  double_link_ptr prev;
+  double_link_ptr cur = head;
+  double_link_ptr next = head->next();
+  while (cur) {
+    cur->set_next(prev);
+    cur->set_prev(next);
+    prev = std::move(cur);
+    cur = next;
+    if (next) {
+      next = next->next();
+    }
+  }
+  return prev;
+}
+
+/**
  * Overloaded `<<` operator to allow streaming to `std::cout`.
  *
  * @note If `head` is not actually the head of the double linked list, there is
