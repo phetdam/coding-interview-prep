@@ -32,6 +32,7 @@ public:
   static single_link_ptr_pair insert_next(
     const single_link_ptr&, const double_vector&
   );
+  static single_link_ptr reverse(const single_link_ptr&);
 protected:
   using T_next_t<single_link_ptr>::set_next;
 };
@@ -63,6 +64,7 @@ public:
   static double_link_ptr_pair insert_next(
     const double_link_ptr&, const double_vector&
   );
+  // static double_link_ptr reverse(const double_link_ptr&);
 protected:
   using T_prev_t<double_link_ptr>::set_prev;
   using T_next_t<double_link_ptr>::set_next;

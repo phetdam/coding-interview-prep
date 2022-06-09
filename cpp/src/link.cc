@@ -96,6 +96,28 @@ single_link_ptr_pair single_link::insert_next(
 }
 
 /**
+ * Reverse the links in a linked list with head `head`.
+ *
+ * @param head `const single_link_ptr&` linked list head
+ * @returns `single_link_ptr` giving the new linked list head
+ */
+single_link_ptr single_link::reverse(const single_link_ptr& head)
+{
+  single_link_ptr prev;
+  single_link_ptr cur = head;
+  single_link_ptr next = head->next();
+  while (cur) {
+    cur->set_next(prev);
+    prev = std::move(cur);
+    cur = next;
+    if (next) {
+      next = next->next();
+    }
+  }
+  return prev;
+}
+
+/**
  * Overloaded `<<` operator to allow streaming to `std::cout`.
  *
  * @param os `std::ostream&` original output stream
@@ -212,7 +234,6 @@ double_link_ptr_pair double_link::insert_prev(
   }
   return std::make_pair(first, last);
 }
-
 
 /**
  * Insert a link between `head` and its next link.
