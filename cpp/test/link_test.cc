@@ -129,6 +129,21 @@ TEST_F(SingleLinkTest, AppendLinksTest)
 }
 
 /**
+ * Test that the `single_link::reverse` static method works as expected.
+ */
+TEST_F(SingleLinkTest, ReverseTest)
+{
+  auto insert_pair = single_link::insert_next(head_, next_values_);
+  single_link_ptr new_head = single_link::reverse(head_);
+  ASSERT_DOUBLE_EQ(insert_pair.second->value(), new_head->value());
+  for (auto ri = next_values_.rbegin(); ri < next_values_.rend(); ri++) {
+    ASSERT_DOUBLE_EQ(*ri, new_head->value());
+    new_head = new_head->next();
+  }
+  ASSERT_DOUBLE_EQ(head_->value(), new_head->value());
+}
+
+/**
  * Test that the `<<` overload works as expected with `single_link_ptr`.
  *
  * @note `<<` is the insertion operator, `>>` is the extraction operator.
@@ -285,6 +300,27 @@ TEST_F(DoubleLinkTest, AppendLinksTest)
     ASSERT_DOUBLE_EQ(next_values_[i - 1], cur->prev()->value());
     cur = cur->next();
   }
+}
+
+/**
+ * Test that the `double_link::reverse` static method works as expected.
+ */
+TEST_F(DoubleLinkTest, ReverseTest)
+{
+  auto insert_pair = double_link::insert_next(head_, next_values_);
+  double_link_ptr new_head = double_link::reverse(head_);
+  ASSERT_DOUBLE_EQ(insert_pair.second->value(), new_head->value());
+  for (auto ri = next_values_.rbegin(); ri < next_values_.rend(); ri++) {
+    ASSERT_DOUBLE_EQ(*ri, new_head->value());
+    new_head = new_head->next();
+  }
+  ASSERT_DOUBLE_EQ(head_->value(), new_head->value());
+  new_head = new_head->prev();
+  for (double value : next_values_) {
+    ASSERT_DOUBLE_EQ(value, new_head->value());
+    new_head = new_head->prev();
+  }
+  ASSERT_EQ(nullptr, new_head);
 }
 
 /**
