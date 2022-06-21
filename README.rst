@@ -61,21 +61,23 @@ The next table shows which data structures/algorithms have been implemented
 and in what languages. Languages for which implementation is incomplete are
 marked with an asterisk ``*``.
 
-+------------------+-------------------+
-| Item             | Languages         |
-+==================+===================+
-| BFS_ (tree)      | C++, Python       |
-+------------------+-------------------+
-| DFS_ (tree)      | C, C++, Python    |
-+------------------+-------------------+
-| binary tree      | C++, Python       |
-+------------------+-------------------+
-| graph            | Python            |
-+------------------+-------------------+
-| linked list      | C*, C++*          |
-+------------------+-------------------+
-| tree             | C, C++, Python    |
-+------------------+-------------------+
++--------------------------+-------------------+
+| Item                     | Languages         |
++==========================+===================+
+| BFS_ (tree)              | C++, Python       |
++--------------------------+-------------------+
+| DFS_ (tree)              | C, C++, Python    |
++--------------------------+-------------------+
+| binary tree              | C++, Python       |
++--------------------------+-------------------+
+| graph                    | Python            |
++--------------------------+-------------------+
+| linked list              | C*, C++*          |
++--------------------------+-------------------+
+| linked list (``void *``) | C*                |
++--------------------------+-------------------+
+| tree                     | C, C++, Python    |
++--------------------------+-------------------+
 
 .. [#] In the past, setuptools_ was the de-facto default Python build system.
 
