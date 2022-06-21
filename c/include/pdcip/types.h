@@ -22,7 +22,8 @@ enum pdcip_type {
   PDCIP_CHAR_PTR,
   PDCIP_STRING,
   PDCIP_SIZE_T,
-  PDCIP_SIZE_T_PTR
+  PDCIP_SIZE_T_PTR,
+  NUM_TYPES  // convenience/sentinel member
 };
 typedef enum pdcip_type pdcip_type;
 
