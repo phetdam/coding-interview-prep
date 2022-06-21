@@ -11,6 +11,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+#include "pdcip/types.h"
+
 /**
  * A simple single-linked list node implementation.
  */
@@ -179,5 +181,48 @@ double_link_n_prev(double_link *);
 
 size_t
 double_link_n_links(double_link *);
+
+/**
+ * A more generic single-linked list node implementation.
+ *
+ * Able to hold a few different types, with the data accessed by dereferencing
+ * the `data` pointer, which may point to something like a double or pointer.
+ *
+ * The `n_data` field indicates how many contiguous elements `*data` points to,
+ * and is usually `0` unless `data_type` is a `PDCIP_<TYPE>_ARRAY` type, in
+ * which case `n_data` gives the number of `<TYPE>` elements that are
+ * contiguously allocated starting at `(*data)[0]`.
+ *
+ * When `data_type` is `PDCIP_STRING`, then `*data` can be expected to point to
+ * a properly null-terminated string, and `n_data` gives the length of said
+ * string. `PDCIP_CHAR_ARRAY` omits the null terminator.
+ *
+ * @note `void_single_link` objects **own** their data. The `*_array_malloc`
+ *     functions copy the specified number of elements from the data pointer.
+ */
+typedef struct void_single_link {
+  void *data;
+  pdcip_type data_type;
+  size_t n_data;
+  struct void_single_link *next;
+} void_single_link;
+
+void_single_link *
+void_single_link_int_malloc(int, void_single_link *);
+
+void_single_link *
+void_single_link_int_array_malloc(int *, size_t, void_single_link *);
+
+void_single_link *
+void_single_link_double_malloc(double, void_single_link *);
+
+void_single_link *
+void_single_link_double_array_malloc(double *, size_t, void_single_link *);
+
+void_single_link *
+void_single_link_void_ptr_malloc(void *, void_single_link *);
+
+void_single_link *
+void_single_link_void_ptr_array_malloc(void **, void_single_link *);
 
 #endif  /* PDCIP_LINK_H_ */
