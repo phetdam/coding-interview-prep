@@ -30,14 +30,14 @@ single_link_malloc(double, single_link *);
  * @param v `double` value the `single_link *` should take
  * @returns `single_link *`
  */
-#define single_link_malloc_default(v) single_link_malloc(v, NULL);
+#define single_link_malloc_default(v) single_link_malloc(v, NULL)
 
 /**
  * Allocate a `single_link *` with `NAN` value and no next links.
  *
  * @returns `single_link *`
  */
-#define single_link_malloc_empty() single_link_malloc(NAN, NULL);
+#define single_link_malloc_empty() single_link_malloc(NAN, NULL)
 
 /**
  * Free a `single_link *` without freeing any next links.
@@ -207,6 +207,34 @@ typedef struct void_single_link {
   struct void_single_link *next;
 } void_single_link;
 
+/**
+ * Partially init an existing `void_single_link *` with name `link`.
+ *
+ * To complete the `void_single_link *` initialization, set `link->data_type`
+ * with the appropriate `pdcip_type` enumeration value.
+ *
+ * @param link name of existing `void_single_link *`
+ * @param data_ `data_type` data that `link->data` will point to
+ * @param data_type C type of `data`
+ * @param n_data_ `size_t` number of data elements if `data` will point to a
+ *     pointer to an array, ex. `data` points to `double *`.
+ * @param next `void_single_link *` next node
+ */
+#define void_single_link_partial_init(link, data_, data_type, n_data_, next) \
+  link->data = malloc(sizeof data_); \
+  *((data_type *) link->data) = data_; \
+  link->n_data = n_data_; \
+  link->next = next
+
+/**
+ * Create and partially init a new `void_single_link *` with name `link`.
+ *
+ * See `void_single_link_partial_init` for parameter documentation.
+ */
+#define void_single_link_partial_create(link, data_, data_type, n_data_, next) \
+  void_single_link *link = malloc(sizeof *link); \
+  void_single_link_partial_init(link, data_, data_type, n_data_, next)
+
 void_single_link *
 void_single_link_int_malloc(int, void_single_link *);
 
@@ -219,10 +247,12 @@ void_single_link_double_malloc(double, void_single_link *);
 void_single_link *
 void_single_link_double_array_malloc(double *, size_t, void_single_link *);
 
+/*
 void_single_link *
 void_single_link_void_ptr_malloc(void *, void_single_link *);
 
 void_single_link *
 void_single_link_void_ptr_array_malloc(void **, void_single_link *);
+*/
 
 #endif  /* PDCIP_LINK_H_ */

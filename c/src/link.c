@@ -19,7 +19,7 @@
 single_link *
 single_link_malloc(double value, single_link *next)
 {
-  single_link *head = (single_link *) malloc(sizeof(single_link));
+  single_link *head = malloc(sizeof *head);
   head->value = value;
   head->next = next;
   return head;
@@ -100,7 +100,7 @@ single_link_n_links(single_link *head)
 double_link *
 double_link_malloc(double value, double_link *prev, double_link *next)
 {
-  double_link *head = (double_link *) malloc(sizeof(double_link));
+  double_link *head = malloc(sizeof *head);
   head->value = value;
   head->prev = prev;
   head->next = next;
@@ -168,4 +168,72 @@ double_link_n_next(double_link *link)
 {
   count_n_next(double_link, link);
   return n_next;
+}
+
+/**
+ * Allocate `void_single_link *` holding `int` data.
+ *
+ * @param value `int` to store in `*data`
+ * @param next `void_single_link *` next node
+ */
+void_single_link *
+void_single_link_int_malloc(int value, void_single_link *next)
+{
+  void_single_link_partial_create(head, value, int, 0, next);
+  head->data_type = PDCIP_INT;
+  return head;
+}
+
+/**
+ * Allocate `void_single_link *` holding `int *` pointing to `int` array.
+ *
+ * @param values `int *` pointing to contiguous `int` values
+ * @param n_values `size_t` number of contiguous `int` values
+ * @param next `void_single_link *` next node
+ */
+void_single_link *
+void_single_link_int_array_malloc(
+  int *values, size_t n_values, void_single_link *next)
+{
+  int *copy_values = malloc(n_values * (sizeof *copy_values));
+  for (size_t i = 0; i < n_values; i++) {
+    copy_values[i] = values[i];
+  }
+  void_single_link_partial_create(head, copy_values, int *, n_values, next);
+  head->data_type = PDCIP_INT_ARRAY;
+  return head;
+}
+
+/**
+ * Allocate `void_single_link *` holding `double` data.
+ *
+ * @param value `double` to store in `*data`
+ * @param next `void_single_link *` next node
+ */
+void_single_link *
+void_single_link_double_malloc(double value, void_single_link *next)
+{
+  void_single_link_partial_create(head, value, double, 0, next);
+  head->data_type = PDCIP_DOUBLE;
+  return head;
+}
+
+/**
+ * Allocate `void_single_link *` holding `double *` pointing to `double` array.
+ *
+ * @param values `double *` pointing to contiguous `double` values
+ * @param n_values `size_t` number of contiguous `double` values
+ * @param next `void_single_link *` next node
+ */
+void_single_link *
+void_single_link_double_array_malloc(
+  double *values, size_t n_values, void_single_link *next)
+{
+  double *copy_values = malloc(n_values * (sizeof *copy_values));
+  for (size_t i = 0; i < n_values; i++) {
+    copy_values[i] = values[i];
+  }
+  void_single_link_partial_create(head, copy_values, double *, n_values, next);
+  head->data_type = PDCIP_DOUBLE_ARRAY;
+  return head;
 }
