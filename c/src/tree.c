@@ -27,7 +27,7 @@ gen_tree_malloc(double value, size_t n_children, gen_tree **children)
 {
   // n_children can only be zero if children is NULL
   assert((n_children == 0 && !children) || (n_children > 0 && children));
-  gen_tree *tree = (gen_tree *) malloc(sizeof(gen_tree));
+  gen_tree *tree = malloc(sizeof *tree);
   tree->value = value;
   tree->n_children = n_children;
   tree->children = children;
@@ -108,7 +108,7 @@ gen_tree_make_children(size_t n, const double *values)
   if (!n) {
     return NULL;
   }
-  gen_tree **children = (gen_tree **) malloc(n * sizeof(gen_tree *));
+  gen_tree **children = malloc(n * (sizeof *children));
   map_func(gen_tree_malloc_default, values, children, n);
   return children;
 }
@@ -160,17 +160,15 @@ gen_tree_dfs(const gen_tree *tree, size_t *n_nodes_p)
   // if no children, we write 1 and return array of just tree
   if (!tree->n_children) {
     *n_nodes_p = 1;
-    gen_tree **nodes = (gen_tree **) malloc(sizeof(gen_tree *));
+    gen_tree **nodes = malloc(sizeof *nodes);
     // silence warning about discarding const qualifier
     *nodes = (gen_tree *) tree;
     return nodes;
   }
   // array of gen_tree **, each of which points to array of gen_tree *
-  gen_tree ***nodes_ar = (gen_tree ***) malloc(
-    tree->n_children * sizeof(gen_tree **)
-  );
+  gen_tree ***nodes_ar = malloc(tree->n_children * (sizeof *nodes_ar));
   // holds number of nodes in each subtree
-  size_t *n_nodes_ar = (size_t *) malloc(tree->n_children * sizeof(size_t));
+  size_t *n_nodes_ar = malloc(tree->n_children * (sizeof *n_nodes_ar));
   // call recursively to populate
   for (size_t i = 0; i < tree->n_children; i++) {
     nodes_ar[i] = gen_tree_dfs(tree->children[i], n_nodes_ar + i);
@@ -180,7 +178,7 @@ gen_tree_dfs(const gen_tree *tree, size_t *n_nodes_p)
   // number of nodes (gen_tree *) we have copied so far from nodes_ar
   size_t n_copied = 0;
   // construct new children array we want to return
-  gen_tree **nodes = (gen_tree **) malloc(n_nodes * sizeof(gen_tree *));
+  gen_tree **nodes = malloc(n_nodes * (sizeof *nodes));
   for (size_t i = 0; i < tree->n_children; i++) {
     for (size_t j = 0; j < n_nodes_ar[i]; j++) {
       nodes[n_copied + j] = nodes_ar[i][j];
@@ -212,7 +210,7 @@ gen_tree_dfs(const gen_tree *tree, size_t *n_nodes_p)
 binary_tree *
 binary_tree_malloc(double value, binary_tree *left, binary_tree *right)
 {
-  binary_tree *tree = (binary_tree *) malloc(sizeof(binary_tree));
+  binary_tree *tree = malloc(sizeof *tree);
   tree->value = value;
   tree->left = left;
   tree->right = right;
@@ -323,7 +321,7 @@ binary_tree_sorted_values(const binary_tree *tree, size_t *n_values_p)
     values_right = binary_tree_sorted_values(tree->right, &n_values_right);
   }
   size_t n_values = n_values_left + n_values_right + 1;
-  double *values = (double *) malloc(n_values * sizeof(double));
+  double *values = malloc(n_values * (sizeof *values));
   for (size_t i = 0; i < n_values_left; i++) {
     values[i] = values_left[i];
   }
