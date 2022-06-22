@@ -206,20 +206,16 @@ gen_tree_dfs(const gen_tree *tree, size_t *n_nodes_p)
  * Allocate a `binary_tree` instance on the heap.
  *
  * @param value `double` value to give the `binary_tree`, can be `NAN` if root
- * @param left `const binary_tree *` to set the left child as, can be `NULL`
- * @param right `const binary_tree *` to set the right child as, can be `NULL`
+ * @param left `binary_tree *` to set the left child as, can be `NULL`
+ * @param right `binary_tree *` to set the right child as, can be `NULL`
  */
 binary_tree *
-binary_tree_malloc(
-  double value,
-  const binary_tree *left,
-  const binary_tree *right)
+binary_tree_malloc(double value, binary_tree *left, binary_tree *right)
 {
   binary_tree *tree = (binary_tree *) malloc(sizeof(binary_tree));
   tree->value = value;
-  // forcible cast to suppress -Wdiscard-qualifiers. left, right are untouched
-  tree->left = (binary_tree *) left;
-  tree->right = (binary_tree *) right;
+  tree->left = left;
+  tree->right = right;
   return tree;
 }
 

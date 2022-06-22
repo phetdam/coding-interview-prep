@@ -134,7 +134,7 @@ typedef struct binary_tree_ {
 } binary_tree;
 
 binary_tree *
-binary_tree_malloc(double, const binary_tree *, const binary_tree *);
+binary_tree_malloc(double, binary_tree *, binary_tree *);
 
 /**
  * Allocate a `binary_tree` instance on the heap with zero children.
