@@ -21,7 +21,7 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 # debug and release flags, handle MSVC case specifically
 if(MSVC)
     # Check causes C4100 warning. see definition of START_TEST macro
-    add_compile_options(/Wall /wd4100 /wd5045)
+    add_compile_options(/Wall /wd4100 /wd4820 /wd5045)
     if(CMAKE_BUILD_TYPE STREQUAL Release)
         add_compile_options(/O2)
     else()
