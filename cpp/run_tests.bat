@@ -92,7 +92,9 @@ if %ERRORLEVEL% gtr 0 (
 :: need to put pdcip_c DLL on path + ensure that Google Test has color output
 set PATH=%BUILD_WINDOWS_DIR%\src;%PATH%
 set GTEST_COLOR=yes
-ctest --test-dir %BUILD_WINDOWS_DIR% %*
+:: by default, we try to run tests in parallel using half available threads
+set /a N_THREADS=%NUMBER_OF_PROCESSORS%/2
+ctest --test-dir %BUILD_WINDOWS_DIR% -j %N_THREADS% %*
 exit /b 0
 
 endlocal
