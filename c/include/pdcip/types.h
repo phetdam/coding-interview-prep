@@ -11,7 +11,7 @@
 /**
  * Type enumeration so we can embed type information.
  */
-enum pdcip_type {
+typedef enum {
   PDCIP_INT,
   PDCIP_INT_ARRAY,
   PDCIP_FLOAT,
@@ -26,7 +26,6 @@ enum pdcip_type {
   PDCIP_VOID_PTR,
   PDCIP_VOID_PTR_ARRAY,
   NUM_TYPES  // convenience/sentinel member
-};
-typedef enum pdcip_type pdcip_type;
+} pdcip_type;
 
 #endif  /* PDCIP_TYPES_H_ */
