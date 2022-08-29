@@ -237,3 +237,32 @@ void_single_link_double_array_malloc(
   head->data_type = PDCIP_DOUBLE_ARRAY;
   return head;
 }
+
+/**
+ * Free a `void_single_link *` with scalar data.
+ *
+ * @param link `void_single_link*` link to free
+ * @returns `void_single_link *` pointer to next link, `NULL` if no next link
+ */
+void_single_link *
+void_single_link_free(void_single_link *link)
+{
+  void_single_link *next = link->next;
+  free(link->data);
+  free(link);
+  return next;
+}
+
+/**
+ * Free a `void_single_link *` with array data.
+ *
+ * @param link `void_single_link*` link to free
+ * @returns `void_single_link *` pointer to next link, `NULL` if no next link
+ */
+void_single_link *
+void_single_link_array_free(void_single_link *link)
+{
+  // free underlying array data first
+  free(*(void **) link->data);
+  return void_single_link_free(link);
+}

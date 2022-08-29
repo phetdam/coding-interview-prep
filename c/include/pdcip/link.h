@@ -255,4 +255,17 @@ void_single_link *
 void_single_link_void_ptr_array_malloc(void **, void_single_link *);
 */
 
+void_single_link *
+void_single_link_free(void_single_link *);
+
+void_single_link *
+void_single_link_array_free(void_single_link *);
+
+#define void_single_link_int_free void_single_link_free
+#define void_single_link_int_array_free void_single_link_array_free
+#define void_single_link_double_free void_single_link_free
+#define void_single_link_double_array_free void_single_link_array_free
+#define void_single_link_void_ptr_free void_single_link_free
+#define void_single_link_void_ptr_array_free void_single_link_array_free
+
 #endif  /* PDCIP_LINK_H_ */
