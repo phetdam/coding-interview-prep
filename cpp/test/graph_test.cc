@@ -94,5 +94,5 @@ TEST_F(EdgeTest, EqualsNotEqualsTest)
 
 }  // namespace
 
-}  // namespace pdcip::testing
+}  // namespace testing
 }  // namespace pdcip

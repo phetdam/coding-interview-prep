@@ -28,7 +28,7 @@ using T_ptr_vector_t = std::vector<T_ptr_t<T>>;
 template <typename T>
 using T_ptr_vector_ptr_t = std::shared_ptr<T_ptr_vector_t<T>>;
 
-typename Tree;
+class tree;
 using tree_ptr = T_ptr_t<tree>;
 using tree_ptr_vector = T_ptr_vector_t<tree>;
 using tree_ptr_vector_ptr = T_ptr_vector_ptr_t<tree>;
@@ -66,7 +66,7 @@ using double_link_ptr_pair = T_ptr_pair_t<double_link>;
  * The `T` `value` can be either copy set or moved.
  */
 template <typename T>
-typename T_value_t {
+class T_value_t {
 public:
   T_value_t(const T& value) : value_(value) {}
   T_value_t(T&& value) : value_(std::move(value)) {}
@@ -84,7 +84,7 @@ private:
  * The `T` `prev` can be either copy set or moved.
  */
 template <typename T>
-typename T_prev_t {
+class T_prev_t {
 public:
   T_prev_t(const T& prev) : prev_(prev) {}
   T_prev_t(T&& prev) : prev_(std::move(prev)) {}
@@ -102,7 +102,7 @@ private:
  * The `T` `next` can be either copy set or moved.
  */
 template <typename T>
-typename T_next_t {
+class T_next_t {
 public:
   T_next_t(const T& next) : next_(next) {}
   T_next_t(T&& next) : next_(std::move(next)) {}

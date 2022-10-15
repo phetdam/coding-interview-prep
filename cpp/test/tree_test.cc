@@ -311,5 +311,5 @@ TEST_F(BinaryTreeTest, BreadthFirstSearchTest)
 
 }  // namespace
 
-}  // namespace pdcip::testing
+}  // namespace testing
 }  // namespace pdcip
